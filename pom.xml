@@ -62,6 +62,7 @@
         <module>liquibase-integration-tests</module>
         <module>liquibase-debian</module>
         <module>liquibase-sdk</module>
+        <module>liquibase-ant</module>
     </modules>
 
     <dependencyManagement>
