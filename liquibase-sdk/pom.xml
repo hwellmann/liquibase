@@ -1,18 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>liquibase-core</artifactId>
-    <name>Liquibase Core</name>
-    <packaging>jar</packaging>
-
-    <parent>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-parent</artifactId>
-        <version>3.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.liquibase</groupId>
+    <artifactId>liquibase-parent</artifactId>
+    <version>3.4.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>liquibase-sdk</artifactId>
 
     <properties>
         <bundle.namespace>liquibase.*</bundle.namespace>
@@ -20,6 +13,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
@@ -31,6 +29,13 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>8.1.14.v20131031</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -140,11 +145,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -189,49 +189,6 @@
             </plugin>
 
 
-            <!--<plugin>-->
-            <!--<groupId>org.apache.felix</groupId>-->
-            <!--<artifactId>maven-bundle-plugin</artifactId>-->
-            <!--<extensions>true</extensions>-->
-            <!--<configuration>-->
-            <!--<instructions>-->
-            <!--<_include>-osgi.bnd</_include>-->
-            <!--</instructions>-->
-            <!--<manifestLocation>${project.build.directory}/jar-with-deps/META-INF</manifestLocation>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>bundle-manifest</id>-->
-            <!--<phase>process-classes</phase>-->
-            <!--<goals>-->
-            <!--<goal>manifest</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>distro</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <!-- create the distribution archives -->
-                                <descriptor>src/main/resources/assembly/bin.xml</descriptor>
-                            </descriptors>
-                            <!--<archive>
-                              <manifestFile>../liquibase-core/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                            </archive>-->
-                        </configuration>
-                    </execution>
-                </executions>
-                <version>2.3</version>
-            </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>
