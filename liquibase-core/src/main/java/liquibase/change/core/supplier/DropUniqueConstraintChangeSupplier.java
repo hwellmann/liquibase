@@ -11,7 +11,7 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.UniqueConstraint;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class DropUniqueConstraintChangeSupplier extends AbstractChangeSupplier<DropUniqueConstraintChange>  {
 

@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import static junit.framework.TestCase.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 import liquibase.change.Change;
 import liquibase.change.ColumnConfig;

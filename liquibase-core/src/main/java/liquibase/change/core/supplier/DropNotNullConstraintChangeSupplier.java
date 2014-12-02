@@ -11,8 +11,8 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static liquibase.Assert.assertFalse;
+import static liquibase.Assert.assertTrue;
 
 public class DropNotNullConstraintChangeSupplier extends AbstractChangeSupplier<DropNotNullConstraintChange>  {
 

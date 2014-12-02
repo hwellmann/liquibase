@@ -5,7 +5,7 @@ import liquibase.change.core.EmptyChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 
-import static junit.framework.Assert.assertEquals;
+import static liquibase.Assert.assertEquals;
 
 public class EmptyChangeSupplier extends AbstractChangeSupplier<EmptyChange>  {
 

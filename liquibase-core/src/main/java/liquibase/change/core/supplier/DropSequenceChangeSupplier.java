@@ -8,7 +8,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Sequence;
 
-import static junit.framework.TestCase.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class DropSequenceChangeSupplier extends AbstractChangeSupplier<DropSequenceChange>  {
 

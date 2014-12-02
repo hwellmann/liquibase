@@ -10,7 +10,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.PrimaryKey;
 
-import static junit.framework.TestCase.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class DropPrimaryKeyChangeSupplier extends AbstractChangeSupplier<DropPrimaryKeyChange>  {
 

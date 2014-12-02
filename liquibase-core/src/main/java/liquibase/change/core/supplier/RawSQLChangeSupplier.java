@@ -10,7 +10,7 @@ import liquibase.executor.ExecutorService;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.statement.core.RawSqlStatement;
 
-import static org.junit.Assert.assertTrue;
+import static liquibase.Assert.assertTrue;
 
 public class RawSQLChangeSupplier extends AbstractChangeSupplier<RawSQLChange>  {
 

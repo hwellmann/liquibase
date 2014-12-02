@@ -8,7 +8,7 @@ import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Table;
 
-import static junit.framework.TestCase.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class RenameTableChangeSupplier extends AbstractChangeSupplier<RenameTableChange>  {
 

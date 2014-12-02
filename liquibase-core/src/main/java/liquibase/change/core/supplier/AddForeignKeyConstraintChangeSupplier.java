@@ -12,7 +12,7 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Table;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class AddForeignKeyConstraintChangeSupplier extends AbstractChangeSupplier<AddForeignKeyConstraintChange>  {
 

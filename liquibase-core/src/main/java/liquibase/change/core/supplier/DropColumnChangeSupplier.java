@@ -9,7 +9,7 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class DropColumnChangeSupplier extends AbstractChangeSupplier<DropColumnChange>  {
 

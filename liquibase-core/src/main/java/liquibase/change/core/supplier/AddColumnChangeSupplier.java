@@ -13,7 +13,7 @@ import liquibase.structure.core.Table;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class AddColumnChangeSupplier extends AbstractChangeSupplier<AddColumnChange>  {
     public AddColumnChangeSupplier() {

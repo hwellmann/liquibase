@@ -11,7 +11,7 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.PrimaryKey;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class AddPrimaryKeyChangeSupplier extends AbstractChangeSupplier<AddPrimaryKeyChange>  {
 

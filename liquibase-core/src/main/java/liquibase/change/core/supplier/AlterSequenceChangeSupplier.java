@@ -9,7 +9,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Sequence;
 
-import static junit.framework.Assert.assertEquals;
+import static liquibase.Assert.assertEquals;
 
 public class AlterSequenceChangeSupplier extends AbstractChangeSupplier<AlterSequenceChange>  {
 

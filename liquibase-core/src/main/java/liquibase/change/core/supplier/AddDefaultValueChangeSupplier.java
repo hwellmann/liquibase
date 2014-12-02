@@ -11,8 +11,8 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static liquibase.Assert.assertNull;
+import static liquibase.Assert.assertNotNull;
 
 public class AddDefaultValueChangeSupplier extends AbstractChangeSupplier<AddDefaultValueChange> {
 

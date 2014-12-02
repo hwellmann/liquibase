@@ -6,7 +6,7 @@ import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.View;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class RenameViewChangeSupplier extends AbstractChangeSupplier<RenameViewChange>  {
 

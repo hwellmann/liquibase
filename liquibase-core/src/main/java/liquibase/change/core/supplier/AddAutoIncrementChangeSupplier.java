@@ -13,8 +13,8 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static liquibase.Assert.assertNotNull;
+import static liquibase.Assert.assertNull;
 
 public class AddAutoIncrementChangeSupplier extends AbstractChangeSupplier<AddAutoIncrementChange>  {
 

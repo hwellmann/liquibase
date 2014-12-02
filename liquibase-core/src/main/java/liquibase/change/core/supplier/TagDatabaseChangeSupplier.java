@@ -14,7 +14,7 @@ import liquibase.statement.core.CreateDatabaseChangeLogTableStatement;
 import liquibase.statement.core.MarkChangeSetRanStatement;
 import liquibase.statement.core.RawSqlStatement;
 
-import static org.junit.Assert.assertTrue;
+import static liquibase.Assert.assertTrue;
 
 public class TagDatabaseChangeSupplier extends AbstractChangeSupplier<TagDatabaseChange> {
 

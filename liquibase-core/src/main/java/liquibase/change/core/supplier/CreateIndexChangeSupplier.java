@@ -14,7 +14,7 @@ import liquibase.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class CreateIndexChangeSupplier extends AbstractChangeSupplier<CreateIndexChange>  {
 

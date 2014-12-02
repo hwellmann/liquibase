@@ -6,7 +6,7 @@ import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Sequence;
 
-import static junit.framework.Assert.assertNotNull;
+import static liquibase.Assert.assertNotNull;
 
 public class CreateSequenceChangeSupplier extends AbstractChangeSupplier<CreateSequenceChange>  {
 
