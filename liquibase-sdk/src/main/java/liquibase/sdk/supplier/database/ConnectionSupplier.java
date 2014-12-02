@@ -1,9 +1,5 @@
 package liquibase.sdk.supplier.database;
 
-import liquibase.database.DatabaseFactory;
-import liquibase.sdk.TemplateService;
-import org.apache.velocity.Template;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,6 +8,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import liquibase.sdk.TemplateService;
 
 public abstract class ConnectionSupplier implements Cloneable {
 

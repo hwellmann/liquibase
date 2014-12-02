@@ -28,13 +28,25 @@
             <artifactId>jetty-servlet</artifactId>
             <version>8.1.14.v20131031</version>
             <scope>compile</scope>
-            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

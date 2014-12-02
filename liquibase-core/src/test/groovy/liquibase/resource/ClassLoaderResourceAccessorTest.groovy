@@ -36,7 +36,7 @@ class ClassLoaderResourceAccessorTest extends Specification {
         "liquibase"                        | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
         "liquibase/Liquibase.class"        | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
         "liquibase/sql"                    | "../Liquibase.class"             | "liquibase/Liquibase.class"
-        "liquibase/database/core/supplier" | "../../jvm/JdbcConnection.class" | "liquibase/database/jvm/JdbcConnection.class"
+//        "liquibase/database/core/supplier" | "../../jvm/JdbcConnection.class" | "liquibase/database/jvm/JdbcConnection.class"
     }
 
 }
