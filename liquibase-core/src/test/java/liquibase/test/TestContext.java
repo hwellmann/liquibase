@@ -1,18 +1,21 @@
 package liquibase.test;
 
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.sdk.database.MockDatabase;
-import liquibase.database.core.SQLiteDatabase;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import liquibase.resource.ResourceAccessor;
-
 import java.io.File;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.ResourceAccessor;
+import liquibase.sdk.database.MockDatabase;
 
 /**
  * Controls the database connections for running tests.
@@ -58,22 +61,7 @@ public class TestContext {
     }
 
     public File findCoreProjectRoot() throws URISyntaxException {
-        URI uri = new URI(this.getClass().getClassLoader().getResource("liquibase/test/TestContext.class").toExternalForm());
-        if(!uri.isOpaque()) {
-            File thisClassFile = new File(uri);
-            return thisClassFile.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile();
-        }
-        uri = new URI(this.getClass().getClassLoader().getResource("liquibase/integration/commandline/Main.class").toExternalForm());
-        if(!uri.isOpaque()) {
-            File thisClassFile = new File(uri);
-            return new File(thisClassFile.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile(), "liquibase-core");
-        }
-        uri = new URI(this.getClass().getClassLoader().getResource("liquibase/test/DatabaseTest.class").toExternalForm());
-        if(!uri.isOpaque()) {
-            File thisClassFile = new File(uri);
-            return new File(thisClassFile.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile(), "liquibase-core");
-        }
-        throw new IllegalStateException("Cannot find liquibase-core project root");
+        return new File("../liquibase-core");
     }
 
     public ResourceAccessor getTestResourceAccessor() throws URISyntaxException, MalformedURLException {

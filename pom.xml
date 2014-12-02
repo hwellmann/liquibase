@@ -63,6 +63,7 @@
         <module>liquibase-debian</module>
         <module>liquibase-sdk</module>
         <module>liquibase-ant</module>
+        <module>liquibase-yaml</module>
     </modules>
 
     <dependencyManagement>

@@ -1,16 +1,19 @@
 package liquibase.parser;
 
-import liquibase.exception.LiquibaseException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import liquibase.parser.core.sql.SqlChangeLogParser;
 import liquibase.parser.core.xml.XMLChangeLogSAXParser;
-import static org.junit.Assert.*;
-
 import liquibase.test.JUnitResourceAccessor;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 public class ChangeLogParserFactoryTest {
 
@@ -27,7 +30,7 @@ public class ChangeLogParserFactoryTest {
     @Test
     public void getInstance() {
         assertNotNull(ChangeLogParserFactory.getInstance());
-        
+
         assertTrue(ChangeLogParserFactory.getInstance() == ChangeLogParserFactory.getInstance());
     }
 
@@ -72,7 +75,7 @@ public class ChangeLogParserFactoryTest {
 	@Test
     public void builtInGeneratorsAreFound() {
         List<ChangeLogParser> generators = ChangeLogParserFactory.getInstance().getParsers();
-        assertEquals(5, generators.size());
+        assertEquals(3, generators.size());
     }
 
     @Test

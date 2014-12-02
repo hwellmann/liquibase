@@ -1,12 +1,17 @@
 package liquibase.serializer;
 
-import liquibase.serializer.core.string.StringChangeLogSerializer;
-import liquibase.serializer.core.xml.XMLChangeLogSerializer;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
+
+import liquibase.serializer.core.string.StringChangeLogSerializer;
+import liquibase.serializer.core.xml.XMLChangeLogSerializer;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class ChangeLogSerializerFactoryTest {
 
@@ -19,7 +24,7 @@ public class ChangeLogSerializerFactoryTest {
     @Test
     public void getInstance() {
         assertNotNull(ChangeLogSerializerFactory.getInstance());
-        
+
         assertTrue(ChangeLogSerializerFactory.getInstance() == ChangeLogSerializerFactory.getInstance());
     }
 
@@ -64,7 +69,7 @@ public class ChangeLogSerializerFactoryTest {
 	@Test
     public void builtInGeneratorsAreFound() {
         Map<String, ChangeLogSerializer> generators = ChangeLogSerializerFactory.getInstance().getSerializers();
-        assertEquals(5, generators.size());
+        assertEquals(3, generators.size());
     }
 
     @Test
