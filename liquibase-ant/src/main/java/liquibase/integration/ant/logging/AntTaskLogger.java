@@ -1,6 +1,7 @@
 package liquibase.integration.ant.logging;
 
 import liquibase.logging.core.AbstractLogger;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 

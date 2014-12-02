@@ -1,15 +1,19 @@
 package liquibase.logging.core;
 
-import liquibase.configuration.LiquibaseConfiguration;
-import liquibase.logging.LogLevel;
-import liquibase.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.util.Date;
 
+import liquibase.configuration.LiquibaseConfiguration;
+import liquibase.logging.LogLevel;
+import liquibase.logging.Logger;
+import liquibase.util.StringUtils;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Logger.class)
 public class DefaultLogger extends AbstractLogger {
 
     private String name = "liquibase";

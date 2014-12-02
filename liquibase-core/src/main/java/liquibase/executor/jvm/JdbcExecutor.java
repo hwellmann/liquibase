@@ -1,7 +1,14 @@
 package liquibase.executor.jvm;
 
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import liquibase.change.Change;
-import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.OfflineConnection;
 import liquibase.database.PreparedStatementFactory;
@@ -12,20 +19,14 @@ import liquibase.executor.AbstractExecutor;
 import liquibase.executor.Executor;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
-import liquibase.sql.UnparsedSql;
 import liquibase.sql.visitor.SqlVisitor;
-import liquibase.statement.*;
-import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.CallableSqlStatement;
+import liquibase.statement.ExecutablePreparedStatement;
+import liquibase.statement.SqlStatement;
 import liquibase.util.JdbcUtils;
 import liquibase.util.StringUtils;
 
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Class to simplify execution of SqlStatements.  Based heavily on <a href="http://static.springframework.org/spring/docs/2.0.x/reference/jdbc.html">Spring's JdbcTemplate</a>.
@@ -33,6 +34,7 @@ import java.util.Map;
  * <b>Note: This class is currently intended for Liquibase-internal use only and may change without notice in the future</b>
  */
 @SuppressWarnings({"unchecked"})
+@MetaInfServices(Executor.class)
 public class JdbcExecutor extends AbstractExecutor implements Executor {
 
     private Logger log = LogFactory.getLogger();
@@ -173,7 +175,7 @@ public class JdbcExecutor extends AbstractExecutor implements Executor {
 
     @Override
     public long queryForLong(SqlStatement sql, List<SqlVisitor> sqlVisitors) throws DatabaseException {
-        Number number = (Number) queryForObject(sql, Long.class, sqlVisitors);
+        Number number = queryForObject(sql, Long.class, sqlVisitors);
         return (number != null ? number.longValue() : 0);
     }
 
@@ -184,7 +186,7 @@ public class JdbcExecutor extends AbstractExecutor implements Executor {
 
     @Override
     public int queryForInt(SqlStatement sql, List<SqlVisitor> sqlVisitors) throws DatabaseException {
-        Number number = (Number) queryForObject(sql, Integer.class, sqlVisitors);
+        Number number = queryForObject(sql, Integer.class, sqlVisitors);
         return (number != null ? number.intValue() : 0);
     }
 
@@ -206,7 +208,7 @@ public class JdbcExecutor extends AbstractExecutor implements Executor {
     @Override
     public List<Map<String, ?>> queryForList(SqlStatement sql, List<SqlVisitor> sqlVisitors) throws DatabaseException {
         //noinspection unchecked
-        return (List<Map<String, ?>>) query(sql, getColumnMapRowMapper(), sqlVisitors);
+        return query(sql, getColumnMapRowMapper(), sqlVisitors);
     }
 
     @Override

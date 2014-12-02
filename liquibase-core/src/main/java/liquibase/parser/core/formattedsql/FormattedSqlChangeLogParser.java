@@ -1,5 +1,11 @@
 package liquibase.parser.core.formattedsql;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import liquibase.Labels;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
@@ -16,10 +22,9 @@ import liquibase.resource.UtfBomAwareReader;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 
-import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class FormattedSqlChangeLogParser implements ChangeLogParser {
 
     @Override

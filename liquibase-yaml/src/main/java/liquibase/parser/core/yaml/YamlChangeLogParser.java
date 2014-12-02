@@ -1,5 +1,13 @@
 package liquibase.parser.core.yaml;
 
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import liquibase.ContextExpression;
 import liquibase.Labels;
 import liquibase.changelog.ChangeLogParameters;
@@ -11,11 +19,11 @@ import liquibase.parser.ChangeLogParser;
 import liquibase.parser.core.ParsedNode;
 import liquibase.resource.ResourceAccessor;
 import liquibase.util.StreamUtil;
+
+import org.kohsuke.MetaInfServices;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
-import java.util.*;
-
+@MetaInfServices
 public class YamlChangeLogParser implements ChangeLogParser {
 
     protected Logger log = LogFactory.getLogger();
