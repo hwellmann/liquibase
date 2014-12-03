@@ -52,6 +52,11 @@ public class MetaInfServiceLocator extends ServiceLocator {
         return super.newInstance(requiredInterface);
     }
 
+    @Override
+    public Class findClass(Class requiredInterface) throws ServiceNotFoundException {
+        return newInstance(requiredInterface).getClass();
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public <T> Class<? extends T>[] findClasses(Class<T> requiredInterface)

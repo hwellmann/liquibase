@@ -228,7 +228,7 @@ public class ServiceLocator {
     }
 
     public static void reset() {
-        instance = new ServiceLocator();
+        instance = new MetaInfServiceLocator();
     }
 
     protected Logger getLogger() {
