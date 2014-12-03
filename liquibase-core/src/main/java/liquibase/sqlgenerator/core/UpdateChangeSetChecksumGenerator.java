@@ -1,7 +1,6 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
@@ -12,6 +11,9 @@ import liquibase.statement.SqlStatement;
 import liquibase.statement.core.UpdateChangeSetChecksumStatement;
 import liquibase.statement.core.UpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class UpdateChangeSetChecksumGenerator extends AbstractSqlGenerator<UpdateChangeSetChecksumStatement> {
     @Override
     public ValidationErrors validate(UpdateChangeSetChecksumStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {

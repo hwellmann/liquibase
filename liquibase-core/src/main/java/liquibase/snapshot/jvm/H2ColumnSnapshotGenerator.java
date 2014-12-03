@@ -1,15 +1,19 @@
 package liquibase.snapshot.jvm;
 
+import java.sql.SQLException;
+
 import liquibase.database.Database;
 import liquibase.database.core.H2Database;
 import liquibase.exception.DatabaseException;
 import liquibase.snapshot.CachedRow;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.statement.DatabaseFunction;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Column;
 
-import java.sql.SQLException;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class H2ColumnSnapshotGenerator extends ColumnSnapshotGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

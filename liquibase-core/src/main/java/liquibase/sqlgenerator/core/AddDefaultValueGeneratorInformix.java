@@ -2,16 +2,17 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
-import liquibase.structure.core.Schema;
 import liquibase.datatype.DataTypeFactory;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Table;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddDefaultValueStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddDefaultValueGeneratorInformix extends AddDefaultValueGenerator {
 	@Override
 	public int getPriority() {

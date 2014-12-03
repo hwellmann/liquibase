@@ -1,17 +1,24 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropIndexStatement;
-import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Index;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * Drops an existing index.
  */
 @DatabaseChange(name="dropIndex", description = "Drops an existing index", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "index")
+@MetaInfServices(Change.class)
 public class DropIndexChange extends AbstractChange {
 
     private String schemaName;

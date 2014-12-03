@@ -1,7 +1,23 @@
 package liquibase.serializer.core.yaml;
 
+import java.beans.IntrospectionException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
@@ -9,9 +25,10 @@ import liquibase.statement.DatabaseFunction;
 import liquibase.statement.SequenceCurrentValueFunction;
 import liquibase.statement.SequenceNextValueFunction;
 import liquibase.util.StringUtils;
+
+import org.kohsuke.MetaInfServices;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.introspector.FieldProperty;
 import org.yaml.snakeyaml.introspector.GenericProperty;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.MappingNode;
@@ -21,12 +38,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.beans.IntrospectionException;
-import java.io.*;
-import java.lang.reflect.Type;
-import java.sql.Timestamp;
-import java.util.*;
-
+@MetaInfServices(ChangeLogSerializer.class)
 public class YamlChangeLogSerializer implements ChangeLogSerializer {
 
     protected Yaml yaml;

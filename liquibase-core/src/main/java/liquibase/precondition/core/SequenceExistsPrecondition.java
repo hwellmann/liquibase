@@ -1,17 +1,23 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.PreconditionErrorException;
+import liquibase.exception.PreconditionFailedException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.precondition.Precondition;
+import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Sequence;
-import liquibase.exception.*;
-import liquibase.precondition.Precondition;
-import liquibase.snapshot.DatabaseSnapshot;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class SequenceExistsPrecondition extends AbstractPrecondition {
     private String catalogName;
     private String schemaName;

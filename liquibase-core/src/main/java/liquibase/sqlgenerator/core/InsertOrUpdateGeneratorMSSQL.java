@@ -4,9 +4,13 @@ import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.exception.LiquibaseException;
 import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.InsertOrUpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class InsertOrUpdateGeneratorMSSQL extends InsertOrUpdateGenerator {
     @Override
     public boolean supports(InsertOrUpdateStatement statement, Database database) {
@@ -34,7 +38,7 @@ public class InsertOrUpdateGeneratorMSSQL extends InsertOrUpdateGenerator {
         insertBlock.append(super.getInsertStatement(insertOrUpdateStatement, database, sqlGeneratorChain));
         insertBlock.append("END\n");
 
-        return insertBlock.toString(); 
+        return insertBlock.toString();
     }
 
     @Override

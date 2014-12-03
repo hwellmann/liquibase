@@ -1,21 +1,24 @@
 package liquibase.sqlgenerator.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import liquibase.change.ColumnConfig;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.exception.DatabaseException;
 import liquibase.sql.Sql;
-import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddColumnStatement;
 import liquibase.structure.core.Index;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class AddColumnGeneratorSQLite extends AddColumnGenerator {
      @Override
      public int getPriority() {
@@ -43,6 +46,7 @@ public class AddColumnGeneratorSQLite extends AddColumnGenerator {
         // define alter table logic
         SQLiteDatabase.AlterTableVisitor rename_alter_visitor =
         new SQLiteDatabase.AlterTableVisitor() {
+            @Override
             public ColumnConfig[] getColumnsToAdd() {
                 return new ColumnConfig[] {
                     new ColumnConfig()
@@ -51,12 +55,15 @@ public class AddColumnGeneratorSQLite extends AddColumnGenerator {
                         .setAutoIncrement(statement.isAutoIncrement())
                 };
             }
+            @Override
             public boolean copyThisColumn(ColumnConfig column) {
                 return !column.getName().equals(statement.getColumnName());
             }
+            @Override
             public boolean createThisColumn(ColumnConfig column) {
                 return true;
             }
+            @Override
             public boolean createThisIndex(Index index) {
                 return true;
             }

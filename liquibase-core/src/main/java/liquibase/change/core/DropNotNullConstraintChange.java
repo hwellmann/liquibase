@@ -1,6 +1,11 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -8,10 +13,13 @@ import liquibase.statement.core.SetNullableStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Drops a not-null constraint from an existing column.
  */
 @DatabaseChange(name="dropNotNullConstraint", description = "Makes a column nullable", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class DropNotNullConstraintChange extends AbstractChange {
 
     private String catalogName;
@@ -76,7 +84,7 @@ public class DropNotNullConstraintChange extends AbstractChange {
     	return new SqlStatement[] { new SetNullableStatement(
                 getCatalogName(),
     			getSchemaName(),
-    			getTableName(), getColumnName(), getColumnDataType(), true) 
+    			getTableName(), getColumnName(), getColumnDataType(), true)
     	};
     }
 
@@ -91,7 +99,7 @@ public class DropNotNullConstraintChange extends AbstractChange {
         }
 
     }
-    
+
 //    private SqlStatement[] generateStatementsForSQLiteDatabase(Database database) {
 //    	// SQLite does not support this ALTER TABLE operation until now.
 //		// For more information see: http://www.sqlite.org/omitted.html.

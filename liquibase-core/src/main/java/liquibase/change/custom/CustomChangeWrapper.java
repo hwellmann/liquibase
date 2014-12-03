@@ -1,18 +1,32 @@
 package liquibase.change.custom;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import liquibase.change.AbstractChange;
-import liquibase.change.DatabaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
-import liquibase.exception.*;
+import liquibase.exception.CustomChangeException;
+import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
 import liquibase.statement.SqlStatement;
 import liquibase.util.ObjectUtil;
 
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Adapts CustomChange implementations to the standard change system used by Liquibase.
@@ -30,13 +44,14 @@ import java.util.*;
                 "\n" +
                 "For a sample custom change class, see liquibase.change.custom.ExampleCustomSqlChange",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class CustomChangeWrapper extends AbstractChange {
 
     /**
      * Non-private access only for testing.
      */
     CustomChange customChange;
-    
+
     private String className;
 
     private SortedSet<String> params = new TreeSet<String>();

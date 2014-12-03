@@ -8,34 +8,34 @@ import liquibase.datatype.LiquibaseDataType;
  * A wrapper class for data types.
  * Wraps a LiquibaseDataType instance and replaces some of the
  * original data types with dbms-compatible ones.
- * 
+ *
  * @author islavov
  */
 public class DataTypeWrapper  extends LiquibaseDataType {
-	
+
 	private static LiquibaseDataType stripWrappedDataType(LiquibaseDataType candidate) {
-		
+
 		if (candidate instanceof DataTypeWrapper) {
-			
+
 			// Strip off any wrapped data type
-			
+
 			return((DataTypeWrapper) candidate).getUnderlyingDataType();
 		}
-		
-		return candidate; 
+
+		return candidate;
 	}
-	
+
 	private LiquibaseDataType underlyingDataType;
-	
+
 	public LiquibaseDataType getUnderlyingDataType() {
 		return underlyingDataType;
 	}
-	
+
 	public DataTypeWrapper(LiquibaseDataType originalType) {
 		super(stripWrappedDataType(originalType));
 		this.underlyingDataType = stripWrappedDataType(originalType);
 	}
-	
+
 	@Override
     public String getName() {
         return underlyingDataType.getName();
@@ -50,12 +50,12 @@ public class DataTypeWrapper  extends LiquibaseDataType {
     public int getPriority() {
         return underlyingDataType.getPriority();
     }
-    
+
     @Override
     public boolean supports(Database database) {
         return underlyingDataType.supports(database);
     }
-    
+
     @Override
     public int getMinParameters(Database database) {
         return underlyingDataType.getMinParameters(database);
@@ -70,7 +70,7 @@ public class DataTypeWrapper  extends LiquibaseDataType {
     public Object[] getParameters() {
     	return underlyingDataType.getParameters();
     }
-    
+
     @Override
     public void addParameter(Object value) {
         this.underlyingDataType.addParameter(value);
@@ -90,7 +90,7 @@ public class DataTypeWrapper  extends LiquibaseDataType {
     public String objectToSql(Object value, Database database) {
     	return underlyingDataType.objectToSql(value, database);
     }
-    
+
     public Object stringToObject(String value, Database database) {
         return value;
     }

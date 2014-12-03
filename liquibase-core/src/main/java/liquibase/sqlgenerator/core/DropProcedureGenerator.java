@@ -4,11 +4,15 @@ import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.DropProcedureStatement;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.StoredProcedure;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropProcedureGenerator extends AbstractSqlGenerator<DropProcedureStatement> {
     @Override
     public ValidationErrors validate(DropProcedureStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {

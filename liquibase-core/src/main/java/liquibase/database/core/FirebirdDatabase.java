@@ -1,16 +1,19 @@
 package liquibase.database.core;
 
-import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
-import liquibase.structure.DatabaseObject;
 import liquibase.exception.DatabaseException;
+import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * Firebird database implementation.
  * SQL Syntax ref: http://www.ibphoenix.com/main.nfs?a=ibphoenix&page=ibp_60_sqlref
  */
+@MetaInfServices(Database.class)
 public class FirebirdDatabase extends AbstractJdbcDatabase {
 
     public FirebirdDatabase() {
@@ -35,7 +38,7 @@ public class FirebirdDatabase extends AbstractJdbcDatabase {
     public int getPriority() {
         return PRIORITY_DEFAULT;
     }
-    
+
     @Override
     public String getShortName() {
         return "firebird";

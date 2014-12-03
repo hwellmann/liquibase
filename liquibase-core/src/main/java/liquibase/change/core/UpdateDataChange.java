@@ -1,6 +1,15 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.parser.core.ParsedNode;
@@ -10,10 +19,10 @@ import liquibase.statement.SqlStatement;
 import liquibase.statement.UpdateExecutablePreparedStatement;
 import liquibase.statement.core.UpdateStatement;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name = "update", description = "Updates data in an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class UpdateDataChange extends AbstractModifyDataChange implements ChangeWithColumns<ColumnConfig> {
 
     private List<ColumnConfig> columns;
@@ -65,21 +74,21 @@ public class UpdateDataChange extends AbstractModifyDataChange implements Change
 
         if (needsPreparedStatement) {
             UpdateExecutablePreparedStatement statement = new UpdateExecutablePreparedStatement(database, catalogName, schemaName, tableName, columns, getChangeSet(), this.getResourceAccessor());
-            
+
             statement.setWhereClause(where);
-            
+
             for (ColumnConfig whereParam : whereParams) {
                 if (whereParam.getName() != null) {
                     statement.addWhereColumnName(whereParam.getName());
                 }
                 statement.addWhereParameter(whereParam.getValueObject());
             }
-            
+
             return new SqlStatement[] {
                     statement
             };
         }
-    	
+
         UpdateStatement statement = new UpdateStatement(getCatalogName(), getSchemaName(), getTableName());
 
         for (ColumnConfig column : getColumns()) {

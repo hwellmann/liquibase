@@ -8,12 +8,15 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CommentStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CommentGenerator extends AbstractSqlGenerator<CommentStatement> {
 
 	@Override
     public Sql[] generateSql(CommentStatement comment, Database database, SqlGeneratorChain sqlGeneratorChain) {
         return new Sql[] {
-                new SingleLineComment(comment.getText(), database.getLineComment())     
+                new SingleLineComment(comment.getText(), database.getLineComment())
 		};
 	}
 

@@ -1,6 +1,11 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -8,10 +13,13 @@ import liquibase.statement.core.DropDefaultValueStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Removes the default value from an existing column.
  */
 @DatabaseChange(name="dropDefaultValue", description="Removes the database default value for a column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class DropDefaultValueChange extends AbstractChange {
 
     private String catalogName;
@@ -60,7 +68,7 @@ public class DropDefaultValueChange extends AbstractChange {
     public String getColumnDataType() {
 		return columnDataType;
 	}
-    
+
     public void setColumnDataType(String columnDataType) {
 		this.columnDataType = columnDataType;
 	}
@@ -88,7 +96,7 @@ public class DropDefaultValueChange extends AbstractChange {
         }
 
     }
-    
+
 //    private SqlStatement[] generateStatementsForSQLiteDatabase(Database database) {
 //
 //    	// SQLite does not support this ALTER TABLE operation until now.

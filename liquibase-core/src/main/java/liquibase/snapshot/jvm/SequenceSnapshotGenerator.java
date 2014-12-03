@@ -1,25 +1,34 @@
 package liquibase.snapshot.jvm;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.DerbyDatabase;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.H2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
-import liquibase.snapshot.InvalidExampleException;
-import liquibase.snapshot.SnapshotGeneratorChain;
 import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Sequence;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class SequenceSnapshotGenerator extends JdbcSnapshotGenerator {
 
     public SequenceSnapshotGenerator() {
@@ -122,7 +131,7 @@ public class SequenceSnapshotGenerator extends JdbcSnapshotGenerator {
             else{
                 return "SELECT SEQNAME AS SEQUENCE_NAME FROM SYSCAT.SEQUENCES WHERE SEQTYPE='S' AND SEQSCHEMA = '" + schema.getCatalogName() + "'";
             }
-            
+
             //return "SELECT SEQNAME AS SEQUENCE_NAME FROM SYSCAT.SEQUENCES WHERE SEQTYPE='S' AND SEQSCHEMA = '" + schema.getCatalogName() + "'";
         } else if (database instanceof DerbyDatabase) {
             return "SELECT " +

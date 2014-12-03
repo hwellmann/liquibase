@@ -1,18 +1,26 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.math.BigInteger;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CreateSequenceStatement;
 import liquibase.structure.core.Sequence;
 
-import java.math.BigInteger;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Creates a new sequence.
  */
 @DatabaseChange(name="createSequence", description = "Creates a new database sequence", priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class CreateSequenceChange extends AbstractChange {
 
     private String catalogName;

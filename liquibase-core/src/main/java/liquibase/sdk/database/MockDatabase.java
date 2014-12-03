@@ -34,6 +34,9 @@ import liquibase.statement.SqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Schema;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Database.class)
 public class MockDatabase implements Database, InternalDatabase {
 
     private boolean outputDefaultSchema;
@@ -546,7 +549,7 @@ public class MockDatabase implements Database, InternalDatabase {
     public void executeRollbackStatements(final SqlStatement[] statements, final List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException {
         ;
     }
-    
+
     @Override
     public void saveRollbackStatement(final Change change, final List<SqlVisitor> sqlVisitors, final Writer writer) throws IOException, RollbackImpossibleException, StatementNotSupportedOnDatabaseException, LiquibaseException {
         ;

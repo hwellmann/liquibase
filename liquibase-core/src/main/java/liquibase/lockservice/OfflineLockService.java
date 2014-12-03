@@ -5,6 +5,9 @@ import liquibase.database.OfflineConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LockException;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices
 public class OfflineLockService implements LockService {
 
     private Database database;

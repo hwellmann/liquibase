@@ -1,6 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -9,7 +10,10 @@ import liquibase.serializer.LiquibaseSerializable;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropProcedureStatement;
 
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="dropProcedure", description = "Drops an existing procedure", priority = ChangeMetaData.PRIORITY_DEFAULT+100, appliesTo = "storedProcedure")
+@MetaInfServices(Change.class)
 public class DropProcedureChange extends AbstractChange {
 
     private String catalogName;

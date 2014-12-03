@@ -1,6 +1,11 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -8,10 +13,13 @@ import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropForeignKeyConstraintStatement;
 import liquibase.structure.core.ForeignKey;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Drops an existing foreign key constraint.
  */
 @DatabaseChange(name="dropForeignKeyConstraint", description = "Drops an existing foreign key", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "foreignKey")
+@MetaInfServices(Change.class)
 public class DropForeignKeyConstraintChange extends AbstractChange {
     private String baseTableCatalogName;
     private String baseTableSchemaName;
@@ -60,15 +68,15 @@ public class DropForeignKeyConstraintChange extends AbstractChange {
         if (database instanceof SQLiteDatabase) {
     		// return special statements for SQLite databases
     		return generateStatementsForSQLiteDatabase();
-    	} 
-    	
+    	}
+
         return new SqlStatement[]{
                 new DropForeignKeyConstraintStatement(
                         getBaseTableCatalogName(),
                         getBaseTableSchemaName(),
                         getBaseTableName(),
                         getConstraintName()),
-        };    	
+        };
     }
 
     @Override

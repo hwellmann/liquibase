@@ -1,5 +1,9 @@
 package liquibase.diff.compare.core;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.compare.CompareControl;
@@ -12,11 +16,9 @@ import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class ForeignKeyComparator implements DatabaseObjectComparator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

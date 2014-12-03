@@ -1,20 +1,24 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
-import liquibase.logging.LogFactory;
+import liquibase.exception.PreconditionErrorException;
+import liquibase.exception.PreconditionFailedException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.precondition.Precondition;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Index;
 import liquibase.structure.core.Schema;
-import liquibase.exception.*;
-import liquibase.precondition.Precondition;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class IndexExistsPrecondition extends AbstractPrecondition {
     private String catalogName;
     private String schemaName;

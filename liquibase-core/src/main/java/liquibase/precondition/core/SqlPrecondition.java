@@ -1,19 +1,22 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
-import liquibase.exception.*;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.PreconditionErrorException;
+import liquibase.exception.PreconditionFailedException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
 import liquibase.executor.ExecutorService;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.AbstractPrecondition;
 import liquibase.precondition.Precondition;
-import liquibase.resource.ResourceAccessor;
-import liquibase.serializer.LiquibaseSerializable;
 import liquibase.statement.core.RawSqlStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class SqlPrecondition extends AbstractPrecondition {
 
     private String expectedResult;
@@ -50,7 +53,7 @@ public class SqlPrecondition extends AbstractPrecondition {
     public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
         DatabaseConnection connection = database.getConnection();
         try {
-            String result = (String) ExecutorService.getInstance().getExecutor(database).queryForObject(new RawSqlStatement(getSql().replaceFirst(";$","")), String.class);
+            String result = ExecutorService.getInstance().getExecutor(database).queryForObject(new RawSqlStatement(getSql().replaceFirst(";$","")), String.class);
             if (result == null) {
                 throw new PreconditionFailedException("No rows returned from SQL Precondition", changeLog, this);
             }

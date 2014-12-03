@@ -5,7 +5,10 @@ import liquibase.datatype.DataTypeInfo;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.statement.DatabaseFunction;
 
+import org.kohsuke.MetaInfServices;
+
 @DataTypeInfo(name="function", aliases = "liquibase.statement.DatabaseFunction", minParameters = 0, maxParameters = 0, priority = LiquibaseDataType.PRIORITY_DEFAULT)
+@MetaInfServices
 public class DatabaseFunctionType extends LiquibaseDataType {
 
     @Override

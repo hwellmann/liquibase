@@ -1,32 +1,33 @@
 package liquibase.database.core;
 
 import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.OfflineConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.executor.ExecutorService;
+import liquibase.logging.LogFactory;
+import liquibase.statement.core.GetViewDefinitionStatement;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Index;
 import liquibase.structure.core.Table;
 import liquibase.structure.core.View;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.executor.ExecutorService;
-import liquibase.statement.core.GetViewDefinitionStatement;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import liquibase.logging.LogFactory;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Encapsulates MS-SQL database support.
  */
+@MetaInfServices(Database.class)
 public class MSSQLDatabase extends AbstractJdbcDatabase {
     public static final String PRODUCT_NAME = "Microsoft SQL Server";
     protected Set<String> systemTablesAndViews = new HashSet<String>();
@@ -135,7 +136,7 @@ public class MSSQLDatabase extends AbstractJdbcDatabase {
     protected String getAutoIncrementClause() {
     	return "IDENTITY";
     }
-    
+
     @Override
     protected boolean generateAutoIncrementStartWith(BigInteger startWith) {
         return true;
@@ -180,7 +181,7 @@ public class MSSQLDatabase extends AbstractJdbcDatabase {
         }
         return null;
     }
-    
+
     @Override
     public String getConcatSql(String... values) {
         StringBuffer returnString = new StringBuffer();
@@ -298,7 +299,7 @@ public class MSSQLDatabase extends AbstractJdbcDatabase {
     @Override
     public String getViewDefinition(CatalogAndSchema schema, String viewName) throws DatabaseException {
           schema = schema.customize(this);
-        List<String> defLines = (List<String>) ExecutorService.getInstance().getExecutor(this).queryForList(new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName), String.class);
+        List<String> defLines = ExecutorService.getInstance().getExecutor(this).queryForList(new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName), String.class);
         StringBuffer sb = new StringBuffer();
         for (String defLine : defLines) {
             sb.append(defLine);

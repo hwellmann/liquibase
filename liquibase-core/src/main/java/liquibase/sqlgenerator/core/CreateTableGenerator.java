@@ -1,13 +1,28 @@
 package liquibase.sqlgenerator.core;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
+import liquibase.database.core.SybaseDatabase;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.exception.ValidationErrors;
 import liquibase.logging.LogFactory;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.AutoIncrementConstraint;
 import liquibase.statement.ForeignKeyConstraint;
@@ -20,12 +35,9 @@ import liquibase.structure.core.Sequence;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class CreateTableGenerator extends AbstractSqlGenerator<CreateTableStatement> {
 
     @Override
@@ -38,23 +50,23 @@ public class CreateTableGenerator extends AbstractSqlGenerator<CreateTableStatem
 
     @Override
     public Sql[] generateSql(CreateTableStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
-    	
+
     	if (database instanceof InformixDatabase) {
     		AbstractSqlGenerator<CreateTableStatement> gen = new CreateTableGeneratorInformix();
     		return gen.generateSql(statement, database, sqlGeneratorChain);
     	}
 
         List<Sql> additionalSql = new ArrayList<Sql>();
-    	
+
         StringBuffer buffer = new StringBuffer();
         buffer.append("CREATE TABLE ").append(database.escapeTableName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName())).append(" ");
         buffer.append("(");
-        
+
         boolean isSinglePrimaryKeyColumn = statement.getPrimaryKeyConstraint() != null
             && statement.getPrimaryKeyConstraint().getColumns().size() == 1;
-        
+
         boolean isPrimaryKeyAutoIncrement = false;
-        
+
         Iterator<String> columnIterator = statement.getColumns().iterator();
         List<String> primaryKeyColumns = new LinkedList<String>();
 
@@ -68,7 +80,7 @@ public class CreateTableGenerator extends AbstractSqlGenerator<CreateTableStatem
             buffer.append(" ").append(columnType);
 
             AutoIncrementConstraint autoIncrementConstraint = null;
-            
+
             for (AutoIncrementConstraint currentAutoIncrementConstraint : statement.getAutoIncrementConstraints()) {
                 if (column.equals(currentAutoIncrementConstraint.getColumnName())) {
                     autoIncrementConstraint = currentAutoIncrementConstraint;
@@ -81,11 +93,11 @@ public class CreateTableGenerator extends AbstractSqlGenerator<CreateTableStatem
                     && statement.getPrimaryKeyConstraint().getColumns().contains(column);
             isPrimaryKeyAutoIncrement = isPrimaryKeyAutoIncrement
                     || isPrimaryKeyColumn && isAutoIncrementColumn;
-            
+
             if (isPrimaryKeyColumn) {
             	primaryKeyColumns.add(column);
             }
-            
+
             if ((database instanceof SQLiteDatabase) &&
                     isSinglePrimaryKeyColumn &&
                     isPrimaryKeyColumn &&
@@ -123,7 +135,7 @@ public class CreateTableGenerator extends AbstractSqlGenerator<CreateTableStatem
                 // TODO: check if database supports auto increment on non primary key column
                 if (database.supportsAutoIncrement()) {
                     String autoIncrementClause = database.getAutoIncrementClause(autoIncrementConstraint.getStartWith(), autoIncrementConstraint.getIncrementBy());
-                
+
                     if (!"".equals(autoIncrementClause)) {
                         buffer.append(" ").append(autoIncrementClause);
                     }

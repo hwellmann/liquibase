@@ -1,28 +1,25 @@
 package liquibase.database.core;
 
-import java.sql.*;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
 
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.OfflineConnection;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.CreateDatabaseChangeLogLockTableStatement;
-import liquibase.statement.core.DropTableStatement;
-import liquibase.statement.core.InitializeDatabaseChangeLogLockTableStatement;
-import liquibase.statement.core.RawSqlStatement;
-import liquibase.structure.DatabaseObject;
 import liquibase.exception.DatabaseException;
+import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
+import liquibase.statement.core.RawSqlStatement;
+import liquibase.structure.DatabaseObject;
 
-import java.sql.Driver;
-import java.util.Enumeration;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(Database.class)
 public class DerbyDatabase extends AbstractJdbcDatabase {
 
     private Logger log = LogFactory.getLogger();
@@ -155,9 +152,9 @@ public class DerbyDatabase extends AbstractJdbcDatabase {
                 if (e instanceof SQLException) {
                     String state = ((SQLException) e).getSQLState();
                     if ("XJ015".equals(state) || "08006".equals(state)) {
-                        // "The XJ015 error (successful shutdown of the Derby engine) and the 08006 
-                        // error (successful shutdown of a single database) are the only exceptions 
-                        // thrown by Derby that might indicate that an operation succeeded. All other 
+                        // "The XJ015 error (successful shutdown of the Derby engine) and the 08006
+                        // error (successful shutdown of a single database) are the only exceptions
+                        // thrown by Derby that might indicate that an operation succeeded. All other
                         // exceptions indicate that an operation failed."
                         // See http://db.apache.org/derby/docs/dev/getstart/rwwdactivity3.html
                         return;

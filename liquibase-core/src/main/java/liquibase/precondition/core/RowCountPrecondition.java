@@ -13,6 +13,9 @@ import liquibase.precondition.Precondition;
 import liquibase.statement.core.TableRowCountStatement;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class RowCountPrecondition extends AbstractPrecondition {
 
     private String catalogName;

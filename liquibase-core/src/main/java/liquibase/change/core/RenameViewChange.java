@@ -1,16 +1,24 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RenameViewStatement;
 import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Renames an existing view.
  */
 @DatabaseChange(name="renameView", description = "Renames an existing view", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "view")
+@MetaInfServices(Change.class)
 public class RenameViewChange extends AbstractChange {
     private String catalogName;
     private String schemaName;

@@ -1,6 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -8,15 +9,16 @@ import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.logging.LogFactory;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.sql.Sql;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RuntimeStatement;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="output", description = "Logs a message and continues execution.", priority = ChangeMetaData.PRIORITY_DEFAULT, since = "3.3")
+@MetaInfServices(Change.class)
 public class OutputChange extends AbstractChange {
 
     private String message;

@@ -4,13 +4,17 @@ import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.MySQLDatabase;
-import liquibase.structure.core.View;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.GetViewDefinitionStatement;
+import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class GetViewDefinitionGenerator extends AbstractSqlGenerator<GetViewDefinitionStatement> {
 
     @Override

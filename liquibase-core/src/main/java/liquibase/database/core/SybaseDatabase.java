@@ -1,27 +1,31 @@
 package liquibase.database.core;
 
-import liquibase.CatalogAndSchema;
-import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.OfflineConnection;
-import liquibase.statement.core.RawSqlStatement;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.DatabaseException;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
-import liquibase.logging.LogFactory;
-import liquibase.statement.core.GetViewDefinitionStatement;
-import liquibase.structure.core.Table;
-import liquibase.structure.core.View;
-
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import liquibase.CatalogAndSchema;
+import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.database.OfflineConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.executor.Executor;
+import liquibase.executor.ExecutorService;
+import liquibase.logging.LogFactory;
+import liquibase.statement.core.GetViewDefinitionStatement;
+import liquibase.statement.core.RawSqlStatement;
+import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.View;
+
+import org.kohsuke.MetaInfServices;
+
 /**
  * Encapsulates Sybase ASE database support.
  */
+@MetaInfServices(Database.class)
 public class SybaseDatabase extends AbstractJdbcDatabase {
     public static final String PRODUCT_NAME = "Adaptive Server Enterprise";
     protected Set<String> systemTablesAndViews = new HashSet<String>();
@@ -141,13 +145,13 @@ public class SybaseDatabase extends AbstractJdbcDatabase {
 		// not supported
 		return false;
 	}
-	
+
 	@Override
 	protected boolean generateAutoIncrementBy(BigInteger incrementBy) {
 		// not supported
 		return false;
-	}    
-    
+	}
+
     @Override
     public String getConcatSql(String... values) {
         StringBuffer returnString = new StringBuffer();
@@ -252,15 +256,15 @@ public class SybaseDatabase extends AbstractJdbcDatabase {
         GetViewDefinitionStatement statement = new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName);
         Executor executor = ExecutorService.getInstance().getExecutor(this);
         @SuppressWarnings("unchecked")
-        List<String> definitionRows = (List<String>) executor.queryForList(statement, String.class);
+        List<String> definitionRows = executor.queryForList(statement, String.class);
         StringBuilder definition = new StringBuilder();
         for (String d : definitionRows) {
         	definition.append(d);
         }
         return definition.toString();
 	}
-	
-	/** 
+
+	/**
 	 * @return the major version if supported, otherwise -1
 	 * @see liquibase.database.AbstractJdbcDatabase#getDatabaseMajorVersion()
 	 */

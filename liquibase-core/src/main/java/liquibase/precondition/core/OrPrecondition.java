@@ -1,7 +1,10 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
+import java.util.ArrayList;
+import java.util.List;
+
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
@@ -11,12 +14,12 @@ import liquibase.precondition.FailedPrecondition;
 import liquibase.precondition.Precondition;
 import liquibase.precondition.PreconditionLogic;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Class for controling "or" logic in preconditions.
  */
+@MetaInfServices(Precondition.class)
 public class OrPrecondition extends PreconditionLogic {
 
     @Override

@@ -1,6 +1,17 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.DbmsTargetedChange;
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
 import liquibase.exception.ValidationErrors;
@@ -8,13 +19,13 @@ import liquibase.statement.InsertExecutablePreparedStatement;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.InsertStatement;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Inserts data into an existing table.
  */
 @DatabaseChange(name="insert", description = "Inserts data into an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class InsertDataChange extends AbstractChange implements ChangeWithColumns<ColumnConfig>, DbmsTargetedChange {
 
     private String catalogName;

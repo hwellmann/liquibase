@@ -2,24 +2,25 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
 import liquibase.database.core.HsqlDatabase;
+import liquibase.datatype.DataTypeFactory;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.datatype.core.BooleanType;
 import liquibase.datatype.core.CharType;
-import liquibase.datatype.core.NumberType;
-import liquibase.statement.DatabaseFunction;
-import liquibase.statement.SequenceNextValueFunction;
-import liquibase.structure.core.Schema;
-import liquibase.datatype.DataTypeFactory;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Table;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
+import liquibase.statement.DatabaseFunction;
+import liquibase.statement.SequenceNextValueFunction;
 import liquibase.statement.core.AddDefaultValueStatement;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
 
-import javax.management.Query;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class AddDefaultValueGenerator extends AbstractSqlGenerator<AddDefaultValueStatement> {
 
     @Override

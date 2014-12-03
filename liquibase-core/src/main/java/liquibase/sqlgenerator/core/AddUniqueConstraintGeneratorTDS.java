@@ -6,9 +6,13 @@ import liquibase.database.core.SybaseASADatabase;
 import liquibase.database.core.SybaseDatabase;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddUniqueConstraintStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddUniqueConstraintGeneratorTDS extends AddUniqueConstraintGenerator {
 
 	public AddUniqueConstraintGeneratorTDS() {
@@ -33,10 +37,10 @@ public class AddUniqueConstraintGeneratorTDS extends AddUniqueConstraintGenerato
 
 		final String sqlTemplate = "ALTER TABLE %s ADD CONSTRAINT %s UNIQUE (%s)";
 		final String sqlNoContraintNameTemplate = "ALTER TABLE %s ADD UNIQUE (%s)";
-		
+
 		if (statement.getConstraintName() == null) {
 			return new Sql[] {
-				new UnparsedSql(String.format(sqlNoContraintNameTemplate 
+				new UnparsedSql(String.format(sqlNoContraintNameTemplate
 						, database.escapeTableName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName())
 						, database.escapeColumnNameList(statement.getColumnNames())
 				), getAffectedUniqueConstraint(statement))

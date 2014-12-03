@@ -1,20 +1,23 @@
 package liquibase.serializer.core.string;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import liquibase.changelog.ChangeSet;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.util.StringUtils;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.io.OutputStream;
-import java.io.IOException;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(ChangeLogSerializer.class)
 public class StringChangeLogSerializer implements ChangeLogSerializer {
 
     private static final int INDENT_LENGTH = 4;

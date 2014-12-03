@@ -8,8 +8,11 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddPrimaryKeyStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddPrimaryKeyGeneratorInformix extends AddPrimaryKeyGenerator {
-	
+
     @Override
     public int getPriority() {
         return SqlGenerator.PRIORITY_DATABASE;
@@ -19,7 +22,7 @@ public class AddPrimaryKeyGeneratorInformix extends AddPrimaryKeyGenerator {
     public boolean supports(AddPrimaryKeyStatement statement, Database database) {
         return (database instanceof InformixDatabase);
     }
-    
+
     @Override
     public Sql[] generateSql(AddPrimaryKeyStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         StringBuilder sql = new StringBuilder();

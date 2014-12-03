@@ -1,6 +1,21 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.CheckSum;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -12,14 +27,12 @@ import liquibase.resource.UtfBomAwareReader;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.InsertStatement;
 import liquibase.structure.core.Column;
+import liquibase.util.BooleanParser;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 import liquibase.util.csv.CSVReader;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import liquibase.util.BooleanParser;
+import org.kohsuke.MetaInfServices;
 
 
 @DatabaseChange(name="loadData",
@@ -32,6 +45,7 @@ import liquibase.util.BooleanParser;
                 "Once the date format string is set, Liquibase will then call the SimpleDateFormat.parse() method attempting to parse the input string so that it can return a Date/Time. If problems occur, then a ParseException is thrown and the input string is treated as a String for the INSERT command to be generated.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table",
         since="1.7")
+@MetaInfServices(Change.class)
 public class LoadDataChange extends AbstractChange implements ChangeWithColumns<LoadDataColumnConfig> {
 
     private String catalogName;
@@ -231,7 +245,7 @@ public class LoadDataChange extends AbstractChange implements ChangeWithColumns<
         } catch (UnexpectedLiquibaseException ule) {
                 if (getChangeSet() != null && getChangeSet().getFailOnError() != null && !getChangeSet().getFailOnError()) {
                     Logger log = LogFactory.getLogger();
-                    log.info("Change set " + getChangeSet().toString(false) + " failed, but failOnError was false.  Error: " + ule.getMessage());        
+                    log.info("Change set " + getChangeSet().toString(false) + " failed, but failOnError was false.  Error: " + ule.getMessage());
                     return new SqlStatement[0];
                 } else {
                     throw ule;

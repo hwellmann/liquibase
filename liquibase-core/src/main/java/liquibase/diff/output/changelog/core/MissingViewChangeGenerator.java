@@ -5,6 +5,7 @@ import liquibase.change.core.CreateViewChange;
 import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.MissingObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
@@ -13,6 +14,9 @@ import liquibase.structure.core.Table;
 import liquibase.structure.core.View;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ChangeGenerator.class)
 public class MissingViewChangeGenerator implements MissingObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

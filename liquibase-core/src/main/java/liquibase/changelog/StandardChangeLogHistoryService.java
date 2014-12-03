@@ -1,5 +1,14 @@
 package liquibase.changelog;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.change.CheckSum;
@@ -18,15 +27,25 @@ import liquibase.snapshot.SnapshotControl;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.SqlStatement;
-import liquibase.statement.core.*;
+import liquibase.statement.core.AddColumnStatement;
+import liquibase.statement.core.CreateDatabaseChangeLogTableStatement;
+import liquibase.statement.core.DropTableStatement;
+import liquibase.statement.core.GetNextChangeSetSequenceValueStatement;
+import liquibase.statement.core.MarkChangeSetRanStatement;
+import liquibase.statement.core.ModifyDataTypeStatement;
+import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.core.RemoveChangeSetRanStatusStatement;
+import liquibase.statement.core.SelectFromDatabaseChangeLogStatement;
+import liquibase.statement.core.SetNullableStatement;
+import liquibase.statement.core.TagDatabaseStatement;
+import liquibase.statement.core.UpdateChangeSetChecksumStatement;
+import liquibase.statement.core.UpdateStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(ChangeLogHistoryService.class)
 public class StandardChangeLogHistoryService extends AbstractChangeLogHistoryService {
 
     private List<RanChangeSet> ranChangeSetList;
@@ -60,6 +79,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
         return true;
     }
 
+    @Override
     public void reset() {
         this.ranChangeSetList = null;
         this.serviceInitialized = false;
@@ -76,6 +96,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
         return hasDatabaseChangeLogTable;
     }
 
+    @Override
     public void init() throws DatabaseException {
         if (serviceInitialized) {
             return;
@@ -184,6 +205,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
         serviceInitialized = true;
     }
 
+    @Override
     public void upgradeChecksums(final DatabaseChangeLog databaseChangeLog, final Contexts contexts, LabelExpression labels) throws DatabaseException {
         super.upgradeChecksums(databaseChangeLog, contexts, labels);
         getDatabase().commit();
@@ -192,6 +214,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
     /**
      * Returns the ChangeSets that have been run against the current getDatabase().
      */
+    @Override
     public List<RanChangeSet> getRanChangeSets() throws DatabaseException {
         if (this.ranChangeSetList == null) {
             Database database = getDatabase();

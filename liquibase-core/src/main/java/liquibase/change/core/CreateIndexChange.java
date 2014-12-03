@@ -1,23 +1,32 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.AddColumnConfig;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CreateIndexStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Index;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Creates an index on an existing column.
  */
 @DatabaseChange(name="createIndex", description = "Creates an index on an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "index")
+@MetaInfServices(Change.class)
 public class CreateIndexChange extends AbstractChange implements ChangeWithColumns<AddColumnConfig> {
 
     private String catalogName;

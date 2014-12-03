@@ -1,7 +1,13 @@
 package liquibase.sqlgenerator.core;
 
+import java.math.BigInteger;
+
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.H2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.OracleDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -10,8 +16,9 @@ import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CreateSequenceStatement;
 import liquibase.structure.core.Sequence;
 
-import java.math.BigInteger;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class CreateSequenceGenerator extends AbstractSqlGenerator<CreateSequenceStatement> {
 
     @Override

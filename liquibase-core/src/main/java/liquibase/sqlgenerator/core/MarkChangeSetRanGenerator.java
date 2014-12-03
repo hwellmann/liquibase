@@ -11,6 +11,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.DatabaseFunction;
@@ -21,6 +22,9 @@ import liquibase.statement.core.UpdateStatement;
 import liquibase.util.LiquibaseUtil;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class MarkChangeSetRanGenerator extends AbstractSqlGenerator<MarkChangeSetRanStatement> {
 
     @Override

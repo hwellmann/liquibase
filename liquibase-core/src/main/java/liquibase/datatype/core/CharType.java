@@ -8,7 +8,10 @@ import liquibase.datatype.LiquibaseDataType;
 import liquibase.statement.DatabaseFunction;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 @DataTypeInfo(name="char", aliases = "java.sql.Types.CHAR", minParameters = 0, maxParameters = 1, priority = LiquibaseDataType.PRIORITY_DEFAULT)
+@MetaInfServices
 public class CharType extends LiquibaseDataType {
 
     @Override

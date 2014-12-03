@@ -1,6 +1,8 @@
 package liquibase.servicelocator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import liquibase.exception.ServiceNotFoundException;
@@ -48,6 +50,18 @@ public class MetaInfServiceLocator extends ServiceLocator {
 
         }
         return super.newInstance(requiredInterface);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public <T> Class<? extends T>[] findClasses(Class<T> requiredInterface)
+        throws ServiceNotFoundException {
+        List<Class> classes = new ArrayList<Class>();
+        ServiceLoader<T> loader = ServiceLoader.load(requiredInterface);
+        for (T service : loader) {
+            classes.add(service.getClass());
+        }
+        return classes.toArray(new Class[classes.size()]);
     }
 
 }

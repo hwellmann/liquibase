@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.OfflineConnection;
 import liquibase.exception.DatabaseException;
@@ -18,6 +19,9 @@ import liquibase.statement.core.GetViewDefinitionStatement;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Database.class)
 public class InformixDatabase extends AbstractJdbcDatabase {
 
 	private static final String PRODUCT_NAME = "Informix Dynamic Server";

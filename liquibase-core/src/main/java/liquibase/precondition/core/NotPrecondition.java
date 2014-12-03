@@ -1,7 +1,7 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
@@ -10,9 +10,12 @@ import liquibase.exception.Warnings;
 import liquibase.precondition.Precondition;
 import liquibase.precondition.PreconditionLogic;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Class for controling "not" logic in preconditions.
  */
+@MetaInfServices(Precondition.class)
 public class NotPrecondition extends PreconditionLogic {
 
     @Override

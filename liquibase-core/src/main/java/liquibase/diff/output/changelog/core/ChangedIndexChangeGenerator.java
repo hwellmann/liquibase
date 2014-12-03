@@ -1,5 +1,8 @@
 package liquibase.diff.output.changelog.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import liquibase.change.AddColumnConfig;
 import liquibase.change.Change;
 import liquibase.change.core.CreateIndexChange;
@@ -8,6 +11,7 @@ import liquibase.database.Database;
 import liquibase.diff.Difference;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.ChangedObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
@@ -16,10 +20,9 @@ import liquibase.structure.core.Index;
 import liquibase.structure.core.UniqueConstraint;
 import liquibase.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(ChangeGenerator.class)
 public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {
@@ -46,7 +49,7 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
         DropIndexChange dropIndexChange = new DropIndexChange();
         dropIndexChange.setTableName(index.getTable().getName());
         dropIndexChange.setIndexName(index.getName());
-        
+
         CreateIndexChange addIndexChange = new CreateIndexChange();
         addIndexChange.setTableName(index.getTable().getName());
         List<AddColumnConfig> columns = new ArrayList<AddColumnConfig>();
@@ -67,7 +70,7 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
         }
 
         Difference columnsDifference = differences.getDifference("columns");
-        
+
         if (columns != null) {
             List<Column> referenceColumns = (List<Column>) columnsDifference.getReferenceValue();
             List<Column> comparedColumns = (List<Column>) columnsDifference.getComparedValue();
@@ -83,7 +86,7 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
             if (!StringUtils.join(referenceColumns, ",", formatter).equalsIgnoreCase(StringUtils.join(comparedColumns, ",", formatter))) {
                 control.setAlreadyHandledChanged(new Index().setTable(index.getTable()).setColumns(comparedColumns));
             }
-    
+
             if (index.isUnique() != null && index.isUnique()) {
                 control.setAlreadyHandledChanged(new UniqueConstraint().setTable(index.getTable()).setColumns(referenceColumns));
                 if (!StringUtils.join(referenceColumns, ",", formatter).equalsIgnoreCase(StringUtils.join(comparedColumns, ",", formatter))) {

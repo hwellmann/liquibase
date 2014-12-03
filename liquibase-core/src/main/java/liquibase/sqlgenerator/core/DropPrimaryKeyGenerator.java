@@ -2,7 +2,12 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SQLiteDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -12,6 +17,9 @@ import liquibase.statement.core.DropPrimaryKeyStatement;
 import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropPrimaryKeyGenerator extends AbstractSqlGenerator<DropPrimaryKeyStatement> {
 
     @Override
@@ -27,7 +35,7 @@ public class DropPrimaryKeyGenerator extends AbstractSqlGenerator<DropPrimaryKey
         if (database instanceof FirebirdDatabase || database instanceof InformixDatabase) {
             validationErrors.checkRequiredField("constraintName", dropPrimaryKeyStatement.getConstraintName());
         }
-		
+
         return validationErrors;
     }
 
@@ -80,7 +88,7 @@ public class DropPrimaryKeyGenerator extends AbstractSqlGenerator<DropPrimaryKey
 				query.append(" $$ language plpgsql;");
                 query.append(" select __liquibase_drop_pk('").append(schemaName).append("', '").append(statement.getTableName()).append("');");
 				query.append(" drop function __liquibase_drop_pk(schemaName text, tableName text);");
-				sql = query.toString();			
+				sql = query.toString();
 			} else {
 				sql = "ALTER TABLE " + database.escapeTableName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName()) + " DROP CONSTRAINT " + database.escapeConstraintName(statement.getConstraintName());
 			}

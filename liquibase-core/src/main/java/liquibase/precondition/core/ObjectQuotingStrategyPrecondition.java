@@ -11,6 +11,9 @@ import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
 import liquibase.precondition.Precondition;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class ObjectQuotingStrategyPrecondition extends AbstractPrecondition {
     private ObjectQuotingStrategy strategy;
 

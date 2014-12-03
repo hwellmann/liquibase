@@ -1,16 +1,24 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropTableStatement;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Drops an existing table.
  */
 @DatabaseChange(name="dropTable", description = "Drops an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class DropTableChange extends AbstractChange {
 
     private String catalogName;
@@ -59,7 +67,7 @@ public class DropTableChange extends AbstractChange {
         if (isCascadeConstraints() != null) {
             constraints = isCascadeConstraints();
         }
-        
+
         return new SqlStatement[]{
                 new DropTableStatement(getCatalogName(), getSchemaName(), getTableName(), constraints)
         };

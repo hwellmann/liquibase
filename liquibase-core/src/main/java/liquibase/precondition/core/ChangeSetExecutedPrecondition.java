@@ -12,6 +12,9 @@ import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
 import liquibase.precondition.Precondition;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class ChangeSetExecutedPrecondition extends AbstractPrecondition {
 
     private String changeLogFile;
@@ -56,7 +59,7 @@ public class ChangeSetExecutedPrecondition extends AbstractPrecondition {
     public ValidationErrors validate(Database database) {
         return new ValidationErrors();
     }
-    
+
     @Override
     public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
         ObjectQuotingStrategy objectQuotingStrategy = null;

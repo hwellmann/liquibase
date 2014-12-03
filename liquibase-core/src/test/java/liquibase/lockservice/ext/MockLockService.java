@@ -1,15 +1,18 @@
 package liquibase.lockservice.ext;
 
 import liquibase.database.Database;
-import liquibase.sdk.database.MockDatabase;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LockException;
 import liquibase.lockservice.DatabaseChangeLogLock;
 import liquibase.lockservice.LockService;
+import liquibase.sdk.database.MockDatabase;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * @author John Sanda
  */
+@MetaInfServices
 public class MockLockService implements LockService {
     @Override
     public boolean supports(Database database) {

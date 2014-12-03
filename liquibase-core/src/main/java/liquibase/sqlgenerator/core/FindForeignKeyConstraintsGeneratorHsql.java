@@ -5,9 +5,13 @@ import liquibase.database.core.HsqlDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.FindForeignKeyConstraintsStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class FindForeignKeyConstraintsGeneratorHsql extends AbstractSqlGenerator<FindForeignKeyConstraintsStatement> {
 	@Override
 	public int getPriority() {
@@ -19,13 +23,15 @@ public class FindForeignKeyConstraintsGeneratorHsql extends AbstractSqlGenerator
 		return database instanceof HsqlDatabase;
 	}
 
-	public ValidationErrors validate(FindForeignKeyConstraintsStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
+	@Override
+    public ValidationErrors validate(FindForeignKeyConstraintsStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
 		ValidationErrors validationErrors = new ValidationErrors();
 		validationErrors.checkRequiredField("baseTableName", statement.getBaseTableName());
 		return validationErrors;
 	}
 
-	public Sql[] generateSql(FindForeignKeyConstraintsStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
+	@Override
+    public Sql[] generateSql(FindForeignKeyConstraintsStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("SELECT ");

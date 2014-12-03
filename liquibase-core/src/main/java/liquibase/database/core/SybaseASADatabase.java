@@ -1,23 +1,26 @@
 /**
- * 
+ *
  */
 package liquibase.database.core;
-
-import liquibase.CatalogAndSchema;
-import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.DatabaseConnection;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.UnexpectedLiquibaseException;
 
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
+import liquibase.CatalogAndSchema;
+import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
+
+import org.kohsuke.MetaInfServices;
+
 /**
  * @author otaranenko
  *
  */
+@MetaInfServices(Database.class)
 public class SybaseASADatabase extends AbstractJdbcDatabase {
 
     private static final Set<String> systemTablesAndViews;
@@ -116,9 +119,9 @@ public class SybaseASADatabase extends AbstractJdbcDatabase {
 		systemTablesAndViews.add("sysusertype");
 		systemTablesAndViews.add("sysviews");
     }
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public SybaseASADatabase() {
 		super();
@@ -129,7 +132,7 @@ public class SybaseASADatabase extends AbstractJdbcDatabase {
     public int getPriority() {
         return PRIORITY_DEFAULT;
     }
-    
+
 	/* (non-Javadoc)
 	 * @see liquibase.database.Database#getDefaultDriver(java.lang.String)
 	 */
@@ -157,7 +160,7 @@ public class SybaseASADatabase extends AbstractJdbcDatabase {
     */
 	@Override
     public String getShortName() {
-		
+
 		return "asany";
 	}
 
@@ -229,27 +232,27 @@ public class SybaseASADatabase extends AbstractJdbcDatabase {
 	protected String getAutoIncrementClause() {
 		return "DEFAULT AUTOINCREMENT";
 	}
-	
+
 	@Override
 	protected boolean generateAutoIncrementStartWith(BigInteger startWith) {
 		// not supported
 		return false;
 	}
-	
+
 	@Override
 	protected boolean generateAutoIncrementBy(BigInteger incrementBy) {
 		// not supported
 		return false;
 	}
-	
+
 	@Override
 	public void setAutoCommit(boolean b) throws DatabaseException {
 		// workaround for strange Sybase bug.
-		// In some circumstances tds-driver thrown exception 
+		// In some circumstances tds-driver thrown exception
 		// JZ016: The AutoCommit option is already set to false.
     	if (b || super.isAutoCommit()) {
     		super.setAutoCommit(b);
         }
 	}
-    
+
 }

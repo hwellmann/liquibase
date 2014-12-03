@@ -1,18 +1,22 @@
 package liquibase.serializer.core.string;
 
-import liquibase.changelog.ChangeSet;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.serializer.SnapshotSerializer;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.util.StringUtils;
 
-import java.io.File;
-import java.util.*;
-import java.io.OutputStream;
-import java.io.IOException;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class StringSnapshotSerializer implements SnapshotSerializer {
 
     private static final int INDENT_LENGTH = 4;

@@ -1,16 +1,30 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.ConstraintsConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.datatype.LiquibaseDataType;
-import liquibase.exception.*;
-import liquibase.parser.core.ParsedNode;
-import liquibase.resource.ResourceAccessor;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrors;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.*;
+import liquibase.statement.AutoIncrementConstraint;
+import liquibase.statement.ForeignKeyConstraint;
+import liquibase.statement.NotNullConstraint;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.UniqueConstraint;
 import liquibase.statement.core.CreateTableStatement;
 import liquibase.statement.core.SetColumnRemarksStatement;
 import liquibase.statement.core.SetTableRemarksStatement;
@@ -19,14 +33,13 @@ import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Creates a new table.
  */
 @DatabaseChange(name="createTable", description = "Create Table", priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class CreateTableChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private List<ColumnConfig> columns;

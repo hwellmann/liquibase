@@ -4,11 +4,19 @@ import liquibase.change.Change;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.UnexpectedObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.PrimaryKey;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ChangeGenerator.class)
 public class UnexpectedColumnChangeGenerator implements UnexpectedObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

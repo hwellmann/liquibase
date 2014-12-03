@@ -12,10 +12,14 @@ import liquibase.database.core.SybaseASADatabase;
 import liquibase.database.core.SybaseDatabase;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.ValidationErrors;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.AutoIncrementConstraint;
 import liquibase.statement.core.AddColumnStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddColumnGeneratorDefaultClauseBeforeNotNull extends AddColumnGenerator {
     @Override
     public int getPriority() {

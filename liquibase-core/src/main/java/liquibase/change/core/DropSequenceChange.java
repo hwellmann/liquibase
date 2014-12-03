@@ -1,16 +1,24 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropSequenceStatement;
 import liquibase.structure.core.Sequence;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Drops an existing sequence.
  */
 @DatabaseChange(name="dropSequence", description = "Drop an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
+@MetaInfServices(Change.class)
 public class DropSequenceChange extends AbstractChange {
 
     private String catalogName;

@@ -1,13 +1,18 @@
 package liquibase.structure.core;
 
-import liquibase.database.Database;
-import liquibase.exception.UnexpectedLiquibaseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(DatabaseObject.class)
 public class Index extends AbstractDatabaseObject {
 
 	/** Marks Index as associated with Primary Key [PK] */
@@ -61,7 +66,7 @@ public class Index extends AbstractDatabaseObject {
         if (getTable() == null) {
             return null;
         }
-        
+
         return getTable().getSchema();
     }
 

@@ -1,18 +1,26 @@
 package liquibase.sqlgenerator.core;
 
+import java.util.List;
+
 import liquibase.database.Database;
-import liquibase.database.core.*;
-import liquibase.structure.core.Index;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SybaseDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.DropIndexStatement;
+import liquibase.structure.core.Index;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class DropIndexGenerator extends AbstractSqlGenerator<DropIndexStatement> {
 
     @Override
@@ -41,7 +49,7 @@ public class DropIndexGenerator extends AbstractSqlGenerator<DropIndexStatement>
         }
 
         String schemaName = statement.getTableSchemaName();
-        
+
         if (database instanceof MySQLDatabase) {
             return new Sql[] {new UnparsedSql("DROP INDEX " + database.escapeIndexName(null, null, statement.getIndexName()) + " ON " + database.escapeTableName(statement.getTableCatalogName(), schemaName, statement.getTableName()), getAffectedIndex(statement)) };
         } else if (database instanceof MSSQLDatabase) {

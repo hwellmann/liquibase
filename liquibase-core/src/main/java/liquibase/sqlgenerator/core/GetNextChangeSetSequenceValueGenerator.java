@@ -4,11 +4,15 @@ import liquibase.change.ColumnConfig;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.core.GetNextChangeSetSequenceValueStatement;
 import liquibase.statement.core.SelectFromDatabaseChangeLogStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class GetNextChangeSetSequenceValueGenerator extends AbstractSqlGenerator<GetNextChangeSetSequenceValueStatement> {
 
     @Override

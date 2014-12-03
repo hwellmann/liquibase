@@ -1,8 +1,9 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.DatabaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.parser.core.ParsedNode;
@@ -13,7 +14,10 @@ import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RuntimeStatement;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="stop", description = "Stops Liquibase execution with a message. Mainly useful for debugging and stepping through a changelog", priority = ChangeMetaData.PRIORITY_DEFAULT, since = "1.9")
+@MetaInfServices(Change.class)
 public class StopChange extends AbstractChange {
 
     private String message ="Stop command in changelog file";

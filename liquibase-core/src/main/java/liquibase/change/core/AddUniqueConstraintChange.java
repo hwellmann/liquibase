@@ -1,6 +1,12 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -8,10 +14,13 @@ import liquibase.statement.core.AddUniqueConstraintStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.UniqueConstraint;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Adds a unique constraint to an existing column.
  */
 @DatabaseChange(name="addUniqueConstraint", description = "Adds a unique constrant to an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class AddUniqueConstraintChange extends AbstractChange {
 
     private String catalogName;

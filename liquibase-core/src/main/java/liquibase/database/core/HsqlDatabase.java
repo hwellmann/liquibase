@@ -1,11 +1,5 @@
 package liquibase.database.core;
 
-import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.DatabaseConnection;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.DateParseException;
-import liquibase.util.ISODateFormat;
-
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,6 +8,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.DateParseException;
+import liquibase.util.ISODateFormat;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Database.class)
 public class HsqlDatabase extends AbstractJdbcDatabase {
     private static String START_CONCAT = "CONCAT(";
     private static String END_CONCAT = ")";
@@ -28,7 +32,7 @@ public class HsqlDatabase extends AbstractJdbcDatabase {
     	super.defaultAutoIncrementStartWith = BigInteger.ZERO;
         super.sequenceCurrentValueFunction = "CURRVAL('%s')";
     }
-    
+
     @Override
     public boolean isCorrectDatabaseImplementation(DatabaseConnection conn) throws DatabaseException {
         return "HSQL Database Engine".equalsIgnoreCase(conn.getDatabaseProductName());
@@ -454,7 +458,7 @@ public class HsqlDatabase extends AbstractJdbcDatabase {
     public boolean isCaseSensitive() {
         return false;
     }
-    
+
     @Override
     public void setConnection(DatabaseConnection conn) {
         oracleSyntax = null;

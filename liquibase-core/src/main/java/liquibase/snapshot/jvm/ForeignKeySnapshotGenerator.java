@@ -1,5 +1,10 @@
 package liquibase.snapshot.jvm;
 
+import java.sql.DatabaseMetaData;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
@@ -7,15 +12,22 @@ import liquibase.database.core.MSSQLDatabase;
 import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.exception.DatabaseException;
 import liquibase.snapshot.CachedRow;
-import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.JdbcDatabaseSnapshot;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.ForeignKeyConstraintType;
+import liquibase.structure.core.Index;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
 
-import java.sql.DatabaseMetaData;
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class ForeignKeySnapshotGenerator extends JdbcSnapshotGenerator {
 
     public ForeignKeySnapshotGenerator() {

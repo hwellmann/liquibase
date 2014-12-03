@@ -10,6 +10,9 @@ import liquibase.statement.core.DropViewStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropViewGenerator extends AbstractSqlGenerator<DropViewStatement> {
 
     @Override

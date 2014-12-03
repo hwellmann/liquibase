@@ -3,8 +3,8 @@ package liquibase.sqlgenerator.core;
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
 import liquibase.database.core.MSSQLDatabase;
-import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.SQLiteDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -15,6 +15,9 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddForeignKeyConstraintGenerator extends AbstractSqlGenerator<AddForeignKeyConstraintStatement> {
 
     @Override
@@ -72,7 +75,7 @@ public class AddForeignKeyConstraintGenerator extends AbstractSqlGenerator<AddFo
             if ((database instanceof OracleDatabase) && (statement.getOnDelete().equalsIgnoreCase("RESTRICT") || statement.getOnDelete().equalsIgnoreCase("NO ACTION"))) {
                 //don't use
             } else if ((database instanceof MSSQLDatabase) && statement.getOnDelete().equalsIgnoreCase("RESTRICT")) {
-                //don't use                        
+                //don't use
 		    } else if (database instanceof InformixDatabase && !(statement.getOnDelete().equalsIgnoreCase("CASCADE"))) {
 			    //TODO Informix can handle ON DELETE CASCADE only, but I don't know if this is really correct
 		    	// see "REFERENCES Clause" in manual

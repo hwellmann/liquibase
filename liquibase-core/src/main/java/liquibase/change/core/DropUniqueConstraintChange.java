@@ -1,6 +1,12 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.SybaseASADatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -9,10 +15,13 @@ import liquibase.statement.core.DropUniqueConstraintStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.UniqueConstraint;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Removes an existing unique constraint.
  */
 @DatabaseChange(name="dropUniqueConstraint", description = "Drops an existing unique constraint", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "uniqueConstraint")
+@MetaInfServices(Change.class)
 public class DropUniqueConstraintChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
@@ -70,7 +79,7 @@ public class DropUniqueConstraintChange extends AbstractChange {
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
-        
+
 //todo    	if (database instanceof SQLiteDatabase) {
 //    		// return special statements for SQLite databases
 //    		return generateStatementsForSQLiteDatabase(database);

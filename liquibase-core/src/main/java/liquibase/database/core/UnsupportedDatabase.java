@@ -1,9 +1,13 @@
 package liquibase.database.core;
 
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.exception.DatabaseException;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Database.class)
 public class UnsupportedDatabase extends AbstractJdbcDatabase {
 
     @Override
@@ -35,7 +39,7 @@ public class UnsupportedDatabase extends AbstractJdbcDatabase {
     @Override
     public String getDefaultDriver(String url) {
         return null;
-    }    
+    }
 
     @Override
     public String getShortName() {

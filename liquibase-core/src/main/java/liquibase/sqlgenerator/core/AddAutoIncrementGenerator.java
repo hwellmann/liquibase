@@ -5,16 +5,20 @@ import liquibase.database.core.DerbyDatabase;
 import liquibase.database.core.H2Database;
 import liquibase.database.core.HsqlDatabase;
 import liquibase.database.core.MSSQLDatabase;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Schema;
-import liquibase.structure.core.Table;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddAutoIncrementStatement;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddAutoIncrementGenerator extends AbstractSqlGenerator<AddAutoIncrementStatement> {
 
     @Override
@@ -57,7 +61,7 @@ public class AddAutoIncrementGenerator extends AbstractSqlGenerator<AddAutoIncre
             + database.escapeColumnName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName(), statement.getColumnName())
             + " "
             + DataTypeFactory.getInstance().fromDescription(statement.getColumnDataType() + "{autoIncrement:true}", database).toDatabaseDataType(database)
-            + " " 
+            + " "
             + database.getAutoIncrementClause(statement.getStartWith(), statement.getIncrementBy());
 
         return new Sql[]{

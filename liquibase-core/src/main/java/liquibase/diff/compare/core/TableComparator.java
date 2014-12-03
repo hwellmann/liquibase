@@ -1,5 +1,7 @@
 package liquibase.diff.compare.core;
 
+import java.util.Set;
+
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.compare.CompareControl;
@@ -9,8 +11,9 @@ import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
 
-import java.util.Set;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class TableComparator  implements DatabaseObjectComparator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

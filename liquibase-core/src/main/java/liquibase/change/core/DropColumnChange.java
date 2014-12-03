@@ -1,6 +1,17 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.SQLiteDatabase;
@@ -11,18 +22,16 @@ import liquibase.statement.core.DropColumnStatement;
 import liquibase.statement.core.ReorganizeTableStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Index;
-import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Drops an existing column from a table.
  */
 @DatabaseChange(name = "dropColumn", description = "Drop existing column(s)", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class DropColumnChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private String catalogName;
@@ -166,18 +175,22 @@ public class DropColumnChange extends AbstractChange implements ChangeWithColumn
 
         // define alter table logic
         SQLiteDatabase.AlterTableVisitor rename_alter_visitor = new SQLiteDatabase.AlterTableVisitor() {
+            @Override
             public ColumnConfig[] getColumnsToAdd() {
                 return new ColumnConfig[0];
             }
 
+            @Override
             public boolean createThisColumn(ColumnConfig column) {
                 return !column.getName().equals(columnName);
             }
 
+            @Override
             public boolean copyThisColumn(ColumnConfig column) {
                 return !column.getName().equals(columnName);
             }
 
+            @Override
             public boolean createThisIndex(Index index) {
                 return !index.getColumns().contains(columnName);
             }

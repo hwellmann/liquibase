@@ -7,6 +7,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.RuntimeStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class RuntimeGenerator extends AbstractSqlGenerator<RuntimeStatement> {
 
     @Override

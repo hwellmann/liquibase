@@ -7,6 +7,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddDefaultValueStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddDefaultValueSQLite extends AddDefaultValueGenerator {
     @Override
     public int getPriority() {

@@ -1,24 +1,31 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SQLiteDatabase.AlterTableVisitor;
 import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Index;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropPrimaryKeyStatement;
+import liquibase.structure.core.Index;
 import liquibase.structure.core.PrimaryKey;
-import liquibase.structure.core.Table;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Removes an existing primary key.
  */
 @DatabaseChange(name="dropPrimaryKey", description = "Drops an existing primary key", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "primaryKey")
+@MetaInfServices(Change.class)
 public class DropPrimaryKeyChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
@@ -76,7 +83,7 @@ public class DropPrimaryKeyChange extends AbstractChange {
     		// return special statements for SQLite databases
     		return generateStatementsForSQLiteDatabase(database);
         }
-    	
+
         return new SqlStatement[]{
                 new DropPrimaryKeyStatement(getCatalogName(), getSchemaName(), getTableName(), getConstraintName()),
         };
@@ -91,18 +98,18 @@ public class DropPrimaryKeyChange extends AbstractChange {
         }
 
     }
-    
+
     private SqlStatement[] generateStatementsForSQLiteDatabase(Database database) {
-    	
+
     	// SQLite does not support this ALTER TABLE operation until now.
 		// For more information see: http://www.sqlite.org/omitted.html.
 		// This is a small work around...
-    	
-    	// Note: The attribute "constraintName" is used to pass the column 
+
+    	// Note: The attribute "constraintName" is used to pass the column
     	// name instead of the constraint name.
-		
+
     	List<SqlStatement> statements = new ArrayList<SqlStatement>();
-    	
+
 		// define alter table logic
 		AlterTableVisitor rename_alter_visitor = new AlterTableVisitor() {
 			@Override
@@ -125,7 +132,7 @@ public class DropPrimaryKeyChange extends AbstractChange {
 				return true;
 			}
 		};
-    		
+
     	try {
     		// alter table
 			statements.addAll(SQLiteDatabase.getAlterTableStatements(
@@ -134,7 +141,7 @@ public class DropPrimaryKeyChange extends AbstractChange {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return statements.toArray(new SqlStatement[statements.size()]);
     }
 

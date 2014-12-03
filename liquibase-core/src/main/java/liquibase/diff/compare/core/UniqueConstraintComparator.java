@@ -1,5 +1,10 @@
 package liquibase.diff.compare.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.compare.CompareControl;
@@ -11,11 +16,9 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 import liquibase.structure.core.UniqueConstraint;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class UniqueConstraintComparator implements DatabaseObjectComparator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

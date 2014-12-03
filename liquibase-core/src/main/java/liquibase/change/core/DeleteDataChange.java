@@ -1,6 +1,9 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
 import liquibase.database.Database;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
@@ -8,7 +11,10 @@ import liquibase.resource.ResourceAccessor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DeleteStatement;
 
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="delete", description = "Deletes data from an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class DeleteDataChange extends AbstractModifyDataChange {
 
 

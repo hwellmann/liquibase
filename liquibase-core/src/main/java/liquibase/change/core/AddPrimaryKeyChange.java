@@ -1,6 +1,11 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -9,12 +14,14 @@ import liquibase.statement.core.AddPrimaryKeyStatement;
 import liquibase.statement.core.ReorganizeTableStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.PrimaryKey;
-import liquibase.structure.core.Table;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * Creates a primary key out of an existing column or set of columns.
  */
 @DatabaseChange(name="addPrimaryKey", description = "Adds creates a primary key out of an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class AddPrimaryKeyChange extends AbstractChange {
 
     private String catalogName;

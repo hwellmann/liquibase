@@ -1,5 +1,7 @@
 package liquibase.datatype.core;
 
+import java.util.Arrays;
+
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.MSSQLDatabase;
@@ -9,9 +11,9 @@ import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.statement.DatabaseFunction;
 
-import java.util.Arrays;
-import java.util.Collections;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class UnknownType extends LiquibaseDataType {
 
     public UnknownType() {

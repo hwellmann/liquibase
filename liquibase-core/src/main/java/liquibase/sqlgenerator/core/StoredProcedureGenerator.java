@@ -9,6 +9,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.StoredProcedureStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class StoredProcedureGenerator extends AbstractSqlGenerator<StoredProcedureStatement> {
 
     @Override

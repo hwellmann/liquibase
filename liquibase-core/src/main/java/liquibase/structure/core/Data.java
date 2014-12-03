@@ -3,6 +3,9 @@ package liquibase.structure.core;
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(DatabaseObject.class)
 public class Data extends AbstractDatabaseObject {
 
     @Override

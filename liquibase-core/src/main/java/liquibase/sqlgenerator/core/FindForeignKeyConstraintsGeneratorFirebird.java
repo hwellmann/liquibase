@@ -5,9 +5,13 @@ import liquibase.database.core.FirebirdDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.FindForeignKeyConstraintsStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class FindForeignKeyConstraintsGeneratorFirebird extends AbstractSqlGenerator<FindForeignKeyConstraintsStatement> {
     @Override
     public int getPriority() {

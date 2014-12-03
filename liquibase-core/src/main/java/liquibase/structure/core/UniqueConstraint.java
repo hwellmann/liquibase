@@ -1,13 +1,16 @@
 package liquibase.structure.core;
 
-import liquibase.structure.AbstractDatabaseObject;
-import liquibase.structure.DatabaseObject;
-import liquibase.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.structure.AbstractDatabaseObject;
+import liquibase.structure.DatabaseObject;
+import liquibase.util.StringUtils;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(DatabaseObject.class)
 public class UniqueConstraint extends AbstractDatabaseObject {
 
     public UniqueConstraint() {

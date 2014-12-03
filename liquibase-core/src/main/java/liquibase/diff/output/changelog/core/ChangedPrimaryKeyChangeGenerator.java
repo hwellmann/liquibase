@@ -1,11 +1,14 @@
 package liquibase.diff.output.changelog.core;
 
+import java.util.List;
+
 import liquibase.change.Change;
 import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.ChangedObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
@@ -15,9 +18,9 @@ import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.UniqueConstraint;
 import liquibase.util.StringUtils;
 
-import java.util.Collection;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(ChangeGenerator.class)
 public class ChangedPrimaryKeyChangeGenerator  implements ChangedObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

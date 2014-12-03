@@ -3,7 +3,11 @@ package liquibase.change.core;
 import java.io.IOException;
 import java.io.InputStream;
 
-import liquibase.change.*;
+import liquibase.change.AbstractSQLChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.database.Database;
 import liquibase.exception.SetupException;
@@ -11,6 +15,8 @@ import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * Represents a Change for custom SQL stored in a File.
@@ -35,6 +41,7 @@ import liquibase.util.StringUtils;
                 "A multiline comment that starts with /* and ends with */.\n" +
                 "A single line comment starting with <space>--<space> and finishing at the end of the line",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class SQLFileChange extends AbstractSQLChange {
 
     private String path;
@@ -97,6 +104,7 @@ public class SQLFileChange extends AbstractSQLChange {
         }
     }
 
+    @Override
     public InputStream openSqlStream() throws IOException {
         if (path == null) {
             return null;

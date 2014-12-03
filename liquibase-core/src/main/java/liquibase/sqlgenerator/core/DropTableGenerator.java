@@ -1,7 +1,7 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.OracleDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.logging.LogFactory;
 import liquibase.sql.Sql;
@@ -12,6 +12,9 @@ import liquibase.statement.core.DropTableStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropTableGenerator extends AbstractSqlGenerator<DropTableStatement> {
 
     @Override

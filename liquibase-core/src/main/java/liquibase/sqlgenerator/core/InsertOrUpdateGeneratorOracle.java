@@ -4,8 +4,12 @@ import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.statement.core.InsertOrUpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class InsertOrUpdateGeneratorOracle extends InsertOrUpdateGenerator {
 
 

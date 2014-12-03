@@ -5,12 +5,16 @@ import liquibase.change.core.CreateViewChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.ChangedObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
 import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ChangeGenerator.class)
 public class ChangedViewChangeGenerator implements ChangedObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

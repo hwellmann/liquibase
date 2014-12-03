@@ -1,9 +1,16 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.math.BigInteger;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeNote;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.PostgresDatabase;
-import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SequenceNextValueFunction;
 import liquibase.statement.SqlStatement;
@@ -14,9 +21,7 @@ import liquibase.statement.core.SetNullableStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.math.BigInteger;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Makes an existing column into an auto-increment column.
@@ -27,6 +32,7 @@ import java.math.BigInteger;
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column",
         databaseNotes = {@DatabaseChangeNote(database = "sqlite", notes = "If the column type is not INTEGER it is converted to INTEGER")}
 )
+@MetaInfServices(Change.class)
 public class AddAutoIncrementChange extends AbstractChange {
 
     private String catalogName;
@@ -86,7 +92,7 @@ public class AddAutoIncrementChange extends AbstractChange {
     public BigInteger getStartWith() {
     	return startWith;
     }
-    
+
     public void setStartWith(BigInteger startWith) {
     	this.startWith = startWith;
     }
@@ -95,11 +101,11 @@ public class AddAutoIncrementChange extends AbstractChange {
     public BigInteger getIncrementBy() {
     	return incrementBy;
     }
-    
+
     public void setIncrementBy(BigInteger incrementBy) {
     	this.incrementBy = incrementBy;
     }
-    
+
     @Override
     public SqlStatement[] generateStatements(Database database) {
         if (database instanceof PostgresDatabase) {

@@ -9,6 +9,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.GetViewDefinitionStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class GetViewDefinitionGeneratorDB2 extends GetViewDefinitionGenerator {
     @Override
     public int getPriority() {

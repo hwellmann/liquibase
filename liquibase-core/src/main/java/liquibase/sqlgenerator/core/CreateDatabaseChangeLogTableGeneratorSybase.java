@@ -1,16 +1,20 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
-import liquibase.datatype.DataTypeFactory;
 import liquibase.database.core.SybaseDatabase;
+import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CreateDatabaseChangeLogTableStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CreateDatabaseChangeLogTableGeneratorSybase extends AbstractSqlGenerator<CreateDatabaseChangeLogTableStatement> {
     @Override
     public int getPriority() {

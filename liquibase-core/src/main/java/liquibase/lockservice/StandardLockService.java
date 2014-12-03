@@ -1,5 +1,11 @@
 package liquibase.lockservice;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
 import liquibase.database.Database;
@@ -14,15 +20,18 @@ import liquibase.logging.LogFactory;
 import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
-import liquibase.statement.core.*;
+import liquibase.statement.core.CreateDatabaseChangeLogLockTableStatement;
+import liquibase.statement.core.DropTableStatement;
+import liquibase.statement.core.InitializeDatabaseChangeLogLockTableStatement;
+import liquibase.statement.core.LockDatabaseChangeLogStatement;
+import liquibase.statement.core.RawSqlStatement;
+import liquibase.statement.core.SelectFromDatabaseChangeLogLockStatement;
+import liquibase.statement.core.UnlockDatabaseChangeLogStatement;
 import liquibase.structure.core.Table;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class StandardLockService implements LockService {
 
     private Database database;
@@ -186,7 +195,7 @@ public class StandardLockService implements LockService {
             database.rollback();
             this.init();
 
-            Boolean locked = (Boolean) ExecutorService.getInstance().getExecutor(database).queryForObject(new SelectFromDatabaseChangeLogLockStatement("LOCKED"), Boolean.class);
+            Boolean locked = ExecutorService.getInstance().getExecutor(database).queryForObject(new SelectFromDatabaseChangeLogLockStatement("LOCKED"), Boolean.class);
 
             if (locked) {
                 return false;

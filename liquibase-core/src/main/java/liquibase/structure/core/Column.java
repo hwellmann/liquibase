@@ -1,15 +1,18 @@
 package liquibase.structure.core;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(DatabaseObject.class)
 public class Column extends AbstractDatabaseObject {
 
     private String name;

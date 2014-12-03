@@ -1,5 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import java.util.Date;
+
 import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
@@ -12,6 +14,7 @@ import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.datatype.core.DateTimeType;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.MissingObjectChangeGenerator;
 import liquibase.statement.DatabaseFunction;
@@ -20,8 +23,9 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 
-import java.util.Date;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(ChangeGenerator.class)
 public class MissingTableChangeGenerator implements MissingObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

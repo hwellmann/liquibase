@@ -1,23 +1,33 @@
 package liquibase.sqlgenerator.core;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import liquibase.change.AddColumnConfig;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SybaseASADatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CreateIndexStatement;
 import liquibase.structure.core.Index;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class CreateIndexGenerator extends AbstractSqlGenerator<CreateIndexStatement> {
 
     @Override

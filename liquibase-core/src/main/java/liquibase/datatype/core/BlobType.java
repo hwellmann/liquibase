@@ -1,13 +1,24 @@
 package liquibase.datatype.core;
 
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.H2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SybaseASADatabase;
+import liquibase.database.core.SybaseDatabase;
 import liquibase.datatype.DataTypeInfo;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 @DataTypeInfo(name="blob", aliases = {"longblob", "longvarbinary", "java.sql.Types.BLOB", "java.sql.Types.LONGBLOB", "java.sql.Types.LONGVARBINARY", "java.sql.Types.VARBINARY", "java.sql.Types.BINARY", "varbinary"}, minParameters = 0, maxParameters = 1, priority = LiquibaseDataType.PRIORITY_DEFAULT)
+@MetaInfServices
 public class BlobType extends LiquibaseDataType {
 
     @Override

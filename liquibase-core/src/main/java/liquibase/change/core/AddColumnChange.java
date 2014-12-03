@@ -5,12 +5,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import liquibase.change.*;
+import liquibase.change.AbstractChange;
+import liquibase.change.AddColumnConfig;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeWithColumns;
+import liquibase.change.ColumnConfig;
+import liquibase.change.ConstraintsConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.H2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.MySQLDatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.*;
+import liquibase.statement.AutoIncrementConstraint;
+import liquibase.statement.ColumnConstraint;
+import liquibase.statement.ForeignKeyConstraint;
+import liquibase.statement.NotNullConstraint;
+import liquibase.statement.PrimaryKeyConstraint;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.UniqueConstraint;
 import liquibase.statement.core.AddColumnStatement;
 import liquibase.statement.core.ReorganizeTableStatement;
 import liquibase.statement.core.SetColumnRemarksStatement;
@@ -20,10 +39,13 @@ import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Adds a column to an existing table.
  */
 @DatabaseChange(name="addColumn", description = "Adds a new column to an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class AddColumnChange extends AbstractChange implements ChangeWithColumns<AddColumnConfig> {
 
     private String catalogName;
@@ -34,7 +56,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
     public AddColumnChange() {
         columns = new ArrayList<AddColumnConfig>();
     }
-    
+
     @DatabaseChangeProperty(mustEqualExisting ="relation.catalog", since = "3.0")
     public String getCatalogName() {
         return catalogName;
@@ -140,7 +162,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
 
             if (database instanceof DB2Database) {
                 sql.add(new ReorganizeTableStatement(getCatalogName(), getSchemaName(), getTableName()));
-            }            
+            }
 
             if (column.getValueObject() != null) {
                 UpdateStatement updateStatement = new UpdateStatement(getCatalogName(), getSchemaName(), getTableName());

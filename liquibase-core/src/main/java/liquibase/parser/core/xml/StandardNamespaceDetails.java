@@ -1,14 +1,17 @@
 package liquibase.parser.core.xml;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import liquibase.parser.LiquibaseParser;
 import liquibase.parser.NamespaceDetails;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.serializer.LiquibaseSerializer;
 import liquibase.serializer.core.xml.XMLChangeLogSerializer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class StandardNamespaceDetails implements NamespaceDetails {
 
     public static final String GENERIC_EXTENSION_XSD = "http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd";

@@ -1,7 +1,13 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
+import liquibase.database.core.SybaseDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -13,6 +19,9 @@ import liquibase.structure.core.Table;
 import liquibase.structure.core.UniqueConstraint;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddUniqueConstraintGenerator extends AbstractSqlGenerator<AddUniqueConstraintStatement> {
 
     @Override

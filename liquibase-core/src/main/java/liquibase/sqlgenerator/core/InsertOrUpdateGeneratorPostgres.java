@@ -6,9 +6,13 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.InsertOrUpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class InsertOrUpdateGeneratorPostgres extends InsertOrUpdateGenerator {
 	@Override
     public boolean supports(InsertOrUpdateStatement statement, Database database) {

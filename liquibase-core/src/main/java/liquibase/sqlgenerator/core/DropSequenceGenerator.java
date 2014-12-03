@@ -11,6 +11,9 @@ import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.DropSequenceStatement;
 import liquibase.structure.core.Sequence;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropSequenceGenerator extends AbstractSqlGenerator<DropSequenceStatement> {
 
     @Override

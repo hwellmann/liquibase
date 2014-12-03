@@ -1,23 +1,25 @@
 package liquibase.snapshot.jvm;
 
-import liquibase.CatalogAndSchema;
-import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.Database;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.snapshot.DatabaseSnapshot;
-import liquibase.snapshot.InvalidExampleException;
-import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.Catalog;
-import liquibase.diff.compare.DatabaseObjectComparatorFactory;
-import liquibase.util.JdbcUtils;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.diff.compare.DatabaseObjectComparatorFactory;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.SnapshotGenerator;
+import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Catalog;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SnapshotGenerator.class)
 public class CatalogSnapshotGenerator extends JdbcSnapshotGenerator {
 
     public CatalogSnapshotGenerator() {

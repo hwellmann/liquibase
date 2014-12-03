@@ -12,6 +12,9 @@ import liquibase.statement.core.ReorganizeTableStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class ReorganizeTableGeneratorDB2 extends AbstractSqlGenerator<ReorganizeTableStatement> {
     @Override
     public int getPriority() {

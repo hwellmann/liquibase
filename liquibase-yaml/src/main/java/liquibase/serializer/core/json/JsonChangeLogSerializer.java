@@ -1,13 +1,15 @@
 package liquibase.serializer.core.json;
 
+import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.serializer.core.yaml.YamlChangeLogSerializer;
+
+import org.kohsuke.MetaInfServices;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.Represent;
 
+@MetaInfServices(ChangeLogSerializer.class)
 public class JsonChangeLogSerializer extends YamlChangeLogSerializer {
 
     @Override

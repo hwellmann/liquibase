@@ -1,18 +1,5 @@
 package liquibase.serializer.core.formattedsql;
 
-import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.core.OracleDatabase;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.serializer.ChangeLogSerializer;
-import liquibase.serializer.LiquibaseSerializable;
-import liquibase.sql.Sql;
-import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.SqlStatement;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,6 +7,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import liquibase.change.Change;
+import liquibase.changelog.ChangeSet;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.serializer.ChangeLogSerializer;
+import liquibase.serializer.LiquibaseSerializable;
+import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGeneratorFactory;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ChangeLogSerializer.class)
 public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
 
     private static Pattern fileNamePatter = Pattern.compile(".*\\.(\\w+)\\.sql");

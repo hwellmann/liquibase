@@ -11,10 +11,14 @@ import liquibase.database.core.SybaseASADatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CreateViewStatement;
 import liquibase.structure.core.View;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CreateViewGeneratorInformix extends AbstractSqlGenerator<CreateViewStatement> {
 
     @Override
@@ -44,9 +48,9 @@ public class CreateViewGeneratorInformix extends AbstractSqlGenerator<CreateView
     @Override
     public Sql[] generateSql(CreateViewStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
     	String viewName = database.escapeViewName(statement.getCatalogName(), statement.getSchemaName(), statement.getViewName());
-    	        
+
         String createClause = "CREATE VIEW  " + viewName + " AS SELECT * FROM (" + statement.getSelectQuery() + ") AS v";
-        
+
         if (statement.isReplaceIfExists()) {
         	return new Sql[] {
     			new UnparsedSql("DROP VIEW IF EXISTS " + viewName),
@@ -55,6 +59,6 @@ public class CreateViewGeneratorInformix extends AbstractSqlGenerator<CreateView
         }
         return new Sql[] {
                 new UnparsedSql(createClause)
-            }; 
+            };
     }
 }

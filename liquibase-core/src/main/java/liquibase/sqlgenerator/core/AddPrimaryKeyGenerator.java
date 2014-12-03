@@ -1,17 +1,25 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddPrimaryKeyStatement;
 import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddPrimaryKeyGenerator extends AbstractSqlGenerator<AddPrimaryKeyStatement> {
 
     @Override

@@ -10,6 +10,9 @@ import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.core.DeleteStatement;
 import liquibase.statement.core.RemoveChangeSetRanStatusStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class RemoveChangeSetRanStatusGenerator extends AbstractSqlGenerator<RemoveChangeSetRanStatusStatement> {
 
     @Override

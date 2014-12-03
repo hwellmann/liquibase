@@ -7,7 +7,10 @@ import liquibase.datatype.DataTypeInfo;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 
+import org.kohsuke.MetaInfServices;
+
 @DataTypeInfo(name="nchar", aliases = { "java.sql.Types.NCHAR", "nchar2"}, minParameters = 0, maxParameters = 1, priority = LiquibaseDataType.PRIORITY_DEFAULT)
+@MetaInfServices(LiquibaseDataType.class)
 public class NCharType extends CharType {
 
     @Override

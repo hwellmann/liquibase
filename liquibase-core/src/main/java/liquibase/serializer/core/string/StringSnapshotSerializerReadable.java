@@ -1,5 +1,15 @@
 package liquibase.serializer.core.string;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.LiquibaseSerializable;
@@ -10,10 +20,9 @@ import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Schema;
 import liquibase.util.StringUtils;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices
 public class StringSnapshotSerializerReadable implements SnapshotSerializer {
 
     private static final int INDENT_LENGTH = 4;

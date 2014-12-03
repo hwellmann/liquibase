@@ -1,6 +1,14 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.parser.core.ParsedNode;
@@ -12,13 +20,13 @@ import liquibase.statement.core.CreateViewStatement;
 import liquibase.statement.core.DropViewStatement;
 import liquibase.structure.core.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Creates a new view.
  */
 @DatabaseChange(name="createView", description = "Create a new database view", priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class CreateViewChange extends AbstractChange {
 
     private String catalogName;

@@ -2,8 +2,12 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
 import liquibase.database.core.FirebirdDatabase;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.statement.core.CreateDatabaseChangeLogTableStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CreateDatabaseChangeLogTableGeneratorFirebird extends CreateDatabaseChangeLogTableGenerator {
     @Override
     public int getPriority() {

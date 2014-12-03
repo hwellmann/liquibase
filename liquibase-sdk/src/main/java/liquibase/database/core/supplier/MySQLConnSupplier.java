@@ -1,11 +1,14 @@
 package liquibase.database.core.supplier;
 
-import liquibase.sdk.supplier.database.ConnectionSupplier;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+import liquibase.sdk.supplier.database.ConnectionSupplier;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ConnectionSupplier.class)
 public class MySQLConnSupplier extends ConnectionSupplier {
     @Override
     public String getDatabaseShortName() {

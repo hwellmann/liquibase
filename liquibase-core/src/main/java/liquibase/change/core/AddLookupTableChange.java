@@ -1,8 +1,22 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.SybaseASADatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RawSqlStatement;
@@ -11,9 +25,7 @@ import liquibase.structure.core.Column;
 import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Table;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Extracts data from an existing column to create a lookup table.
@@ -22,6 +34,7 @@ import java.util.List;
 @DatabaseChange(name="addLookupTable",
         description = "Creates a lookup table containing values stored in a column and creates a foreign key to the new table.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class AddLookupTableChange extends AbstractChange {
 
     private String existingTableCatalogName;

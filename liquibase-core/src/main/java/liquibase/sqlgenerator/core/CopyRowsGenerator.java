@@ -12,6 +12,9 @@ import liquibase.statement.core.CopyRowsStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CopyRowsGenerator extends AbstractSqlGenerator<CopyRowsStatement> {
 
     @Override

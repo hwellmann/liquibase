@@ -1,15 +1,18 @@
 package liquibase.sqlgenerator.core;
 
-import liquibase.change.core.InsertDataChange;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.InsertExecutablePreparedStatement;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  * Dummy SQL generator for <code>InsertDataChange.ExecutableStatement</code><br>
  */
+@MetaInfServices(SqlGenerator.class)
 public class InsertDataChangeGenerator extends AbstractSqlGenerator<InsertExecutablePreparedStatement> {
     @Override
     public ValidationErrors validate(InsertExecutablePreparedStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {

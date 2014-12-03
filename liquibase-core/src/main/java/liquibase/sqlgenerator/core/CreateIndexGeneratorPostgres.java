@@ -11,13 +11,17 @@ import liquibase.database.core.InformixDatabase;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.PostgresDatabase;
 import liquibase.database.core.SybaseASADatabase;
-import liquibase.structure.core.Index;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.CreateIndexStatement;
+import liquibase.structure.core.Index;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CreateIndexGeneratorPostgres extends CreateIndexGenerator {
 
     @Override

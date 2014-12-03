@@ -1,19 +1,44 @@
 package liquibase.snapshot.jvm;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.DerbyDatabase;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
-import liquibase.snapshot.*;
+import liquibase.snapshot.CachedRow;
+import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.JdbcDatabaseSnapshot;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.UniqueConstraint;
 import liquibase.util.StringUtils;
 
-import java.sql.SQLException;
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class UniqueConstraintSnapshotGenerator extends JdbcSnapshotGenerator {
 
     public UniqueConstraintSnapshotGenerator() {
@@ -131,7 +156,7 @@ public class UniqueConstraintSnapshotGenerator extends JdbcSnapshotGenerator {
                 //+ "T2.TABLE_NAME='"+ database.correctObjectName(example.getTable().getName(), Table.class) + "'\n"
                 //+ "\n"
                 + "order by T2.COLUMN_NAME\n";
-                
+
             } else {
                 sql = "select k.colname as column_name from syscat.keycoluse k, syscat.tabconst t "
                         + "where k.constname = t.constname "
@@ -158,7 +183,7 @@ public class UniqueConstraintSnapshotGenerator extends JdbcSnapshotGenerator {
                 String descriptor = rowData.get("DESCRIPTOR").toString();
                 descriptor = descriptor.replaceFirst(".*\\(", "").replaceFirst("\\).*", "");
                 for (String columnNumber : StringUtils.splitAndTrim(descriptor, ",")) {
-                    String columnName = (String) ExecutorService.getInstance().getExecutor(database).queryForObject(new RawSqlStatement(
+                    String columnName = ExecutorService.getInstance().getExecutor(database).queryForObject(new RawSqlStatement(
                             "select c.columnname from sys.syscolumns c "
                             + "join sys.systables t on t.tableid=c.referenceid "
                             + "where t.tablename='" + rowData.get("TABLENAME") + "' and c.columnnumber=" + columnNumber), String.class);

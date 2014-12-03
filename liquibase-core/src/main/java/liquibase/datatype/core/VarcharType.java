@@ -9,7 +9,10 @@ import liquibase.datatype.DataTypeInfo;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.datatype.LiquibaseDataType;
 
+import org.kohsuke.MetaInfServices;
+
 @DataTypeInfo(name="varchar", aliases = {"java.sql.Types.VARCHAR", "java.lang.String", "varchar2", "character varying"}, minParameters = 0, maxParameters = 1, priority = LiquibaseDataType.PRIORITY_DEFAULT)
+@MetaInfServices(LiquibaseDataType.class)
 public class VarcharType extends CharType {
 
     @Override

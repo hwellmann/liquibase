@@ -8,6 +8,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddUniqueConstraintStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddUniqueConstraintGeneratorInformix extends AddUniqueConstraintGenerator {
 
 	public AddUniqueConstraintGeneratorInformix() {
@@ -31,7 +34,7 @@ public class AddUniqueConstraintGeneratorInformix extends AddUniqueConstraintGen
 		final String sqlTemplate = "ALTER TABLE %s ADD CONSTRAINT UNIQUE (%s) CONSTRAINT %s";
 		if (statement.getConstraintName() == null) {
 			return new Sql[] {
-				new UnparsedSql(String.format(sqlNoContraintNameTemplate 
+				new UnparsedSql(String.format(sqlNoContraintNameTemplate
 						, database.escapeTableName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName())
 						, database.escapeColumnNameList(statement.getColumnNames())
 				), getAffectedUniqueConstraint(statement))
@@ -47,7 +50,7 @@ public class AddUniqueConstraintGeneratorInformix extends AddUniqueConstraintGen
 		}
 
 
-		
+
 	}
 
 

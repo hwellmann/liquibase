@@ -1,23 +1,32 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.AddColumnConfig;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.DerbyDatabase;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SQLiteDatabase.AlterTableVisitor;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Index;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RawSqlStatement;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Index;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Combines data from two existing columns into a new column and drops the original columns.
  */
 @DatabaseChange(name="mergeColumns", description = "Concatenates the values in two columns, joins them by with string, and stores the resulting value in a new column.", priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class MergeColumnChange extends AbstractChange {
 
     private String catalogName;
@@ -131,12 +140,12 @@ public class MergeColumnChange extends AbstractChange {
                 , "'" + getJoinString() + "'", database.escapeObjectName(getColumn2Name(), Column.class));
 
         statements.add(new RawSqlStatement(updateStatement));
-        
+
         if (database instanceof SQLiteDatabase) {
             // SQLite does not support this ALTER TABLE operation until now.
 			// For more information see: http://www.sqlite.org/omitted.html
 			// This is a small work around...
-    		
+
 			// define alter table logic
     		AlterTableVisitor rename_alter_visitor = new AlterTableVisitor() {
     			@Override
@@ -164,7 +173,7 @@ public class MergeColumnChange extends AbstractChange {
     						index.getColumns().contains(getColumn2Name()));
     			}
     		};
-        	
+
         	try {
         		// alter table
 				statements.addAll(SQLiteDatabase.getAlterTableStatements(
@@ -173,22 +182,22 @@ public class MergeColumnChange extends AbstractChange {
     		} catch (Exception e) {
 				e.printStackTrace();
 			}
-    		
+
         } else {
-        	// ...if it is not a SQLite database 
-        	
+        	// ...if it is not a SQLite database
+
 	        DropColumnChange dropColumn1Change = new DropColumnChange();
 	        dropColumn1Change.setSchemaName(schemaName);
 	        dropColumn1Change.setTableName(getTableName());
 	        dropColumn1Change.setColumnName(getColumn1Name());
 	        statements.addAll(Arrays.asList(dropColumn1Change.generateStatements(database)));
-	
+
 	        DropColumnChange dropColumn2Change = new DropColumnChange();
 	        dropColumn2Change.setSchemaName(schemaName);
 	        dropColumn2Change.setTableName(getTableName());
 	        dropColumn2Change.setColumnName(getColumn2Name());
 	        statements.addAll(Arrays.asList(dropColumn2Change.generateStatements(database)));
-        
+
         }
         return statements.toArray(new SqlStatement[statements.size()]);
 

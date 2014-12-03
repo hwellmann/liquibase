@@ -1,23 +1,43 @@
 package liquibase.snapshot.jvm;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
-import liquibase.snapshot.*;
+import liquibase.snapshot.CachedRow;
+import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.JdbcDatabaseSnapshot;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.DataType;
+import liquibase.structure.core.Relation;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.View;
 import liquibase.util.SqlUtil;
 import liquibase.util.StringUtils;
 
-import java.sql.*;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class ColumnSnapshotGenerator extends JdbcSnapshotGenerator {
 
     public ColumnSnapshotGenerator() {
@@ -160,8 +180,8 @@ public class ColumnSnapshotGenerator extends JdbcSnapshotGenerator {
                         LogFactory.getLogger().debug("rawSchemaName : <" + rawSchemaName + ">");
                         LogFactory.getLogger().debug("rawTableName : <" + rawTableName + ">");
                         LogFactory.getLogger().debug("raw selectStatement : <" + selectStatement + ">");
-                        
-                        
+
+
                     }
                     else{
                         selectStatement = "select " + database.escapeColumnName(rawCatalogName, rawSchemaName, rawTableName, rawColumnName) + " from " + database.escapeTableName(rawCatalogName, rawSchemaName, rawTableName) + " where 0=1";

@@ -1,16 +1,19 @@
 package liquibase.precondition.core;
 
+import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.database.Database;
+import liquibase.exception.PreconditionErrorException;
+import liquibase.exception.PreconditionFailedException;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
 import liquibase.precondition.Precondition;
-import liquibase.database.Database;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeLogParameters;
-import liquibase.exception.PreconditionFailedException;
-import liquibase.exception.PreconditionErrorException;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Precondition.class)
 public class ChangeLogPropertyDefinedPrecondition extends AbstractPrecondition {
 
     private String property;
@@ -41,7 +44,7 @@ public class ChangeLogPropertyDefinedPrecondition extends AbstractPrecondition {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     @Override
     public Warnings warn(Database database) {
         return new Warnings();

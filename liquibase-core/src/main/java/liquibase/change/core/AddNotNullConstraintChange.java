@@ -1,19 +1,26 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SQLiteDatabase.AlterTableVisitor;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Index;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.ReorganizeTableStatement;
 import liquibase.statement.core.SetNullableStatement;
 import liquibase.statement.core.UpdateStatement;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Index;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Adds a not-null constraint to an existing column.
@@ -21,6 +28,7 @@ import java.util.List;
 @DatabaseChange(name="addNotNullConstraint",
         description = "Adds a not-null constraint to an existing table. If a defaultNullValue attribute is passed, all null values for the column will be updated to the passed value before the constraint is applied.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class AddNotNullConstraintChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
@@ -98,23 +106,23 @@ public class AddNotNullConstraintChange extends AbstractChange {
                     .addNewColumnValue(getColumnName(), defaultNullValue)
                     .setWhereClause(database.escapeObjectName(getColumnName(), Column.class) + " IS NULL"));
         }
-        
+
     	statements.add(new SetNullableStatement(getCatalogName(), getSchemaName(), getTableName(), getColumnName(), getColumnDataType(), false));
         if (database instanceof DB2Database) {
             statements.add(new ReorganizeTableStatement(getCatalogName(), getSchemaName(), getTableName()));
-        }           
-        
+        }
+
         return statements.toArray(new SqlStatement[statements.size()]);
     }
 
     private SqlStatement[] generateStatementsForSQLiteDatabase(Database database) {
-    	
+
     	// SQLite does not support this ALTER TABLE operation until now.
 		// For more information see: http://www.sqlite.org/omitted.html.
 		// This is a small work around...
-    	
+
     	List<SqlStatement> statements = new ArrayList<SqlStatement>();
-    	
+
         if (defaultNullValue != null) {
             statements.add(new UpdateStatement(getCatalogName(), getSchemaName(), getTableName())
                     .addNewColumnValue(getColumnName(), getDefaultNullValue())
@@ -141,7 +149,7 @@ public class AddNotNullConstraintChange extends AbstractChange {
 //    					"values for the existing null values.");
 //    		}
 //    	}
-		
+
 		// define alter table logic
 		AlterTableVisitor rename_alter_visitor = new AlterTableVisitor() {
 			@Override
@@ -164,14 +172,14 @@ public class AddNotNullConstraintChange extends AbstractChange {
 				return true;
 			}
 		};
-    		
+
 		try {
     		// alter table
 			statements.addAll(SQLiteDatabase.getAlterTableStatements(rename_alter_visitor, database,getCatalogName(), getSchemaName(),getTableName()));
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
+
     	return statements.toArray(new SqlStatement[statements.size()]);
     }
 

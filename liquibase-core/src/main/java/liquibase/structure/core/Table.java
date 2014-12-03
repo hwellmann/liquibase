@@ -1,12 +1,14 @@
 package liquibase.structure.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(DatabaseObject.class)
 public class Table extends Relation {
 
 

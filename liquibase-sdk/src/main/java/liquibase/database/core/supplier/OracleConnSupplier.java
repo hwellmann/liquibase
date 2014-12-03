@@ -1,13 +1,16 @@
 package liquibase.database.core.supplier;
 
-import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
-import liquibase.sdk.supplier.database.ConnectionSupplier;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
+import liquibase.sdk.supplier.database.ConnectionSupplier;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ConnectionSupplier.class)
 public class OracleConnSupplier extends ConnectionSupplier {
     @Override
     public String getDatabaseShortName() {
@@ -126,7 +129,7 @@ public class OracleConnSupplier extends ConnectionSupplier {
     public String getSid() {
         return "lqbase";
     }
-    
+
     @Override
     public String getDescription() {
         return super.getDescription() +

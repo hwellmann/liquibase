@@ -1,7 +1,14 @@
 package liquibase.database.core;
 
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.OfflineConnection;
 import liquibase.exception.DatabaseException;
@@ -13,18 +20,13 @@ import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Catalog;
 import liquibase.structure.core.Schema;
-import liquibase.structure.core.Table;
 
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Encapsulates Oracle database support.
  */
+@MetaInfServices(Database.class)
 public class OracleDatabase extends AbstractJdbcDatabase {
     public static final String PRODUCT_NAME = "oracle";
 

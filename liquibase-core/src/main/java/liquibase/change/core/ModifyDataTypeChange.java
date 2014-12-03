@@ -1,16 +1,20 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.DatabaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.ModifyDataTypeStatement;
-import liquibase.database.Database;
 import liquibase.statement.core.ReorganizeTableStatement;
 
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="modifyDataType", description = "Modify data type", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class ModifyDataTypeChange extends AbstractChange {
 
     private String catalogName;

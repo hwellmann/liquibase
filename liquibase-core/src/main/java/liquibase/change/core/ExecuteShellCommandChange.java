@@ -1,8 +1,15 @@
 package liquibase.change.core;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import liquibase.change.AbstractChange;
-import liquibase.change.DatabaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -22,11 +29,7 @@ import liquibase.statement.core.RuntimeStatement;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Executes a given shell executable.
@@ -34,6 +37,7 @@ import java.util.List;
 @DatabaseChange(name="executeCommand",
         description = "Executes a system command. Because this refactoring doesn't generate SQL like most, using LiquiBase commands such as migrateSQL may not work as expected. Therefore, if at all possible use refactorings that generate SQL.",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class ExecuteShellCommandChange extends AbstractChange {
 
     private String executable;
@@ -104,7 +108,7 @@ public class ExecuteShellCommandChange extends AbstractChange {
         if (executor instanceof LoggingExecutor) {
             nonExecutedMode = true;
         }
-        
+
         if (shouldRun && !nonExecutedMode) {
 
 
@@ -146,13 +150,13 @@ public class ExecuteShellCommandChange extends AbstractChange {
                 }
             }};
         }
-        
+
         if (nonExecutedMode) {
         	return new SqlStatement[] {
         			new CommentStatement(getCommandString())
         	};
         }
-        
+
         return new SqlStatement[0];
     }
 

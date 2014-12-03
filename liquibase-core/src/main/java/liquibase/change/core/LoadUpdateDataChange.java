@@ -1,26 +1,30 @@
 package liquibase.change.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
-import liquibase.exception.RollbackImpossibleException;
 import liquibase.exception.LiquibaseException;
+import liquibase.exception.RollbackImpossibleException;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DeleteStatement;
 import liquibase.statement.core.InsertOrUpdateStatement;
 import liquibase.statement.core.InsertStatement;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="loadUpdateData",
         description = "Loads or updates data from a CSV file into an existing table. Differs from loadData by issuing a SQL batch that checks for the existence of a record. If found, the record is UPDATEd, else the record is INSERTed. Also, generates DELETE statements for a rollback.\n" +
                 "\n" +
                 "A value of NULL in a cell will be converted to a database NULL rather than the string 'NULL'",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table", since = "2.0")
+@MetaInfServices(Change.class)
 public class LoadUpdateDataChange extends LoadDataChange {
     private String primaryKey;
     private Boolean onlyUpdate = Boolean.FALSE;

@@ -4,17 +4,21 @@ import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddAutoIncrementStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * SQLite does not support this ALTER TABLE operation until now.
  * For more information see: http://www.sqlite.org/omitted.html.
  * This is a small work around...
  */
+@MetaInfServices(SqlGenerator.class)
 public class AddAutoIncrementGeneratorMySQL extends AddAutoIncrementGenerator {
 
     @Override

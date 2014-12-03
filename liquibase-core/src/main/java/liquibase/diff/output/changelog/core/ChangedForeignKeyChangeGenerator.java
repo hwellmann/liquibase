@@ -6,15 +6,19 @@ import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGenerator;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.diff.output.changelog.ChangedObjectChangeGenerator;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Column;
-import liquibase.structure.core.Index;
 import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.Index;
 import liquibase.structure.core.UniqueConstraint;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ChangeGenerator.class)
 public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGenerator {
     @Override
     public int getPriority(Class<? extends DatabaseObject> objectType, Database database) {

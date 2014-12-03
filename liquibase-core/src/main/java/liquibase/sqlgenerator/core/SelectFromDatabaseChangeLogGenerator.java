@@ -1,18 +1,22 @@
 package liquibase.sqlgenerator.core;
 
+import java.util.Arrays;
+import java.util.List;
+
 import liquibase.change.ColumnConfig;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.SelectFromDatabaseChangeLogStatement;
 import liquibase.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class SelectFromDatabaseChangeLogGenerator extends AbstractSqlGenerator<SelectFromDatabaseChangeLogStatement> {
 
     @Override

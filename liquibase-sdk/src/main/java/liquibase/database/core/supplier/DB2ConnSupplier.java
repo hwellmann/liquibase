@@ -1,12 +1,15 @@
 package liquibase.database.core.supplier;
 
-import liquibase.sdk.supplier.database.ConnectionSupplier;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import liquibase.sdk.supplier.database.ConnectionSupplier;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(ConnectionSupplier.class)
 public class DB2ConnSupplier extends ConnectionSupplier {
     private String installDir = "C:\\Program Files\\IBM\\SQLLIB";
     private String sshInstallDir = "C:\\Program Files\\IBM\\IBM SSH Server";

@@ -2,8 +2,12 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.statement.core.InsertOrUpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class InsertOrUpdateGeneratorDB2 extends InsertOrUpdateGenerator {
 
 	@Override
@@ -28,12 +32,12 @@ public class InsertOrUpdateGeneratorDB2 extends InsertOrUpdateGenerator {
 
         return recordCheckSql.toString();
 	}
-	
+
 	@Override
 	public boolean supports(InsertOrUpdateStatement statement, Database database) {
 		return database instanceof DB2Database;
 	}
-	
+
 	@Override
 	protected String getPostUpdateStatements(Database database) {
         StringBuffer endStatements = new StringBuffer();

@@ -10,6 +10,9 @@ import liquibase.statement.core.ClearDatabaseChangeLogTableStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class ClearDatabaseChangeLogTableGenerator extends AbstractSqlGenerator<ClearDatabaseChangeLogTableStatement> {
 
     @Override

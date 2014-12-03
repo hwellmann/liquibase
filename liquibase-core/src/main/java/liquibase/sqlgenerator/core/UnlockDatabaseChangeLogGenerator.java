@@ -9,6 +9,9 @@ import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.core.UnlockDatabaseChangeLogStatement;
 import liquibase.statement.core.UpdateStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class UnlockDatabaseChangeLogGenerator extends AbstractSqlGenerator<UnlockDatabaseChangeLogStatement> {
 
     @Override

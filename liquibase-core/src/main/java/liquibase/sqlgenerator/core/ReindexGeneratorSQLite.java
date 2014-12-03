@@ -10,6 +10,9 @@ import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.ReindexStatement;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class ReindexGeneratorSQLite extends AbstractSqlGenerator<ReindexStatement> {
     @Override
     public int getPriority() {

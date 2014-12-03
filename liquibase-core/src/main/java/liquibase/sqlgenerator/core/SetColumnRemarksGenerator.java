@@ -7,11 +7,15 @@ import liquibase.database.core.PostgresDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.SetColumnRemarksStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class SetColumnRemarksGenerator extends AbstractSqlGenerator<SetColumnRemarksStatement> {
 	@Override
 	public int getPriority() {

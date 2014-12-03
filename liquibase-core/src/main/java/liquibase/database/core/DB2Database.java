@@ -1,22 +1,26 @@
 package liquibase.database.core;
 
-import liquibase.CatalogAndSchema;
-import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.DatabaseConnection;
-import liquibase.database.OfflineConnection;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.DateParseException;
-import liquibase.structure.core.Catalog;
-import liquibase.util.JdbcUtils;
-import liquibase.util.StringUtils;
-
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import liquibase.CatalogAndSchema;
+import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
+import liquibase.database.OfflineConnection;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.DateParseException;
+import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Catalog;
+import liquibase.util.JdbcUtils;
+import liquibase.util.StringUtils;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(Database.class)
 public class DB2Database extends AbstractJdbcDatabase {
 
     public DB2Database() {
@@ -24,7 +28,7 @@ public class DB2Database extends AbstractJdbcDatabase {
         super.sequenceNextValueFunction = "NEXT VALUE FOR %s";
         super.sequenceCurrentValueFunction = "PREVIOUS VALUE FOR %s";
     }
-    
+
     @Override
     public boolean isCorrectDatabaseImplementation(DatabaseConnection conn) throws DatabaseException {
         return conn.getDatabaseProductName().startsWith("DB2");

@@ -8,6 +8,9 @@ import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.RawSqlStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class RawSqlGenerator extends AbstractSqlGenerator<RawSqlStatement> {
 
     @Override

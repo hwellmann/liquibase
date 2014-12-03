@@ -1,17 +1,20 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractSQLChange;
-import liquibase.change.DatabaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
 import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Allows execution of arbitrary SQL.  This change can be used when existing changes are either don't exist,
- * are not flexible enough, or buggy. 
+ * are not flexible enough, or buggy.
  */
 @DatabaseChange(name="sql",
         description = "The 'sql' tag allows you to specify whatever sql you want. It is useful for complex changes that aren't supported through Liquibase's automated refactoring tags and to work around bugs and limitations of Liquibase. The SQL contained in the sql tag can be multi-line.\n" +
@@ -26,10 +29,11 @@ import liquibase.util.StringUtils;
         "A single line comment starting with <space>--<space> and finishing at the end of the line\n" +
         "Note: By default it will attempt to split statements on a ';' or 'go' at the end of lines. Because of this, if you have a comment or some other non-statement ending ';' or 'go', don't have it at the end of a line or you will get invalid SQL.",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class RawSQLChange extends AbstractSQLChange {
 
     private String comment;
-    
+
     public RawSQLChange() {
     }
 

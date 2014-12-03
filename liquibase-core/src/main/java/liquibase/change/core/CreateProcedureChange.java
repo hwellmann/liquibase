@@ -1,31 +1,39 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.AbstractSQLChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeFactory;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.CheckSum;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.DbmsTargetedChange;
 import liquibase.database.Database;
+import liquibase.database.core.DB2Database;
 import liquibase.database.core.HsqlDatabase;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.OracleDatabase;
-import liquibase.database.core.DB2Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
-import liquibase.resource.ResourceAccessor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CreateProcedureStatement;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.UnsupportedEncodingException;
+import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name = "createProcedure",
         description = "Defines the definition for a stored procedure. This command is better to use for creating procedures than the raw sql command because it will not attempt to strip comments or break up lines.\n\nOften times it is best to use the CREATE OR REPLACE syntax along with setting runOnChange='true' on the enclosing changeSet tag. That way if you need to make a change to your procedure you can simply change your existing code rather than creating a new REPLACE PROCEDURE call. The advantage to this approach is that it keeps your change log smaller and allows you to more easily see what has changed in your procedure code through your source control system's diff command.",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
+@MetaInfServices(Change.class)
 public class CreateProcedureChange extends AbstractChange implements DbmsTargetedChange {
     private String comments;
     private String catalogName;
@@ -117,6 +125,7 @@ public class CreateProcedureChange extends AbstractChange implements DbmsTargete
     /**
      * @deprecated Use setProcedureText() instead
      */
+    @Deprecated
     public void setProcedureBody(String procedureText) {
         this.procedureText = procedureText;
     }
@@ -130,12 +139,14 @@ public class CreateProcedureChange extends AbstractChange implements DbmsTargete
         this.procedureText = procedureText;
     }
 
+    @Override
     @DatabaseChangeProperty(since = "3.1", exampleValue = "h2, oracle")
 	public String getDbms() {
 		return dbms;
 	}
 
-	public void setDbms(final String dbms) {
+	@Override
+    public void setDbms(final String dbms) {
 		this.dbms = dbms;
 	}
 

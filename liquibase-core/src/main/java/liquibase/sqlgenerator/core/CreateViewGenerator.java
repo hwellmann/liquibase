@@ -1,28 +1,39 @@
 package liquibase.sqlgenerator.core;
 
-import liquibase.CatalogAndSchema;
-import liquibase.database.Database;
-import liquibase.database.core.*;
-import liquibase.structure.core.Relation;
-import liquibase.exception.ValidationErrors;
-import liquibase.sql.Sql;
-import liquibase.sql.UnparsedSql;
-import liquibase.sqlgenerator.SqlGeneratorChain;
-import liquibase.statement.core.CreateViewStatement;
-import liquibase.structure.core.View;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import liquibase.CatalogAndSchema;
+import liquibase.database.Database;
+import liquibase.database.core.DB2Database;
+import liquibase.database.core.DerbyDatabase;
+import liquibase.database.core.FirebirdDatabase;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.database.core.InformixDatabase;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SybaseASADatabase;
+import liquibase.exception.ValidationErrors;
+import liquibase.sql.Sql;
+import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
+import liquibase.sqlgenerator.SqlGeneratorChain;
+import liquibase.statement.core.CreateViewStatement;
+import liquibase.structure.core.Relation;
+import liquibase.structure.core.View;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class CreateViewGenerator extends AbstractSqlGenerator<CreateViewStatement> {
 
     @Override
     public ValidationErrors validate(CreateViewStatement createViewStatement, Database database, SqlGeneratorChain sqlGeneratorChain) {
-    	
+
     	if (database instanceof InformixDatabase) {
     		return new CreateViewGeneratorInformix().validate(createViewStatement, database, sqlGeneratorChain);
     	}
-    	
+
         ValidationErrors validationErrors = new ValidationErrors();
 
         validationErrors.checkRequiredField("viewName", createViewStatement.getViewName());
@@ -37,11 +48,11 @@ public class CreateViewGenerator extends AbstractSqlGenerator<CreateViewStatemen
 
     @Override
     public Sql[] generateSql(CreateViewStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
-    	
+
     	if (database instanceof InformixDatabase) {
     		return new CreateViewGeneratorInformix().generateSql(statement, database, sqlGeneratorChain);
     	}
-    	
+
         String createClause;
 
         List<Sql> sql = new ArrayList<Sql>();

@@ -1,5 +1,10 @@
 package liquibase.structure.core;
 
+import liquibase.structure.DatabaseObject;
+
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(DatabaseObject.class)
 public class View extends Relation {
 
     private boolean containsFullDefinition;

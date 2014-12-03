@@ -1,7 +1,7 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.database.Database;
 import liquibase.database.DatabaseList;
 import liquibase.exception.PreconditionErrorException;
@@ -11,10 +11,13 @@ import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
 import liquibase.precondition.Precondition;
 
+import org.kohsuke.MetaInfServices;
+
 /**
  * Precondition for specifying the type of database (oracle, mysql, etc.).
  */
 
+@MetaInfServices(Precondition.class)
 public class DBMSPrecondition extends AbstractPrecondition {
     private String type;
 
@@ -45,7 +48,7 @@ public class DBMSPrecondition extends AbstractPrecondition {
     public ValidationErrors validate(Database database) {
         return new ValidationErrors();
     }
-    
+
     @Override
     public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
         try {

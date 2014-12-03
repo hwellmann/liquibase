@@ -1,24 +1,33 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.ColumnConfig;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
+import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.core.AddForeignKeyConstraintStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.ForeignKeyConstraintType;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.AddForeignKeyConstraintStatement;
 import liquibase.structure.core.Table;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Adds a foreign key constraint to an existing column.
  */
  @DatabaseChange(name="addForeignKeyConstraint", description = "Adds a foreign key constraint to an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+ @MetaInfServices(Change.class)
 public class AddForeignKeyConstraintChange extends AbstractChange {
 
     private String baseTableCatalogName;
@@ -295,6 +304,7 @@ public class AddForeignKeyConstraintChange extends AbstractChange {
     /**
      * @deprecated No longer supported in 3.0
      */
+    @Deprecated
     public Boolean getReferencesUniqueColumn() {
         return null;
     }

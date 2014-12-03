@@ -5,9 +5,13 @@ import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.GetViewDefinitionStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class GetViewDefinitionGeneratorMSSQL extends GetViewDefinitionGenerator {
     @Override
     public int getPriority() {

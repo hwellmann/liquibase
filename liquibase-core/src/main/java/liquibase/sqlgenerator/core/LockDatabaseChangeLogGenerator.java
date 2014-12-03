@@ -1,18 +1,22 @@
 package liquibase.sqlgenerator.core;
 
+import java.sql.Timestamp;
+
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.core.LockDatabaseChangeLogStatement;
 import liquibase.statement.core.UpdateStatement;
 import liquibase.util.NetUtil;
 
-import java.sql.Timestamp;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SqlGenerator.class)
 public class LockDatabaseChangeLogGenerator extends AbstractSqlGenerator<LockDatabaseChangeLogStatement> {
 
     @Override

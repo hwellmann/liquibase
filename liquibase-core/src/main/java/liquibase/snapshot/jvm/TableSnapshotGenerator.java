@@ -1,5 +1,8 @@
 package liquibase.snapshot.jvm;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
@@ -8,13 +11,15 @@ import liquibase.snapshot.CachedRow;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.JdbcDatabaseSnapshot;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.sql.SQLException;
-import java.util.List;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(SnapshotGenerator.class)
 public class TableSnapshotGenerator extends JdbcSnapshotGenerator {
     public TableSnapshotGenerator() {
         super(Table.class, new Class[] { Schema.class});

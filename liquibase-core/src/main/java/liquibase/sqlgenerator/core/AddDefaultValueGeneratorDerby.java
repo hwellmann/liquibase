@@ -1,16 +1,17 @@
 package liquibase.sqlgenerator.core;
 
 import liquibase.database.Database;
-import liquibase.structure.core.Schema;
-import liquibase.datatype.DataTypeFactory;
 import liquibase.database.core.DerbyDatabase;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Table;
+import liquibase.datatype.DataTypeFactory;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.AddDefaultValueStatement;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class AddDefaultValueGeneratorDerby extends AddDefaultValueGenerator {
     @Override
     public int getPriority() {

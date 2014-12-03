@@ -1,25 +1,30 @@
 package liquibase.database.core;
 
-import liquibase.CatalogAndSchema;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.database.AbstractJdbcDatabase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.ObjectQuotingStrategy;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.structure.DatabaseObject;
 import liquibase.exception.DatabaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
 import liquibase.statement.core.RawSqlStatement;
+import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
-import java.math.BigInteger;
-import java.sql.Types;
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Encapsulates PostgreSQL database support.
  */
+@MetaInfServices(Database.class)
 public class PostgresDatabase extends AbstractJdbcDatabase {
     public static final String PRODUCT_NAME = "PostgreSQL";
 
@@ -206,7 +211,7 @@ public class PostgresDatabase extends AbstractJdbcDatabase {
             DatabaseConnection con = getConnection();
 
             if (con != null) {
-                String searchPathResult = (String) ExecutorService.getInstance().getExecutor(this).queryForObject(new RawSqlStatement("SHOW search_path"), String.class);
+                String searchPathResult = ExecutorService.getInstance().getExecutor(this).queryForObject(new RawSqlStatement("SHOW search_path"), String.class);
 
                 if (searchPathResult != null) {
                     String dirtySearchPaths[] = searchPathResult.split("\\,");

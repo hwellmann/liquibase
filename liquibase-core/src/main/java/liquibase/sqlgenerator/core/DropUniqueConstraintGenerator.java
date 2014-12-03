@@ -2,7 +2,10 @@ package liquibase.sqlgenerator.core;
 
 import liquibase.change.ColumnConfig;
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.MySQLDatabase;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -12,8 +15,10 @@ import liquibase.statement.core.DropUniqueConstraintStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 import liquibase.structure.core.UniqueConstraint;
-import liquibase.util.StringUtils;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class DropUniqueConstraintGenerator extends AbstractSqlGenerator<DropUniqueConstraintStatement> {
 
     @Override

@@ -1,19 +1,5 @@
 package liquibase.change.core;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.DatabaseChange;
-import liquibase.change.ChangeMetaData;
-import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
-import liquibase.structure.core.Table;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.FindForeignKeyConstraintsStatement;
-import liquibase.diff.compare.DatabaseObjectComparatorFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,7 +7,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
+import liquibase.database.Database;
+import liquibase.diff.compare.DatabaseObjectComparatorFactory;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.executor.Executor;
+import liquibase.executor.ExecutorService;
+import liquibase.statement.SqlStatement;
+import liquibase.statement.core.FindForeignKeyConstraintsStatement;
+import liquibase.structure.core.Table;
+
+import org.kohsuke.MetaInfServices;
+
 @DatabaseChange(name="dropAllForeignKeyConstraints", description = "Drops all foreign key constraints for a table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
 public class DropAllForeignKeyConstraintsChange extends AbstractChange {
 
     private String baseTableCatalogName;

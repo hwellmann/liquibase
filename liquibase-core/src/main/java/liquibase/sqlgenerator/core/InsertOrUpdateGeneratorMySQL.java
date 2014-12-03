@@ -2,16 +2,21 @@ package liquibase.sqlgenerator.core;
 
 import java.util.Arrays;
 import java.util.HashSet;
+
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.InsertOrUpdateStatement;
+
+import org.kohsuke.MetaInfServices;
 
 /**
  *
  * @author Carles
  */
+@MetaInfServices(SqlGenerator.class)
 public class InsertOrUpdateGeneratorMySQL extends InsertOrUpdateGenerator {
     @Override
     public boolean supports(InsertOrUpdateStatement statement, Database database) {
@@ -21,9 +26,9 @@ public class InsertOrUpdateGeneratorMySQL extends InsertOrUpdateGenerator {
     @Override
     protected String getInsertStatement(InsertOrUpdateStatement insertOrUpdateStatement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         StringBuffer sql = new StringBuffer(super.getInsertStatement(insertOrUpdateStatement, database, sqlGeneratorChain));
-        
+
         sql.deleteCharAt(sql.lastIndexOf(";"));
-        
+
         StringBuffer updateClause = new StringBuffer("ON DUPLICATE KEY UPDATE ");
         String[] pkFields=insertOrUpdateStatement.getPrimaryKey().split(",");
         HashSet<String> hashPkFields = new HashSet<String>(Arrays.asList(pkFields));
@@ -38,7 +43,7 @@ public class InsertOrUpdateGeneratorMySQL extends InsertOrUpdateGenerator {
             	updateClause.append(",");
             }
         }
-        
+
         if(hasFields) {
         	// append the updateClause onto the end of the insert statement
             updateClause.deleteCharAt(updateClause.lastIndexOf(","));

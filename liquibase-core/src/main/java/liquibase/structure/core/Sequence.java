@@ -1,10 +1,13 @@
 package liquibase.structure.core;
 
+import java.math.BigInteger;
+
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 
-import java.math.BigInteger;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(DatabaseObject.class)
 public class Sequence extends AbstractDatabaseObject {
 
     public Sequence() {

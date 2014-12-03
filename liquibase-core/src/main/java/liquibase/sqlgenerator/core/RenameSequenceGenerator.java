@@ -12,15 +12,19 @@ import liquibase.database.core.PostgresDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
+import liquibase.sqlgenerator.SqlGenerator;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.statement.core.RenameSequenceStatement;
 import liquibase.structure.core.Sequence;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(SqlGenerator.class)
 public class RenameSequenceGenerator extends AbstractSqlGenerator<RenameSequenceStatement> {
 
     @Override
     public boolean supports(RenameSequenceStatement statement, Database database) {
-        return database.supportsSequences() 
+        return database.supportsSequences()
             // TODO: following are not implemented/tested currently
             && !(database instanceof DB2Database)
             && !(database instanceof FirebirdDatabase)

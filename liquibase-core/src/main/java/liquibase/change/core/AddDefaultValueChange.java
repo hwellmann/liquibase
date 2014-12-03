@@ -1,21 +1,28 @@
 package liquibase.change.core;
 
-import liquibase.change.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Locale;
+
+import liquibase.change.AbstractChange;
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
+import liquibase.change.DatabaseChange;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.statement.DatabaseFunction;
 import liquibase.statement.SequenceNextValueFunction;
 import liquibase.statement.SqlStatement;
-import liquibase.statement.DatabaseFunction;
 import liquibase.statement.core.AddDefaultValueStatement;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
 import liquibase.util.ISODateFormat;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Locale;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Sets a new default value to an existing column.
@@ -24,6 +31,7 @@ import java.util.Locale;
         description = "Adds a default value to the database definition for the specified column.\n" +
                 "One of defaultValue, defaultValueNumeric, defaultValueBoolean or defaultValueDate must be set",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(Change.class)
 public class AddDefaultValueChange extends AbstractChange {
 
     private String catalogName;

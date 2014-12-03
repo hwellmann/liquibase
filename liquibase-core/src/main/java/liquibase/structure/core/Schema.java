@@ -1,12 +1,20 @@
 package liquibase.structure.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import liquibase.CatalogAndSchema;
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
-import java.util.*;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(DatabaseObject.class)
 public class Schema extends AbstractDatabaseObject {
 
     @Override
@@ -21,7 +29,7 @@ public class Schema extends AbstractDatabaseObject {
     public Schema(String catalog, String schemaName) {
         this(new Catalog(catalog), schemaName);
     }
-    
+
     public Schema(Catalog catalog, String schemaName) {
         schemaName = StringUtils.trimToNull(schemaName);
 
@@ -87,7 +95,7 @@ public class Schema extends AbstractDatabaseObject {
         }
         return getCatalog().getName();
     }
-    
+
     @Override
     public String toString() {
         String catalogName = getCatalogName();
