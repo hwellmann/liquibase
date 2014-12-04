@@ -65,6 +65,7 @@
         <module>liquibase-ant</module>
         <module>liquibase-yaml</module>
         <module>liquibase-spring</module>
+        <module>liquibase-util</module>
     </modules>
 
     <dependencyManagement>
