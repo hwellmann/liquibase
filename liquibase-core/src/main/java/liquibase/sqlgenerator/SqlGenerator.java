@@ -3,9 +3,9 @@ package liquibase.sqlgenerator;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
-import liquibase.servicelocator.PrioritizedService;
 import liquibase.sql.Sql;
 import liquibase.statement.SqlStatement;
+import liquibase.util.PrioritizedService;
 
 /**
  * SqlGenerator implementations take a database-independent SqlStatement interface and create a database-specific Sql object.

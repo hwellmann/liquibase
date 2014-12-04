@@ -1,4 +1,4 @@
-package liquibase.servicelocator;
+package liquibase.util;
 
 public interface PrioritizedService {
 

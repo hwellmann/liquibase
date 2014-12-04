@@ -18,20 +18,14 @@ import liquibase.logging.Logger;
 import liquibase.logging.core.DefaultLogger;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
+import liquibase.util.LiquibaseService;
+import liquibase.util.PrioritizedService;
 import liquibase.util.StringUtils;
 
-public class ServiceLocator {
+public class ScanningServiceLocator {
 
-    private static ServiceLocator instance;
+    private static ScanningServiceLocator instance;
 
-    static {
-        try {
-            Class<?> scanner = Class.forName("Liquibase.ServiceLocator.ClrServiceLocator, Liquibase");
-            instance = (ServiceLocator) scanner.newInstance();
-        } catch (Exception e) {
-            instance = new MetaInfServiceLocator();
-        }
-    }
 
     private ResourceAccessor resourceAccessor;
 
@@ -40,31 +34,31 @@ public class ServiceLocator {
     private Logger logger = new DefaultLogger(); //cannot look up regular logger because you get a stackoverflow since we are in the servicelocator
     private PackageScanClassResolver classResolver;
 
-    protected ServiceLocator() {
+    protected ScanningServiceLocator() {
         this.classResolver = defaultClassLoader();
         setResourceAccessor(new ClassLoaderResourceAccessor());
     }
 
-    protected ServiceLocator(ResourceAccessor accessor) {
+    protected ScanningServiceLocator(ResourceAccessor accessor) {
         this.classResolver = defaultClassLoader();
         setResourceAccessor(accessor);
     }
 
-    protected ServiceLocator(PackageScanClassResolver classResolver) {
+    protected ScanningServiceLocator(PackageScanClassResolver classResolver) {
         this.classResolver = classResolver;
         setResourceAccessor(new ClassLoaderResourceAccessor());
     }
 
-    protected ServiceLocator(PackageScanClassResolver classResolver, ResourceAccessor accessor) {
+    protected ScanningServiceLocator(PackageScanClassResolver classResolver, ResourceAccessor accessor) {
         this.classResolver = classResolver;
         setResourceAccessor(accessor);
     }
 
-    public static ServiceLocator getInstance() {
+    public static ScanningServiceLocator getInstance() {
         return instance;
     }
 
-    public static void setInstance(ServiceLocator newInstance) {
+    public static void setInstance(ScanningServiceLocator newInstance) {
         instance = newInstance;
     }
 
@@ -225,10 +219,6 @@ public class ServiceLocator {
         }
 
         return classes;
-    }
-
-    public static void reset() {
-        instance = new MetaInfServiceLocator();
     }
 
     protected Logger getLogger() {

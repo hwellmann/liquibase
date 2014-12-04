@@ -4,7 +4,7 @@ import java.io.StringWriter;
 
 import liquibase.executor.LoggingExecutor;
 import liquibase.sdk.database.MockDatabase;
-import liquibase.servicelocator.LiquibaseService;
+import liquibase.util.LiquibaseService;
 
 @LiquibaseService(skip=true)
 public class MockExecutor extends LoggingExecutor {

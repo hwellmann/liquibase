@@ -6,9 +6,9 @@
  */
 package liquibase.osgi;
 
-import liquibase.servicelocator.CustomResolverServiceLocator;
 import liquibase.servicelocator.PackageScanClassResolver;
 import liquibase.servicelocator.ServiceLocator;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -23,7 +23,7 @@ public class LiquibaseActivator implements BundleActivator {
 
         PackageScanClassResolver resolver = new OSGIPackageScanClassResolver(bundleContext.getBundle());
 
-        ServiceLocator.setInstance(new CustomResolverServiceLocator(resolver));
+        //ServiceLocator.setInstance(new CustomResolverServiceLocator(resolver));
     }
 
     @Override

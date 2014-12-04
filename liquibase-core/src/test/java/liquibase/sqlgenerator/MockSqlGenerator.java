@@ -3,10 +3,10 @@ package liquibase.sqlgenerator;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
-import liquibase.servicelocator.LiquibaseService;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
 import liquibase.statement.SqlStatement;
+import liquibase.util.LiquibaseService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

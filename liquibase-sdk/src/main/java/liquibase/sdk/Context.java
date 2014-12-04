@@ -1,16 +1,21 @@
 package liquibase.sdk;
 
-import liquibase.change.Change;
-import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
-import liquibase.servicelocator.ServiceLocator;
-import liquibase.sqlgenerator.SqlGenerator;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import liquibase.change.Change;
+import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
+import liquibase.sqlgenerator.SqlGenerator;
 
 public class Context {
 
@@ -70,13 +75,13 @@ public class Context {
         }
 
         try {
-            for (String packageName : ServiceLocator.getInstance().getPackages()) {
-                Enumeration<URL> dirs = this.getClass().getClassLoader().getResources(packageName.replace('.', '/'));
-                while (dirs.hasMoreElements()) {
-                    File dir = new File(dirs.nextElement().toURI());
-                    findClasses(packageName, dir);
-                }
-            }
+//            for (String packageName : ServiceLocator.getInstance().getPackages()) {
+//                Enumeration<URL> dirs = this.getClass().getClassLoader().getResources(packageName.replace('.', '/'));
+//                while (dirs.hasMoreElements()) {
+//                    File dir = new File(dirs.nextElement().toURI());
+//                    findClasses(packageName, dir);
+//                }
+//            }
         } catch (Exception e) {
             throw new UnexpectedLiquibaseSdkException(e);
         }

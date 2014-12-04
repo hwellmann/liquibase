@@ -10,12 +10,12 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.servicelocator.LiquibaseService;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Data;
 import liquibase.structure.core.Table;
 import liquibase.util.ISODateFormat;
 import liquibase.util.JdbcUtils;
+import liquibase.util.LiquibaseService;
 import liquibase.util.csv.CSVWriter;
 
 import java.io.BufferedWriter;

@@ -4,7 +4,7 @@ import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.resource.ResourceAccessor;
-import liquibase.servicelocator.PrioritizedService;
+import liquibase.util.PrioritizedService;
 
 public interface ChangeLogParser extends PrioritizedService, LiquibaseParser {
 

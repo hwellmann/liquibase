@@ -2,8 +2,8 @@ package liquibase.datatype;
 
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.servicelocator.PrioritizedService;
 import liquibase.statement.DatabaseFunction;
+import liquibase.util.PrioritizedService;
 
 import java.util.ArrayList;
 import java.util.List;

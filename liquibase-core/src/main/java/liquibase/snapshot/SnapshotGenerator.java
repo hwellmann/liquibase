@@ -2,8 +2,8 @@ package liquibase.snapshot;
 
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
-import liquibase.servicelocator.PrioritizedService;
 import liquibase.structure.DatabaseObject;
+import liquibase.util.PrioritizedService;
 
 public interface SnapshotGenerator {
 

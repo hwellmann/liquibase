@@ -1,34 +1,49 @@
 package liquibase.dbtest;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertFalse;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.StringWriter;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
 import liquibase.CatalogAndSchema;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
-import liquibase.changelog.ChangeLogHistoryService;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
-import liquibase.database.core.OracleDatabase;
-import liquibase.structure.core.*;
-import liquibase.test.DiffResultAssert;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
+import liquibase.database.core.OracleDatabase;
 import liquibase.database.jvm.JdbcConnection;
-import liquibase.diff.compare.CompareControl;
-import liquibase.diff.output.report.DiffToReport;
-import liquibase.snapshot.*;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.diff.DiffGeneratorFactory;
+import liquibase.diff.DiffResult;
+import liquibase.diff.compare.CompareControl;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.DiffToChangeLog;
+import liquibase.diff.output.report.DiffToReport;
 import liquibase.exception.ChangeLogParseException;
-import liquibase.exception.LiquibaseException;
-import liquibase.servicelocator.ServiceLocator;
-import liquibase.executor.ExecutorService;
-import liquibase.executor.Executor;
-import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
 import liquibase.exception.ValidationFailedException;
+import liquibase.executor.Executor;
+import liquibase.executor.ExecutorService;
 import liquibase.lockservice.LockService;
 import liquibase.lockservice.LockServiceFactory;
 import liquibase.logging.LogFactory;
@@ -36,24 +51,23 @@ import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.SnapshotControl;
+import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.core.DropTableStatement;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.View;
 import liquibase.test.DatabaseTestContext;
+import liquibase.test.DiffResultAssert;
 import liquibase.test.JUnitResourceAccessor;
-import liquibase.test.TestContext;
 import liquibase.util.FileUtil;
 import liquibase.util.RegexMatcher;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
-
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Base class for all database integration tests.  There is an AbstractIntegrationTest subclass for each supported database.
@@ -92,7 +106,7 @@ public abstract class AbstractIntegrationTest {
 
         this.url = url;
 
-        ServiceLocator.getInstance().setResourceAccessor(TestContext.getInstance().getTestResourceAccessor());
+        //ServiceLocator.getInstance().setResourceAccessor(TestContext.getInstance().getTestResourceAccessor());
     }
 
     private void openConnection(String url) throws Exception {
@@ -808,7 +822,7 @@ public abstract class AbstractIntegrationTest {
 //        if (database == null) {
 //            return;
 //        }
-//        
+//
 //        // First import some data from utf8 encoded csv
 //        // and create a snapshot
 //        Liquibase liquibase = createLiquibase("changelogs/common/encoding.utf8.changelog.xml");

@@ -1,7 +1,7 @@
 package liquibase.parser;
 
 import liquibase.serializer.LiquibaseSerializer;
-import liquibase.servicelocator.PrioritizedService;
+import liquibase.util.PrioritizedService;
 
 public interface NamespaceDetails extends PrioritizedService{
 

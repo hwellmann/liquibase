@@ -2,7 +2,7 @@ package liquibase.logging;
 
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
-import liquibase.servicelocator.PrioritizedService;
+import liquibase.util.PrioritizedService;
 
 public interface Logger extends PrioritizedService {
 

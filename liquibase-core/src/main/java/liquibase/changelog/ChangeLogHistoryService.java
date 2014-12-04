@@ -6,7 +6,7 @@ import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.DatabaseHistoryException;
 import liquibase.exception.LiquibaseException;
-import liquibase.servicelocator.PrioritizedService;
+import liquibase.util.PrioritizedService;
 
 import java.util.Date;
 import java.util.List;

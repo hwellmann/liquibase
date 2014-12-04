@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import liquibase.exception.ServiceNotFoundException;
-import liquibase.executor.Executor;
-import liquibase.logging.Logger;
-import liquibase.parser.ChangeLogParser;
+import liquibase.util.PrioritizedService;
 
 public class MetaInfServiceLocator extends ServiceLocator {
 
     @Override
     public Object newInstance(Class requiredInterface) throws ServiceNotFoundException {
-        if (requiredInterface == Executor.class || requiredInterface == Logger.class
-            || requiredInterface == ChangeLogParser.class) {
             ServiceLoader<Object> loader = ServiceLoader.load(requiredInterface);
 
             if (PrioritizedService.class.isAssignableFrom(requiredInterface)) {
@@ -44,12 +40,9 @@ public class MetaInfServiceLocator extends ServiceLocator {
                 }
                 return result;
             }
+        throw new ServiceNotFoundException("Could not find any implementation of "
+            + requiredInterface.getName());
 
-            throw new ServiceNotFoundException("Could not find any implementation of "
-                + requiredInterface.getName());
-
-        }
-        return super.newInstance(requiredInterface);
     }
 
     @Override

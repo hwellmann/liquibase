@@ -7,10 +7,10 @@ import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.RanChangeSet;
 import liquibase.structure.DatabaseObject;
 import liquibase.exception.*;
-import liquibase.servicelocator.PrioritizedService;
 import liquibase.sql.visitor.SqlVisitor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.DatabaseFunction;
+import liquibase.util.PrioritizedService;
 
 import java.io.IOException;
 import java.io.Writer;

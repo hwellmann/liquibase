@@ -11,7 +11,7 @@ import liquibase.resource.ResourceAccessor;
 /**
  * Allows overriding of the resolver class.
  */
-public class CustomResolverServiceLocator extends ServiceLocator{
+public class CustomResolverServiceLocator extends ScanningServiceLocator{
     public CustomResolverServiceLocator(PackageScanClassResolver classResolver) {
         super(classResolver);
     }

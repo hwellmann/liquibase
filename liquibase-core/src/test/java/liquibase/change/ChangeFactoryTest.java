@@ -4,7 +4,8 @@ import liquibase.change.core.AddAutoIncrementChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropTableChange;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.servicelocator.LiquibaseService;
+import liquibase.util.LiquibaseService;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

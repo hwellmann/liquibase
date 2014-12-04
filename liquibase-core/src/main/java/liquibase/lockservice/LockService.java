@@ -3,7 +3,7 @@ package liquibase.lockservice;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LockException;
-import liquibase.servicelocator.PrioritizedService;
+import liquibase.util.PrioritizedService;
 
 /**
  * @author John Sanda
