@@ -1,8 +1,13 @@
 package liquibase.util;
 
-import liquibase.database.Database;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /**
@@ -39,16 +44,16 @@ public class StringUtils {
             return returnString;
         }
     }
-    
+
     /**
      * Removes any comments from multiple line SQL using {@link #stripComments(String)}
      *  and then extracts each individual statement using {@link #splitSQL(String, String)}.
-     * 
+     *
      * @param multiLineSQL A String containing all the SQL statements
      * @param stripComments If true then comments will be stripped, if false then they will be left in the code
      */
     public static String[] processMutliLineSQL(String multiLineSQL,boolean stripComments, boolean splitStatements, String endDelimiter) {
-        
+
         String stripped = stripComments ? stripComments(multiLineSQL) : multiLineSQL;
 	if (splitStatements) {
 	    return splitSQL(stripped, endDelimiter);
@@ -85,7 +90,7 @@ public class StringUtils {
      * any comments that are between \/**\/ or anything that matches
      * SP--SP<text>\n (to support the ANSI standard commenting of --
      * at the end of a line).
-     * 
+     *
      * @return The String without the comments in
      */
     public static String stripComments(String multiLineSQL) {
@@ -118,7 +123,7 @@ public class StringUtils {
         if (collection.size() == 0) {
             return "";
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         for (Object val : collection) {
             buffer.append(formatter.toString(val)).append(delimiter);
