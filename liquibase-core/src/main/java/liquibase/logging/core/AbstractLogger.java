@@ -56,12 +56,12 @@ public abstract class AbstractLogger implements Logger {
     }
 
     @Override
-    public void setChangeLog(DatabaseChangeLog databaseChangeLog) {
-        this.databaseChangeLog = databaseChangeLog;
+    public void setChangeLog(Object databaseChangeLog) {
+        this.databaseChangeLog = (DatabaseChangeLog) databaseChangeLog;
     }
 
     @Override
-    public void setChangeSet(ChangeSet changeSet) {
-        this.changeSet = changeSet;
+    public void setChangeSet(Object changeSet) {
+        this.changeSet = (ChangeSet) changeSet;
     }
 }
