@@ -13,8 +13,9 @@ import java.util.List;
 import liquibase.CatalogAndSchema;
 import liquibase.Liquibase;
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
@@ -447,7 +448,7 @@ public class MockDatabase implements Database, InternalDatabase {
     }
 
     @Override
-    public ChangeSet.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return null;
     }
 
@@ -457,7 +458,7 @@ public class MockDatabase implements Database, InternalDatabase {
     }
 
     @Override
-    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSet.ExecType execType) throws DatabaseException {
+    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSetImpl.ExecType execType) throws DatabaseException {
         ;
     }
 

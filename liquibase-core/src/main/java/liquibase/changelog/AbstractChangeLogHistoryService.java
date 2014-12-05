@@ -29,7 +29,7 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
 
     }
 
-    public ChangeSet.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         RanChangeSet foundRan = getRanChangeSet(changeSet);
 
         if (foundRan == null) {

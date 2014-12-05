@@ -24,12 +24,12 @@ public class ChangeLogIteratorTest {
     @Before
     public void setUp() {
         changeLog = new DatabaseChangeLog();
-        changeLog.addChangeSet(new ChangeSet("1", "nvoxland", false, false, "/path/to/changelog", "test1", "mysql", null));
-        changeLog.addChangeSet(new ChangeSet("2", "nvoxland", false, false, "/path/to/changelog",  "test1", "oracle", null));
-        changeLog.addChangeSet(new ChangeSet("3", "nvoxland", false, false, "/path/to/changelog",  "test2", "mysql", null));
-        changeLog.addChangeSet(new ChangeSet("4", "nvoxland", false, false, "/path/to/changelog",  null, null, null));
-        changeLog.addChangeSet(new ChangeSet("5", "nvoxland", false, false, "/path/to/changelog",  null, "mysql", null));
-        changeLog.addChangeSet(new ChangeSet("6", "nvoxland", false, false, "/path/to/changelog",  "test2", null, null));
+        changeLog.addChangeSet(new ChangeSetImpl("1", "nvoxland", false, false, "/path/to/changelog", "test1", "mysql", null));
+        changeLog.addChangeSet(new ChangeSetImpl("2", "nvoxland", false, false, "/path/to/changelog",  "test1", "oracle", null));
+        changeLog.addChangeSet(new ChangeSetImpl("3", "nvoxland", false, false, "/path/to/changelog",  "test2", "mysql", null));
+        changeLog.addChangeSet(new ChangeSetImpl("4", "nvoxland", false, false, "/path/to/changelog",  null, null, null));
+        changeLog.addChangeSet(new ChangeSetImpl("5", "nvoxland", false, false, "/path/to/changelog",  null, "mysql", null));
+        changeLog.addChangeSet(new ChangeSetImpl("6", "nvoxland", false, false, "/path/to/changelog",  "test2", null, null));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ChangeLogIteratorTest {
 
     private static class TestChangeSetVisitor implements ChangeSetVisitor {
 
-        public List<ChangeSet> visitedChangeSets = new ArrayList<ChangeSet>();
+        public List<ChangeSetImpl> visitedChangeSets = new ArrayList<ChangeSetImpl>();
 
 
         @Override
@@ -86,7 +86,7 @@ public class ChangeLogIteratorTest {
         }
 
         @Override
-        public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+        public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
             visitedChangeSets.add(changeSet);
         }
     }

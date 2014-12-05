@@ -1,7 +1,7 @@
 package liquibase.logging.core;
 
-import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.logging.LogLevel;
 import liquibase.logging.Logger;

@@ -2,7 +2,7 @@ package liquibase.changelog.visitor;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.sdk.database.MockDatabase;
@@ -20,13 +20,13 @@ import liquibase.exception.ValidationErrors;
 
 public class ValidatingVisitorTest {
 
-    private ChangeSet changeSet1;
-    private ChangeSet changeSet2;
+    private ChangeSetImpl changeSet1;
+    private ChangeSetImpl changeSet2;
 
     @Before
     public void setup() {
-        changeSet1 = new ChangeSet("1", "testAuthor", false, false, "path/changelog", null, null, null);
-        changeSet2 = new ChangeSet("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet1 = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet2 = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
     }
 
 

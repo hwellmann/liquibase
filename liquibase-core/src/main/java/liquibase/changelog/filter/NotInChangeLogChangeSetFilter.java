@@ -1,17 +1,18 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class NotInChangeLogChangeSetFilter implements ChangeSetFilter {
 
-    private Set<ChangeSet> changeSets;
+    private Set<ChangeSetImpl> changeSets;
 
     public NotInChangeLogChangeSetFilter(DatabaseChangeLog databaseChangeLog) {
-        this.changeSets = new HashSet<ChangeSet>(databaseChangeLog.getChangeSets());
+        this.changeSets = new HashSet<ChangeSetImpl>(databaseChangeLog.getChangeSets());
     }
 
     @Override

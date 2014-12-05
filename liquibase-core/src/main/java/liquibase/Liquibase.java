@@ -836,11 +836,11 @@ public class Liquibase {
     /**
      * @deprecated use version with LabelExpression
      */
-    public List<ChangeSet> listUnrunChangeSets(Contexts contexts) throws LiquibaseException {
+    public List<ChangeSetImpl> listUnrunChangeSets(Contexts contexts) throws LiquibaseException {
         return listUnrunChangeSets(contexts, new LabelExpression());
     }
 
-    public List<ChangeSet> listUnrunChangeSets(Contexts contexts, LabelExpression labels) throws LiquibaseException {
+    public List<ChangeSetImpl> listUnrunChangeSets(Contexts contexts, LabelExpression labels) throws LiquibaseException {
         changeLogParameters.setContexts(contexts);
         changeLogParameters.setLabels(labels);
 
@@ -897,7 +897,7 @@ public class Liquibase {
         changeLogParameters.setLabels(labels);
 
         try {
-            List<ChangeSet> unrunChangeSets = listUnrunChangeSets(contexts, labels);
+            List<ChangeSetImpl> unrunChangeSets = listUnrunChangeSets(contexts, labels);
             if (unrunChangeSets.size() == 0) {
                 out.append(getDatabase().getConnection().getConnectionUserName());
                 out.append("@");

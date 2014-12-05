@@ -1,6 +1,6 @@
 package liquibase.changelog.visitor;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
@@ -10,9 +10,9 @@ import java.util.*;
 
 public class ListVisitor implements ChangeSetVisitor {
 
-    private List<ChangeSet> seenChangeSets = new ArrayList<ChangeSet>();
+    private List<ChangeSetImpl> seenChangeSets = new ArrayList<ChangeSetImpl>();
 
-    public List<ChangeSet> getSeenChangeSets() {
+    public List<ChangeSetImpl> getSeenChangeSets() {
         return seenChangeSets;
     }
 
@@ -22,7 +22,7 @@ public class ListVisitor implements ChangeSetVisitor {
     }
 
     @Override
-    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         seenChangeSets.add(changeSet);
     }
 }

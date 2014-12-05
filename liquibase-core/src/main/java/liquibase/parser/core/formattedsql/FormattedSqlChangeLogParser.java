@@ -9,9 +9,10 @@ import java.util.regex.Pattern;
 import liquibase.Labels;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeSet;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
 import liquibase.parser.ChangeLogParser;
@@ -77,7 +78,7 @@ public class FormattedSqlChangeLogParser implements ChangeLogParser {
             StringBuffer currentSql = new StringBuffer();
             StringBuffer currentRollbackSql = new StringBuffer();
 
-            ChangeSet changeSet = null;
+            ChangeSetImpl changeSet = null;
             RawSQLChange change = null;
             Pattern changeLogPattern = Pattern.compile("\\-\\-\\s*liquibase formatted.*", Pattern.CASE_INSENSITIVE);
             Pattern changeSetPattern = Pattern.compile("\\-\\-[\\s]*changeset\\s+([^:]+):(\\S+).*", Pattern.CASE_INSENSITIVE);
@@ -162,7 +163,7 @@ public class FormattedSqlChangeLogParser implements ChangeLogParser {
                     String dbms = parseString(dbmsPatternMatcher);
 
 
-                    changeSet = new ChangeSet(changeSetPatternMatcher.group(2), changeSetPatternMatcher.group(1), runAlways, runOnChange, logicalFilePath, context, dbms, runInTransaction, changeLog.getObjectQuotingStrategy(), changeLog);
+                    changeSet = new ChangeSetImpl(changeSetPatternMatcher.group(2), changeSetPatternMatcher.group(1), runAlways, runOnChange, logicalFilePath, context, dbms, runInTransaction, changeLog.getObjectQuotingStrategy(), changeLog);
                     changeSet.setLabels(new Labels(labels));
                     changeSet.setFailOnError(failOnError);
                     changeLog.addChangeSet(changeSet);

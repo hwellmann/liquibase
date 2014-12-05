@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor {
 
-    private LinkedHashMap<ChangeSet, ChangeSetStatus> changeSetStatuses = new LinkedHashMap<ChangeSet, ChangeSetStatus>();
+    private LinkedHashMap<ChangeSetImpl, ChangeSetStatus> changeSetStatuses = new LinkedHashMap<ChangeSetImpl, ChangeSetStatus>();
     private final List<RanChangeSet> ranChangeSets;
 
     public StatusVisitor(Database database) throws LiquibaseException {
@@ -28,20 +28,20 @@ public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor 
     }
 
     @Override
-    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         ChangeSetStatus status = addStatus(changeSet, databaseChangeLog, database);
         status.setWillRun(true);
         status.setFilterResults(filterResults);
     }
 
     @Override
-    public void skipped(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void skipped(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         ChangeSetStatus status = addStatus(changeSet, databaseChangeLog, database);
         status.setWillRun(false);
         status.setFilterResults(filterResults);
     }
 
-    protected ChangeSetStatus addStatus(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database) throws LiquibaseException {
+    protected ChangeSetStatus addStatus(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database) throws LiquibaseException {
         ChangeSetStatus status = new ChangeSetStatus(changeSet);
 
         RanChangeSet ranChangeSetToRemove = null;
@@ -80,7 +80,7 @@ public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor 
     public List<ChangeSetStatus> getStatuses() {
         ArrayList<ChangeSetStatus> returnList = new ArrayList<ChangeSetStatus>();
         for (RanChangeSet changeSet : ranChangeSets) {
-            ChangeSetStatus status = new ChangeSetStatus(new ChangeSet(changeSet.getId(), changeSet.getAuthor(), false, false, changeSet.getChangeLog(), null, null, null));
+            ChangeSetStatus status = new ChangeSetStatus(new ChangeSetImpl(changeSet.getId(), changeSet.getAuthor(), false, false, changeSet.getChangeLog(), null, null, null));
             status.setPreviouslyRan(true);
             status.setDateLastExecuted(changeSet.getDateExecuted());
             status.setStoredCheckSum(changeSet.getLastCheckSum());

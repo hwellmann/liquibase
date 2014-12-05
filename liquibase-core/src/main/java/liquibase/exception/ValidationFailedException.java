@@ -1,5 +1,6 @@
 package liquibase.exception;
 
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.visitor.ValidatingVisitor;
 import liquibase.database.Database;
@@ -14,10 +15,10 @@ import java.util.Set;
 
 public class ValidationFailedException extends MigrationFailedException {
 
-    private List<ChangeSet> invalidMD5Sums;
+    private List<ChangeSetImpl> invalidMD5Sums;
     private List<FailedPrecondition> failedPreconditions;
     private List<ErrorPrecondition> errorPreconditions;
-    private Set<ChangeSet> duplicateChangeSets;
+    private Set<ChangeSetImpl> duplicateChangeSets;
     private List<SetupException> setupExceptions;
     private List<Throwable> changeValidationExceptions;
     private ValidationErrors validationErrors;
@@ -98,7 +99,7 @@ public class ValidationFailedException extends MigrationFailedException {
         return message.toString();
     }
 
-    public List<ChangeSet> getInvalidMD5Sums() {
+    public List<ChangeSetImpl> getInvalidMD5Sums() {
         return invalidMD5Sums;
     }
 

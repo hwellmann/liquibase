@@ -734,7 +734,7 @@ public abstract class AbstractJdbcDatabase implements Database {
 
 	        final long changeSetStarted = System.currentTimeMillis();
 	        DiffResult diffResult = DiffGeneratorFactory.getInstance().compare(new EmptyDatabaseSnapshot(this), snapshot, new CompareControl(snapshot.getSnapshotControl().getTypesToInclude()));
-            List<ChangeSet> changeSets = new DiffToChangeLog(diffResult, new DiffOutputControl(true, true, false).addIncludedSchema(schemaToDrop)).generateChangeSets();
+            List<ChangeSetImpl> changeSets = new DiffToChangeLog(diffResult, new DiffOutputControl(true, true, false).addIncludedSchema(schemaToDrop)).generateChangeSets();
 	        LogFactory.getLogger().debug(String.format("ChangeSet to Remove Database Objects generated in %d ms.", System.currentTimeMillis() - changeSetStarted));
 
             boolean previousAutoCommit = this.getAutoCommitMode();
@@ -1058,7 +1058,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      * Returns the run status for the given ChangeSet
      */
     @Override
-    public ChangeSet.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return ChangeLogHistoryServiceFactory.getInstance().getChangeLogService(this).getRunStatus(changeSet);
     }
 
@@ -1085,7 +1085,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      * with the information.
      */
     @Override
-    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSet.ExecType execType) throws DatabaseException {
+    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSetImpl.ExecType execType) throws DatabaseException {
         ChangeLogHistoryServiceFactory.getInstance().getChangeLogService(this).setExecType(changeSet, execType);
     }
 

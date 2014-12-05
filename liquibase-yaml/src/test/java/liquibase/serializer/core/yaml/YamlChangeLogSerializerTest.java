@@ -2,7 +2,7 @@ package liquibase.serializer.core.yaml;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class YamlChangeLogSerializerTest {
 
     @Test
     public void serialize__change() {
-        ChangeSet changeSet = new ChangeSet("test1", "nvoxland", false, true, "/test/me.txt", null, null, null);
+        ChangeSetImpl changeSet = new ChangeSetImpl("test1", "nvoxland", false, true, "/test/me.txt", null, null, null);
         CreateTableChange change = new CreateTableChange();
         change.setTableName("testTable");
         change.addColumn(new ColumnConfig().setName("id").setType("int"));

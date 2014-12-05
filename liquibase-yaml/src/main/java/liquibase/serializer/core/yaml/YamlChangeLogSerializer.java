@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
@@ -67,7 +67,7 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
 
     protected Map<String, Object> toMap(LiquibaseSerializable object) {
         Comparator<String> comparator;
-        if (object instanceof ChangeSet) {
+        if (object instanceof ChangeSetImpl) {
             comparator = new ChangeSetComparator();
         } else {
             comparator = new Comparator<String>() {
@@ -108,10 +108,10 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void write(List<ChangeSet> changeSets, OutputStream out) throws IOException {
+    public void write(List<ChangeSetImpl> changeSets, OutputStream out) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
         writer.write("databaseChangeLog:\n");
-        for (ChangeSet changeSet : changeSets) {
+        for (ChangeSetImpl changeSet : changeSets) {
             writer.write(StringUtils.indent(serialize(changeSet, true), 2));
             writer.write("\n");
         }
@@ -119,7 +119,7 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -157,8 +157,8 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
             Set<Property> returnSet = new HashSet<Property>();
             LiquibaseSerializable serialzableType = null;
             try {
-                if (type.equals(ChangeSet.class)) {
-                    serialzableType = new ChangeSet("x", "y", false, false, null, null, null, null);
+                if (type.equals(ChangeSetImpl.class)) {
+                    serialzableType = new ChangeSetImpl("x", "y", false, false, null, null, null, null);
                 } else if (LiquibaseSerializable.class.isAssignableFrom(type)) {
                     serialzableType = (LiquibaseSerializable) type.newInstance();
                 } else {

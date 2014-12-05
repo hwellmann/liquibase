@@ -1,10 +1,8 @@
 package liquibase.changelog.visitor;
 
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeSet.ExecType;
-import liquibase.changelog.ChangeSet.RunStatus;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
@@ -13,15 +11,15 @@ import liquibase.precondition.core.PreconditionContainer;
 /**
  * An implementation of ChangeExecListener can be called by UpdateVisitor or
  * RollbackVisitor for each changeset that is actually run.
- * 
+ *
  * @author suehs
- * 
+ *
  */
 public interface ChangeExecListener {
 
   /**
    * Called just before a given changeset is run.
-   * 
+   *
    * @param changeSet
    *          that will be run
    * @param databaseChangeLog
@@ -31,11 +29,11 @@ public interface ChangeExecListener {
    * @param runStatus
    *          of the current change from the database
    */
-  void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, RunStatus runStatus);
+  void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ChangeSet.RunStatus runStatus);
 
   /**
    * Called after the given changeset is run.
-   * 
+   *
    * @param changeSet
    *          changeSet that was run
    * @param databaseChangeLog
@@ -45,11 +43,11 @@ public interface ChangeExecListener {
    * @param execType
    *          is the result
    */
-  void ran(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ExecType execType);
+  void ran(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ChangeSet.ExecType execType);
 
   /**
    * Called after a change is rolled back.
-   * 
+   *
    * @param changeSet
    *          changeSet that was rolled back
    * @param databaseChangeLog

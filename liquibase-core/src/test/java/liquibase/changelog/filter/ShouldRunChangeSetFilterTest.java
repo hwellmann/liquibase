@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import liquibase.change.CheckSum;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
@@ -15,6 +16,7 @@ import liquibase.executor.ExecutorService;
 import liquibase.statement.core.UpdateStatement;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class ShouldRunChangeSetFilterTest  {
@@ -28,7 +30,7 @@ public class ShouldRunChangeSetFilterTest  {
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database);
 
-        assertTrue(filter.accepts(new ChangeSet("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertTrue(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
     }
 
     @Test
@@ -37,23 +39,23 @@ public class ShouldRunChangeSetFilterTest  {
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database);
 
-        assertFalse("Already ran changeset should not be accepted", filter.accepts(new ChangeSet("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertFalse("Already ran changeset should not be accepted", filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
-        assertTrue("AlwaysRun changesets should always be accepted", filter.accepts(new ChangeSet("1", "testAuthor", true, false, "path/changelog", null, null, null)).isAccepted());
+        assertTrue("AlwaysRun changesets should always be accepted", filter.accepts(new ChangeSetImpl("1", "testAuthor", true, false, "path/changelog", null, null, null)).isAccepted());
 
-        assertTrue("RunOnChange changed changeset should be accepted", filter.accepts(new ChangeSet("1", "testAuthor", false, true, "path/changelog", null, null, null)).isAccepted());
+        assertTrue("RunOnChange changed changeset should be accepted", filter.accepts(new ChangeSetImpl("1", "testAuthor", false, true, "path/changelog", null, null, null)).isAccepted());
 
-        assertTrue("ChangeSet with different id should be accepted", filter.accepts(new ChangeSet("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertTrue("ChangeSet with different id should be accepted", filter.accepts(new ChangeSetImpl("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
-        assertTrue("ChangeSet with different author should be accepted", filter.accepts(new ChangeSet("1", "otherAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertTrue("ChangeSet with different author should be accepted", filter.accepts(new ChangeSetImpl("1", "otherAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
-        assertTrue("ChangSet with different path should be accepted", filter.accepts(new ChangeSet("1", "testAuthor", false, false, "other/changelog", null, null, null)).isAccepted());
+        assertTrue("ChangSet with different path should be accepted", filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "other/changelog", null, null, null)).isAccepted());
     }
 
     @Test
     public void does_NOT_accept_current_changeset_with_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSetWithClasspathPrefix = new ChangeSet("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 
@@ -63,7 +65,7 @@ public class ShouldRunChangeSetFilterTest  {
     @Test
     public void does_NOT_accept_current_changeset_when_inserted_changeset_has_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSet = new ChangeSet("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        ChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 
@@ -73,7 +75,7 @@ public class ShouldRunChangeSetFilterTest  {
     @Test
     public void does_NOT_accept_current_changeset_when_both_have_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSet = new ChangeSet("2", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 

@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liquibase.change.Change;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -33,7 +34,7 @@ public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
 
     @Override
     public String serialize(LiquibaseSerializable object, boolean pretty) {
-        if (object instanceof ChangeSet) {
+        if (object instanceof ChangeSetImpl) {
             StringBuilder builder = new StringBuilder();
 
             ChangeSet changeSet = (ChangeSet) object;
@@ -79,11 +80,11 @@ public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
     }
 
     @Override
-    public void write(List<ChangeSet> changeSets, OutputStream out) throws IOException {
+    public void write(List<ChangeSetImpl> changeSets, OutputStream out) throws IOException {
         StringBuilder builder = new StringBuilder();
         builder.append("--liquibase formatted sql\n\n");
 
-        for (ChangeSet changeSet : changeSets) {
+        for (ChangeSetImpl changeSet : changeSets) {
             builder.append(serialize(changeSet, true));
             builder.append("\n");
         }
@@ -93,7 +94,7 @@ public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
     }
 
     @Override
-    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
 
     }
 }

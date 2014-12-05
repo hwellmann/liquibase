@@ -37,7 +37,7 @@ public class DatabaseChangeLog implements Comparable<DatabaseChangeLog>, Conditi
     private String logicalFilePath;
     private ObjectQuotingStrategy objectQuotingStrategy;
 
-    private List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
+    private List<ChangeSetImpl> changeSets = new ArrayList<ChangeSetImpl>();
     private ChangeLogParameters changeLogParameters;
 
     private RuntimeEnvironment runtimeEnvironment;
@@ -128,8 +128,8 @@ public class DatabaseChangeLog implements Comparable<DatabaseChangeLog>, Conditi
     }
 
 
-    public ChangeSet getChangeSet(String path, String author, String id) {
-        for (ChangeSet changeSet : changeSets) {
+    public ChangeSetImpl getChangeSet(String path, String author, String id) {
+        for (ChangeSetImpl changeSet : changeSets) {
             if (normalizePath(changeSet.getFilePath()).equalsIgnoreCase(normalizePath(path))
                     && changeSet.getAuthor().equalsIgnoreCase(author)
                     && changeSet.getId().equalsIgnoreCase(id)
@@ -145,11 +145,11 @@ public class DatabaseChangeLog implements Comparable<DatabaseChangeLog>, Conditi
         return null;
     }
 
-    public List<ChangeSet> getChangeSets() {
+    public List<ChangeSetImpl> getChangeSets() {
         return changeSets;
     }
 
-    public void addChangeSet(ChangeSet changeSet) {
+    public void addChangeSet(ChangeSetImpl changeSet) {
         this.changeSets.add(changeSet);
     }
 
@@ -197,7 +197,7 @@ public class DatabaseChangeLog implements Comparable<DatabaseChangeLog>, Conditi
         }
     }
 
-    public ChangeSet getChangeSet(RanChangeSet ranChangeSet) {
+    public ChangeSetImpl getChangeSet(RanChangeSet ranChangeSet) {
         return getChangeSet(ranChangeSet.getChangeLog(), ranChangeSet.getAuthor(), ranChangeSet.getId());
     }
 
@@ -362,15 +362,15 @@ public class DatabaseChangeLog implements Comparable<DatabaseChangeLog>, Conditi
             }
             this.getPreconditions().addNestedPrecondition(preconditions);
         }
-        for (ChangeSet changeSet : changeLog.getChangeSets()) {
+        for (ChangeSetImpl changeSet : changeLog.getChangeSets()) {
             this.changeSets.add(changeSet);
         }
 
         return true;
     }
 
-    protected ChangeSet createChangeSet(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
-        ChangeSet changeSet = new ChangeSet(this);
+    protected ChangeSetImpl createChangeSet(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
+        ChangeSetImpl changeSet = new ChangeSetImpl(this);
         changeSet.setChangeLogParameters(this.getChangeLogParameters());
         try {
             changeSet.load(node, resourceAccessor);

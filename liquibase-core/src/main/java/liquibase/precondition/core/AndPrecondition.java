@@ -3,8 +3,8 @@ package liquibase.precondition.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;

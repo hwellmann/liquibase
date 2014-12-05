@@ -1,16 +1,17 @@
 package liquibase.changelog.visitor;
 
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeSet.RunStatus;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.filter.ChangeSetFilterResult;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
-import static org.easymock.classextension.EasyMock.*;
-
 import liquibase.database.ObjectQuotingStrategy;
-import org.junit.Test;
 
-import java.util.HashSet;
+import org.junit.Test;
 
 public class UpdateVisitorTest {
 
@@ -21,13 +22,13 @@ public class UpdateVisitorTest {
 
         ChangeExecListener listener = createMock(ChangeExecListener.class);
 
-        ChangeSet changeSet = createMock(ChangeSet.class);
+        ChangeSetImpl changeSet = createMock(ChangeSetImpl.class);
         DatabaseChangeLog databaseChangeLog = new DatabaseChangeLog("test.xml");
         expect(changeSet.execute(databaseChangeLog, listener, database)).andReturn(ChangeSet.ExecType.EXECUTED);
 
         expect(database.getRunStatus(changeSet)).andReturn(ChangeSet.RunStatus.NOT_RAN);
 
-        listener.willRun(changeSet, databaseChangeLog, database, RunStatus.NOT_RAN);
+        listener.willRun(changeSet, databaseChangeLog, database, ChangeSet.RunStatus.NOT_RAN);
         expectLastCall();
         listener.ran(changeSet, databaseChangeLog, database, ChangeSet.ExecType.EXECUTED);
         expectLastCall();

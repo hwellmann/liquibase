@@ -2,7 +2,7 @@ package liquibase.diff.output.changelog;
 
 import liquibase.CatalogAndSchema;
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
 import liquibase.database.Database;
@@ -122,18 +122,18 @@ public class DiffToChangeLog {
      */
     public void print(PrintStream out, ChangeLogSerializer changeLogSerializer) throws ParserConfigurationException, IOException, DatabaseException {
 
-        List<ChangeSet> changeSets = generateChangeSets();
+        List<ChangeSetImpl> changeSets = generateChangeSets();
 
         changeLogSerializer.write(changeSets, out);
 
         out.flush();
     }
 
-    public List<ChangeSet> generateChangeSets() {
+    public List<ChangeSetImpl> generateChangeSets() {
         final ChangeGeneratorFactory changeGeneratorFactory = ChangeGeneratorFactory.getInstance();
         DatabaseObjectComparator comparator = new DatabaseObjectComparator();
 
-        List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
+        List<ChangeSetImpl> changeSets = new ArrayList<ChangeSetImpl>();
         List<Class<? extends DatabaseObject>> types = getOrderedOutputTypes(MissingObjectChangeGenerator.class);
         for (Class<? extends DatabaseObject> type : types) {
             ObjectQuotingStrategy quotingStrategy = ObjectQuotingStrategy.QUOTE_ALL_OBJECTS;
@@ -193,9 +193,9 @@ public class DiffToChangeLog {
         return types;
     }
 
-    private void addToChangeSets(Change[] changes, List<ChangeSet> changeSets, ObjectQuotingStrategy quotingStrategy) {
+    private void addToChangeSets(Change[] changes, List<ChangeSetImpl> changeSets, ObjectQuotingStrategy quotingStrategy) {
         if (changes != null) {
-            ChangeSet changeSet = new ChangeSet(generateId(), getChangeSetAuthor(), false, false, null, changeSetContext,
+            ChangeSetImpl changeSet = new ChangeSetImpl(generateId(), getChangeSetAuthor(), false, false, null, changeSetContext,
                     null, false, quotingStrategy, null);
             for (Change change : changes) {
                 changeSet.addChange(change);

@@ -1,6 +1,7 @@
 package liquibase.dbdoc;
 
 import liquibase.change.Change;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
@@ -138,7 +139,7 @@ public abstract class HTMLWriter {
                     writeTD(fileWriter, change.getChangeSet().getId());
                     writeTD(fileWriter, "<a href='../authors/"+DBDocUtil.toFileName(change.getChangeSet().getAuthor().toLowerCase())+".html'>"+StringUtils.escapeHtml(change.getChangeSet().getAuthor().toLowerCase())+"</a>");
 
-                    ChangeSet.RunStatus runStatus = database.getRunStatus(change.getChangeSet());
+                    ChangeSetImpl.RunStatus runStatus = database.getRunStatus(change.getChangeSet());
                     if (runStatus.equals(ChangeSet.RunStatus.NOT_RAN)) {
                         String anchor = change.getChangeSet().toString(false).replaceAll("\\W","_");
                         writeTD(fileWriter, "NOT YET RAN [<a href='../pending/sql.html#"+ anchor +"'>SQL</a>]");

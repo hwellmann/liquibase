@@ -2,8 +2,9 @@ package liquibase.database;
 
 import liquibase.CatalogAndSchema;
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.structure.DatabaseObject;
 import liquibase.exception.*;
@@ -205,11 +206,11 @@ public interface Database extends PrioritizedService {
 
     String escapeViewName(String catalogName, String schemaName, String viewName);
 
-    ChangeSet.RunStatus getRunStatus(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
+    ChangeSetImpl.RunStatus getRunStatus(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
     RanChangeSet getRanChangeSet(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
-    void markChangeSetExecStatus(ChangeSet changeSet, ChangeSet.ExecType execType) throws DatabaseException;
+    void markChangeSetExecStatus(ChangeSet changeSet, ChangeSetImpl.ExecType execType) throws DatabaseException;
 
     List<RanChangeSet> getRanChangeSetList() throws DatabaseException;
 

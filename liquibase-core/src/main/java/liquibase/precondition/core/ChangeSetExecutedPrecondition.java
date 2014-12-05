@@ -1,7 +1,8 @@
 package liquibase.precondition.core;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.database.ObjectQuotingStrategy;
@@ -68,7 +69,7 @@ public class ChangeSetExecutedPrecondition extends AbstractPrecondition {
         } else {
             objectQuotingStrategy = changeSet.getObjectQuotingStrategy();
         }
-        ChangeSet interestedChangeSet = new ChangeSet(getId(), getAuthor(), false, false, getChangeLogFile(), null, null, false, objectQuotingStrategy, changeLog);
+        ChangeSet interestedChangeSet = new ChangeSetImpl(getId(), getAuthor(), false, false, getChangeLogFile(), null, null, false, objectQuotingStrategy, changeLog);
         RanChangeSet ranChangeSet;
         try {
             ranChangeSet = database.getRanChangeSet(interestedChangeSet);

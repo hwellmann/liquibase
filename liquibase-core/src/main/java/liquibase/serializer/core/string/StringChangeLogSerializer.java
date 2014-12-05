@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.LiquibaseSerializable;
@@ -155,12 +155,12 @@ public class StringChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void write(List<ChangeSet> changeSets, OutputStream out) throws IOException {
+    public void write(List<ChangeSetImpl> changeSets, OutputStream out) throws IOException {
 
     }
 
     @Override
-    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
 
     }
 

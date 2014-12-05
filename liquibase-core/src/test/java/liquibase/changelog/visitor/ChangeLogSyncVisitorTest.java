@@ -1,10 +1,12 @@
 package liquibase.changelog.visitor;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,12 +16,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class ChangeLogSyncVisitorTest {
-    private ChangeSet changeSet;
+    private ChangeSetImpl changeSet;
     private DatabaseChangeLog databaseChangeLog;
 
     @Before
     public void setUp() {
-        changeSet = new ChangeSet("1", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
         databaseChangeLog = new DatabaseChangeLog();
     }
 
