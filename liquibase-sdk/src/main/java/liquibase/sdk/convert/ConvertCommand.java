@@ -1,6 +1,6 @@
 package liquibase.sdk.convert;
 
-import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeLogParametersImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.command.AbstractCommand;
 import liquibase.command.CommandValidationErrors;
@@ -73,7 +73,7 @@ public class ConvertCommand extends AbstractCommand {
         ChangeLogParser sourceParser = ChangeLogParserFactory.getInstance().getParser(src, resourceAccessor);
         ChangeLogSerializer outSerializer = ChangeLogSerializerFactory.getInstance().getSerializer(out);
 
-        DatabaseChangeLog changeLog = sourceParser.parse(src, new ChangeLogParameters(), resourceAccessor);
+        DatabaseChangeLog changeLog = sourceParser.parse(src, new ChangeLogParametersImpl(), resourceAccessor);
 
         File outFile = new File(out);
         if (!outFile.exists()) {

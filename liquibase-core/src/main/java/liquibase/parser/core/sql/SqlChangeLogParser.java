@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import liquibase.change.core.RawSQLChange;
-import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeLogParameters;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;

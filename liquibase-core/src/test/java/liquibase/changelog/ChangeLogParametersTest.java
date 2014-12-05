@@ -21,7 +21,7 @@ public class ChangeLogParametersTest {
 
     @Test
     public void setParameterValue_doubleSet() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters();
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl();
 
         changeLogParameters.set("doubleSet", "originalValue");
         changeLogParameters.set("doubleSet", "newValue");
@@ -31,14 +31,14 @@ public class ChangeLogParametersTest {
 
     @Test
     public void getParameterValue_systemProperty() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters();
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl();
 
         assertEquals(System.getProperty("user.name"), changeLogParameters.getValue("user.name"));
     }
 
     @Test
     public void setParameterValue_doubleSetButSecondWrongDatabase() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters(new H2Database());
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl(new H2Database());
 
         changeLogParameters.set("doubleSet", "originalValue", new ContextExpression(), new Labels(), "baddb");
         changeLogParameters.set("doubleSet", "newValue");
@@ -48,7 +48,7 @@ public class ChangeLogParametersTest {
 
     @Test
     public void setParameterValue_multiDatabase() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters(new H2Database());
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl(new H2Database());
 
         changeLogParameters.set("doubleSet", "originalValue", new ContextExpression(), new Labels(), "baddb, h2");
 
@@ -57,7 +57,7 @@ public class ChangeLogParametersTest {
 
     @Test
     public void setParameterValue_rightDBWrongContext() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters(new H2Database());
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl(new H2Database());
         changeLogParameters.setContexts(new Contexts("junit"));
 
         changeLogParameters.set("doubleSet", "originalValue", "anotherContext", "anotherLabel", "baddb, h2");
@@ -66,7 +66,7 @@ public class ChangeLogParametersTest {
     }
    @Test
     public void setParameterValue_rightDBRightContext() {
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters(new H2Database());
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl(new H2Database());
         changeLogParameters.setContexts(new Contexts("junit"));
 
         changeLogParameters.set("doubleSet", "originalValue", "junit", "junitLabel", "baddb, h2");

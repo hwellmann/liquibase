@@ -886,7 +886,7 @@ public class ChangeSet implements Conditional, LiquibaseSerializable {
     }
 
     /**
-     * Called by the changelog parsing process to pass the {@link ChangeLogParameters}.
+     * Called by the changelog parsing process to pass the {@link ChangeLogParametersImpl}.
      */
     public void setChangeLogParameters(ChangeLogParameters changeLogParameters) {
         this.changeLogParameters = changeLogParameters;

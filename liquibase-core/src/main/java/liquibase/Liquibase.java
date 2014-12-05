@@ -62,7 +62,7 @@ public class Liquibase {
     protected Database database;
     private Logger log;
 
-    private ChangeLogParameters changeLogParameters;
+    private ChangeLogParametersImpl changeLogParameters;
     private ChangeExecListener changeExecListener;
     private ChangeLogSyncListener changeLogSyncListener;
 
@@ -96,7 +96,7 @@ public class Liquibase {
         }
 
         this.resourceAccessor = resourceAccessor;
-        this.changeLogParameters = new ChangeLogParameters(database);
+        this.changeLogParameters = new ChangeLogParametersImpl(database);
         this.database = database;
     }
 
@@ -110,7 +110,7 @@ public class Liquibase {
         }
         this.resourceAccessor = resourceAccessor;
         this.database = database;
-        this.changeLogParameters = new ChangeLogParameters(database);
+        this.changeLogParameters = new ChangeLogParametersImpl(database);
     }
 
     /**
@@ -130,7 +130,7 @@ public class Liquibase {
     /**
      * Returns the ChangeLogParameters container used by this Liquibase instance.
      */
-    public ChangeLogParameters getChangeLogParameters() {
+    public ChangeLogParametersImpl getChangeLogParameters() {
         return changeLogParameters;
     }
 

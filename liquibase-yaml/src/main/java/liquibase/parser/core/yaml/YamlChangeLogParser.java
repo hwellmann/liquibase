@@ -10,8 +10,8 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeLogParameters;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;

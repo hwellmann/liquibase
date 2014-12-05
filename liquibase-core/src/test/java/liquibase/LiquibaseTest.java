@@ -1,7 +1,7 @@
 package liquibase;
 
 import liquibase.changelog.ChangeLogIterator;
-import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeLogParametersImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.filter.ContextChangeSetFilter;
 import liquibase.changelog.filter.DbmsChangeSetFilter;
@@ -85,7 +85,7 @@ public class LiquibaseTest {
 
         ChangeLogParserFactory.setInstance(mockChangeLogParserFactory);
         when(mockChangeLogParserFactory.getParser(anyString(), Mockito.isA(ResourceAccessor.class))).thenReturn(mockChangeLogParser);
-        when(mockChangeLogParser.parse(anyString(), any(ChangeLogParameters.class), Mockito.isA(ResourceAccessor.class))).thenReturn(mockChangeLog);
+        when(mockChangeLogParser.parse(anyString(), any(ChangeLogParametersImpl.class), Mockito.isA(ResourceAccessor.class))).thenReturn(mockChangeLog);
 
         LogFactory.setInstance(new LogFactory() {
             @Override

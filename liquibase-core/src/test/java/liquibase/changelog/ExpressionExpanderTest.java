@@ -10,14 +10,14 @@ import static org.junit.Assert.assertNull;
 
 public class ExpressionExpanderTest {
     
-    private ChangeLogParameters.ExpressionExpander handler;
+    private ChangeLogParametersImpl.ExpressionExpander handler;
     private ChangeLogParameters changeLogParameters;
 
     @Before
     public void setup() {
         LiquibaseConfiguration.getInstance().reset();
-        changeLogParameters = new ChangeLogParameters();
-        this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+        changeLogParameters = new ChangeLogParametersImpl();
+        this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedSimple() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
         assertEquals("${user.name}", handler.expandExpressions("${:user.name}"));
     }
@@ -65,7 +65,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedNonGreedy() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
         assertEquals("${user.name}${user.name}", handler.expandExpressions("${:user.name}${:user.name}"));
     }
@@ -73,7 +73,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedMultipleSimple() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
         assertEquals("${user.name} and ${user.name} are literals", 
         		handler.expandExpressions("${:user.name} and ${:user.name} are literals"));
@@ -82,7 +82,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedMultipleComplex() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
         assertEquals("${user.name} and ${user.name} are literals but this isn't: " + System.getProperty("user.name"), 
         		handler.expandExpressions("${:user.name} and ${:user.name} are literals but this isn't: ${user.name}"));
@@ -91,7 +91,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedBeforeVariable() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
     	assertEquals("${user.name} is a literal, " + System.getProperty("user.name") + " is a variable", 
         		handler.expandExpressions("${:user.name} is a literal, ${user.name} is a variable"));
@@ -100,7 +100,7 @@ public class ExpressionExpanderTest {
     @Test
     public void expandExpressions_escapedAfterVariable() {
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
     	assertEquals(System.getProperty("user.name") + " is a variable, ${user.name} is a literal", 
         		handler.expandExpressions("${user.name} is a variable, ${:user.name} is a literal"));
@@ -112,7 +112,7 @@ public class ExpressionExpanderTest {
     	changeLogParameters.set("b", "Value B");
 
         LiquibaseConfiguration.getInstance().getConfiguration(ChangeLogParserCofiguration.class).setSupportPropertyEscaping(true);
-    	this.handler = new ChangeLogParameters.ExpressionExpander(changeLogParameters);
+    	this.handler = new ChangeLogParametersImpl.ExpressionExpander(changeLogParameters);
     	
         assertEquals("Value A is a variable, ${a} and ${b} are literals but this isn't: Value B", 
         		handler.expandExpressions("${a} is a variable, ${:a} and ${:b} are literals but this isn't: ${b}"));
