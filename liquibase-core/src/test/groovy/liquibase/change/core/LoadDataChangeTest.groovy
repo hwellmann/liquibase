@@ -3,6 +3,7 @@ package liquibase.change.core
 import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.sdk.database.MockDatabase
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ClassLoaderResourceAccessor
@@ -184,7 +185,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
     def "relativeToChangelogFile works"() throws Exception {
         when:
-        ChangeSet changeSet = new ChangeSet(null, null, true, false,
+        ChangeSet changeSet = new ChangeSetImpl(null, null, true, false,
                                             "liquibase/change/fakeChangeSet.xml",
                                             null, null, false, null, null);
 

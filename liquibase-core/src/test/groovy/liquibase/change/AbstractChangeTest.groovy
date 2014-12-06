@@ -1,6 +1,7 @@
 package liquibase.change
 
 import liquibase.changelog.ChangeSet
+import liquibase.changelog.ChangeSetImpl
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.database.Database
 import liquibase.database.core.MSSQLDatabase
@@ -112,7 +113,7 @@ public class AbstractChangeTest extends Specification {
     def getChangeSet() {
         when:
         ExampleAbstractChange change = new ExampleAbstractChange();
-        ChangeSet changeSet = new ChangeSet(new DatabaseChangeLog());
+        ChangeSet changeSet = new ChangeSetImpl(new DatabaseChangeLog());
         change.setChangeSet(changeSet);
 
         then:

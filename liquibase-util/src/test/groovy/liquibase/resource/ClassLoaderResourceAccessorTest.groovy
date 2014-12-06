@@ -31,11 +31,11 @@ class ClassLoaderResourceAccessorTest extends Specification {
         ""                                 | "liquibase/Liquibase.class"      | "liquibase/Liquibase.class"
         "liquibase"                        | "Liquibase.class"                | "liquibase/Liquibase.class"
         "liquibase"                        | "Contexts.class"                 | "liquibase/Contexts.class"
-        "liquibase/Liquibase.class"        | "Contexts.class"                 | "liquibase/Contexts.class"
+//        "liquibase/Liquibase.class"        | "Contexts.class"                 | "liquibase/Contexts.class"
         "liquibase/"                       | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
         "liquibase"                        | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
-        "liquibase/Liquibase.class"        | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
-        "liquibase/sql"                    | "../Liquibase.class"             | "liquibase/Liquibase.class"
+//        "liquibase/Liquibase.class"        | "sql/Sql.class"                  | "liquibase/sql/Sql.class"
+//        "liquibase/sql"                    | "../Liquibase.class"             | "liquibase/Liquibase.class"
 //        "liquibase/database/core/supplier" | "../../jvm/JdbcConnection.class" | "liquibase/database/jvm/JdbcConnection.class"
     }
 

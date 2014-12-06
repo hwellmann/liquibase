@@ -4,7 +4,9 @@ import liquibase.change.Change
 import liquibase.change.ChangeStatus;
 import liquibase.change.StandardChangeTest;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeLogParametersImpl;
 import liquibase.changelog.ChangeSet
+import liquibase.changelog.ChangeSetImpl
 import liquibase.exception.UnexpectedLiquibaseException
 import liquibase.sdk.database.MockDatabase
 import liquibase.sdk.resource.MockResourceAccessor
@@ -64,10 +66,10 @@ public class SQLFileChangeTest extends StandardChangeTest {
     def replacementOfProperties() throws Exception {
         when:
         SQLFileChange change = new SQLFileChange();
-        ChangeLogParameters changeLogParameters = new ChangeLogParameters();
+        ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl();
         changeLogParameters.set("table.prefix", "prfx");
         changeLogParameters.set("some.other.prop", "nofx");
-        ChangeSet changeSet = new ChangeSet("x", "y", true, true, null, null, null, null);
+        ChangeSet changeSet = new ChangeSetImpl("x", "y", true, true, null, null, null, null);
         changeSet.setChangeLogParameters(changeLogParameters);
         change.setChangeSet(changeSet);
 

@@ -1,6 +1,7 @@
 package liquibase.change
 
 import liquibase.changelog.ChangeSet
+import liquibase.changelog.ChangeSetImpl
 import liquibase.sdk.database.MockDatabase
 import liquibase.sdk.supplier.change.ChangeSupplierFactory
 import liquibase.sdk.supplier.resource.ResourceSupplier
@@ -46,7 +47,7 @@ public abstract class StandardChangeTest extends Specification {
         def database = new MockDatabase()
         for (Change change in changeSupplier.getSupplier(changeClass).getAllParameterPermutations(database)) {
             change.setResourceAccessor(resourceSupplier.simpleResourceAccessor)
-            change.setChangeSet(new ChangeSet("mock", "test", false, false, null, null, null, null))
+            change.setChangeSet(new ChangeSetImpl("mock", "test", false, false, null, null, null, null))
             if (change.validate(database).hasErrors()) {
                 continue
             }

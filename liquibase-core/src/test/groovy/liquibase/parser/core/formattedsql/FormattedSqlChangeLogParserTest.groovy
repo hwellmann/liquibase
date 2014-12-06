@@ -3,6 +3,7 @@ package liquibase.parser.core.formattedsql
 import liquibase.change.core.EmptyChange
 import liquibase.change.core.RawSQLChange
 import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.changelog.ChangeSet
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.configuration.LiquibaseConfiguration
@@ -95,14 +96,14 @@ public class FormattedSqlChangeLogParserTest extends Specification {
 
     def invalidPrecondition() throws Exception {
         when:
-        new MockFormattedSqlChangeLogParser(INVALID_CHANGELOG_INVALID_PRECONDITION).parse("asdf.sql", new ChangeLogParameters(), new JUnitResourceAccessor())
+        new MockFormattedSqlChangeLogParser(INVALID_CHANGELOG_INVALID_PRECONDITION).parse("asdf.sql", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
         then:
         thrown(ChangeLogParseException)
     }
 
     def parse() throws Exception {
         expect:
-        ChangeLogParameters params = new ChangeLogParameters()
+        ChangeLogParameters params = new ChangeLogParametersImpl()
         params.set("tablename", "table4")
         DatabaseChangeLog changeLog = new MockFormattedSqlChangeLogParser(VALID_CHANGELOG).parse("asdf.sql", params, new JUnitResourceAccessor())
 
@@ -226,7 +227,7 @@ public class FormattedSqlChangeLogParserTest extends Specification {
                 "--changeset John Doe:12345\n" +
                 "create table test (id int);\n"
 
-        DatabaseChangeLog changeLog = new MockFormattedSqlChangeLogParser(changeLogWithSpace).parse("asdf.sql", new ChangeLogParameters(), new JUnitResourceAccessor())
+        DatabaseChangeLog changeLog = new MockFormattedSqlChangeLogParser(changeLogWithSpace).parse("asdf.sql", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getChangeSets().size() == 1
@@ -242,7 +243,7 @@ public class FormattedSqlChangeLogParserTest extends Specification {
                 "--comment: This is a test comment\n" +
                 "create table test (id int);\n"
 
-        DatabaseChangeLog changeLog = new MockFormattedSqlChangeLogParser(changeLogWithComment).parse("asdf.sql", new ChangeLogParameters(), new JUnitResourceAccessor())
+        DatabaseChangeLog changeLog = new MockFormattedSqlChangeLogParser(changeLogWithComment).parse("asdf.sql", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getChangeSets().size() == 1
@@ -254,7 +255,7 @@ public class FormattedSqlChangeLogParserTest extends Specification {
     @Unroll
     def parse_multipleDbms() throws Exception {
         when:
-        def changeLog = new MockFormattedSqlChangeLogParser(changelog).parse("asdf.sql", new ChangeLogParameters(), new JUnitResourceAccessor())
+        def changeLog = new MockFormattedSqlChangeLogParser(changelog).parse("asdf.sql", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
         def dbmsSet = changeLog.getChangeSets().get(0).getDbmsSet()
 
         then:
@@ -276,7 +277,7 @@ public class FormattedSqlChangeLogParserTest extends Specification {
     @Unroll("#featureName: #example")
     def "example file"() {
         when:
-        def changeLog = new MockFormattedSqlChangeLogParser(example).parse("asdf.sql", new ChangeLogParameters(), new JUnitResourceAccessor())
+        def changeLog = new MockFormattedSqlChangeLogParser(example).parse("asdf.sql", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         ((RawSQLChange) changeLog.changeSets[0].changes[0]).sql == expected

@@ -8,6 +8,7 @@ import liquibase.change.core.*
 import liquibase.change.custom.CustomChangeWrapper
 import liquibase.change.custom.ExampleCustomSqlChange
 import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.changelog.ChangeSet
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.configuration.LiquibaseConfiguration
@@ -60,7 +61,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "able to parse a simple changelog simpleChangeLog.xml"() throws Exception {
         def path = "liquibase/parser/core/xml/simpleChangeLog.xml"
         when:
-        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
         def changeSet = changeLog.changeSets[0];
         def change = changeSet.changes[0];
 
@@ -101,7 +102,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "able to parse a changelog with multiple changeSets multiChangeSetChangeLog.xml"() throws Exception {
         def path = "liquibase/parser/core/xml/multiChangeSetChangeLog.xml"
         when:
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -163,7 +164,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "local path can be set in changelog file logicalPathChangeLog.xml"() throws Exception {
         when:
         def physicalPath = "liquibase/parser/core/xml/logicalPathChangeLog.xml"
-        def changeLog = new XMLChangeLogSAXParser().parse(physicalPath, new ChangeLogParameters(), new JUnitResourceAccessor())
+        def changeLog = new XMLChangeLogSAXParser().parse(physicalPath, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getLogicalFilePath() == "liquibase/parser-logical/xml/logicalPathChangeLog.xml"
@@ -178,7 +179,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "changelog with preconditions can be parsed: preconditionsChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/preconditionsChangeLog.xml"
-        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -202,7 +203,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     @Unroll("#featureName #path")
     def "changeSets with one level of includes parse correctly"() throws Exception {
         when:
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor())
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -231,7 +232,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     @Unroll("#featureName #doubleNestedFileName")
     def "changeSets with two levels of includes parse correctly"() throws Exception {
         when:
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(doubleNestedFileName, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(doubleNestedFileName, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == doubleNestedFileName
@@ -265,7 +266,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "ChangeLogParseException thrown if changelog does not exist"() throws Exception {
         when:
         def path = "liquibase/changelog/parser/xml/missingChangeLog.xml"
-        new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor())
+        new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         def e = thrown(ChangeLogParseException)
@@ -274,7 +275,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
     def "ChangeLogParseException thrown if changelog has invalid tags"() throws Exception {
         when:
-        new XMLChangeLogSAXParser().parse("liquibase/parser/core/xml/malformedChangeLog.xml", new ChangeLogParameters(), new JUnitResourceAccessor())
+        new XMLChangeLogSAXParser().parse("liquibase/parser/core/xml/malformedChangeLog.xml", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         def e = thrown(ChangeLogParseException)
@@ -283,7 +284,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
     def "ChangeLogParseException thrown if changelog is invalid XML: invalidChangeLog.xml"() throws Exception {
         when:
-        new XMLChangeLogSAXParser().parse("liquibase/parser/core/xml/invalidChangeLog.xml", new ChangeLogParameters(), new JUnitResourceAccessor())
+        new XMLChangeLogSAXParser().parse("liquibase/parser/core/xml/invalidChangeLog.xml", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         def e = thrown(ChangeLogParseException)
@@ -294,7 +295,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "tags that don't correspond to anything in liquibase are ignored"() throws Exception {
         def path = "liquibase/parser/core/xml/unusedTagsChangeLog.xml"
         expect:
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         changeLog.getLogicalFilePath() == path
         changeLog.getPhysicalFilePath() == path
@@ -316,7 +317,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
 	def "changeLog parameters are correctly expanded"() throws Exception {
         when:
-        def params = new ChangeLogParameters(new MockDatabase());
+        def params = new ChangeLogParametersImpl(new MockDatabase());
         params.setContexts(new Contexts("prod"))
 		params.set("tablename", "my_table_name");
         params.set("tablename2", "my_table_name_2");
@@ -348,7 +349,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 	def "tests for particular features and edge conditions part 1 testCasesChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/testCasesChangeLog.xml"
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then: "before/after/position attributes are read correctly"
         ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getName() == "middlename";
@@ -409,7 +410,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "tests for particular features and edge conditions part 2 testCasesChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/testCasesChangeLog.xml"
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
 
         then: "comment in sql is parsed correctly"
@@ -497,7 +498,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "tests for particular features and edge conditions part 3 testCasesChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/testCasesChangeLog.xml"
-        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
 
         then: "complex preconditions are parsed"
@@ -587,7 +588,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
     def "changelog with multiple dropColumn columns can be parsed"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/addDropColumnsChangeLog.xml"
-        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        def changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:  "add columns"
         assert 2 == changeLog.getChangeSets().get(1).getChanges().get(0).getColumns().size()

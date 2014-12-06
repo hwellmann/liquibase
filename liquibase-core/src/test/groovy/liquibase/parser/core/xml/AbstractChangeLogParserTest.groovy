@@ -2,6 +2,7 @@ package liquibase.parser.core.xml
 
 import liquibase.change.core.RawSQLChange
 import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.exception.ChangeLogParseException
 import liquibase.parser.core.ParsedNode
 import liquibase.resource.ResourceAccessor
@@ -15,7 +16,7 @@ class AbstractChangeLogParserTest extends Specification {
 
     def "null node creates null changelog object"() {
         when:
-        def changeLog = createParser(null).parse("com/example/changelog.xml", new ChangeLogParameters(), resourceSupplier.simpleResourceAccessor)
+        def changeLog = createParser(null).parse("com/example/changelog.xml", new ChangeLogParametersImpl(), resourceSupplier.simpleResourceAccessor)
         then:
         changeLog == null
     }
@@ -23,7 +24,7 @@ class AbstractChangeLogParserTest extends Specification {
     def "empty node creates empty changelog object"() {
         when:
         def changeLogNode = new ParsedNode(null, "databaseChangeLog")
-        def changeLog = createParser(changeLogNode).parse("com/example/changelog.xml", new ChangeLogParameters(), resourceSupplier.simpleResourceAccessor)
+        def changeLog = createParser(changeLogNode).parse("com/example/changelog.xml", new ChangeLogParametersImpl(), resourceSupplier.simpleResourceAccessor)
 
         then:
         changeLog.physicalFilePath == "com/example/changelog.xml"
@@ -38,7 +39,7 @@ class AbstractChangeLogParserTest extends Specification {
         changeLogNode.addChildren([changeSet: [id: "2", author: "nvoxland"]]).children[1].value = [sql: "select * from y"]
         changeLogNode.addChildren([changeSet: [id: "3", author: "nvoxland"]]).children[2].value = [sql: "select * from z"]
 
-        def changeLog = createParser(changeLogNode).parse("com/example/changelog.xml", new ChangeLogParameters(), resourceSupplier.simpleResourceAccessor)
+        def changeLog = createParser(changeLogNode).parse("com/example/changelog.xml", new ChangeLogParametersImpl(), resourceSupplier.simpleResourceAccessor)
 
         then:
         changeLog.preconditions.nestedPreconditions.size() == 0

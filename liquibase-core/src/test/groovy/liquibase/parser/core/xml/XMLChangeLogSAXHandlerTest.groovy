@@ -1,6 +1,7 @@
 package liquibase.parser.core.xml
 
-import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeLogParametersImpl;
 import liquibase.sdk.supplier.resource.ResourceSupplier
 import org.xml.sax.Attributes
 import spock.lang.Shared
@@ -13,14 +14,14 @@ class XMLChangeLogSAXHandlerTest extends Specification {
 
     def "empty file parses to null"() {
         when:
-        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParameters())
+        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParametersImpl())
         then:
         handler.databaseChangeLogTree == null
     }
 
     def "only root node file parses to empty ChangeLogNode"() {
         when:
-        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParameters())
+        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParametersImpl())
         handler.startElement(uri, "databaseChangeLog", "databaseChangeLog", null);
         handler.endElement(uri, "databaseChangeLog", "databaseChangeLog");
 
@@ -31,7 +32,7 @@ class XMLChangeLogSAXHandlerTest extends Specification {
 
     def "node with attributes are parsed"() {
         when:
-        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParameters())
+        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParametersImpl())
         def attributes = Mock(Attributes)
         attributes.getLength() >> 3
         attributes.getLocalName(0) >> "attr0"
@@ -59,7 +60,7 @@ class XMLChangeLogSAXHandlerTest extends Specification {
 
     def "node with text is parsed"() {
         when:
-        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParameters())
+        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParametersImpl())
         def attributes = Mock(Attributes)
         attributes.getLength() >> 1
         attributes.getLocalName(0) >> "attr0"
@@ -80,7 +81,7 @@ class XMLChangeLogSAXHandlerTest extends Specification {
 
     def "complex structure with with attributes and child nodes and text is parsed"() {
         when:
-        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParameters())
+        def handler = new XMLChangeLogSAXHandler("com/example/test.xml", resourceSupplier.simpleResourceAccessor, new ChangeLogParametersImpl())
         def attributes = Mock(Attributes)
         attributes.getLength() >> 3
         attributes.getLocalName(0) >> "attr0"

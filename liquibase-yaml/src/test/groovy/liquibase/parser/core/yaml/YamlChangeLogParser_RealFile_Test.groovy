@@ -19,6 +19,7 @@ import liquibase.change.core.UpdateDataChange
 import liquibase.change.custom.CustomChangeWrapper
 import liquibase.change.custom.ExampleCustomSqlChange;
 import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.database.ObjectQuotingStrategy
@@ -67,7 +68,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "able to parse a simple changelog simpleChangeLog.yaml"() throws ChangeLogParseException {
         def path = "liquibase/parser/core/yaml/simpleChangeLog.yaml"
         when:
-        def changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        def changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
         def changeSet = changeLog.changeSets[0]
         def change = changeSet.changes[0]
 
@@ -107,7 +108,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "able to parse a changelog with multiple changeSets multiChangeSetChangeLog.yaml"() throws Exception {
         def path = "liquibase/parser/core/yaml/multiChangeSetChangeLog.yaml"
         when:
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -164,7 +165,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "local path can be set in changelog file logicalPathChangeLog.yaml"() throws Exception {
         when:
         def physicalPath = "liquibase/parser/core/yaml/logicalPathChangeLog.yaml"
-        def changeLog = new YamlChangeLogParser().parse(physicalPath, new ChangeLogParameters(), new JUnitResourceAccessor())
+        def changeLog = new YamlChangeLogParser().parse(physicalPath, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getLogicalFilePath() == "liquibase/parser-logical/yaml/logicalPathChangeLog.yaml"
@@ -179,7 +180,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "changelog with preconditions can be parsed: preconditionsChangeLog.yaml"() throws Exception {
         when:
         def path = "liquibase/parser/core/yaml/preconditionsChangeLog.yaml"
-        def changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        def changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -203,7 +204,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     @Unroll("#featureName #path")
     def "changeSets with one level of includes parse correctly"() throws Exception {
         when:
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor())
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         changeLog.getLogicalFilePath() == path
@@ -232,7 +233,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     @Unroll("#featureName #doubleNestedFileName")
     def "changeSets with two levels of includes parse correctly"() throws Exception {
         when:
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(doubleNestedFileName, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(doubleNestedFileName, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then:
         changeLog.getLogicalFilePath() == doubleNestedFileName
@@ -265,7 +266,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "ChangeLogParseException thrown if changelog does not exist"() throws Exception {
         when:
         def path = "liquibase/changelog/parser/yaml/missingChangeLog.yaml"
-        new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor())
+        new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         def e = thrown(ChangeLogParseException)
@@ -274,7 +275,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
 
     def "ChangeLogParseException thrown if changelog has invalid tags"() throws Exception {
         when:
-        new YamlChangeLogParser().parse("liquibase/parser/core/yaml/malformedChangeLog.yaml", new ChangeLogParameters(), new JUnitResourceAccessor())
+        new YamlChangeLogParser().parse("liquibase/parser/core/yaml/malformedChangeLog.yaml", new ChangeLogParametersImpl(), new JUnitResourceAccessor())
 
         then:
         def e = thrown(ChangeLogParseException)
@@ -284,7 +285,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "elements that don't correspond to anything in liquibase are ignored"() throws Exception {
         def path = "liquibase/parser/core/yaml/unusedTagsChangeLog.yaml"
         expect:
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         changeLog.getLogicalFilePath() == path
         changeLog.getPhysicalFilePath() == path
@@ -306,7 +307,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
 
     def "changeLog parameters are correctly expanded"() throws Exception {
         when:
-        def params = new ChangeLogParameters(new MockDatabase());
+        def params = new ChangeLogParametersImpl(new MockDatabase());
         params.setContexts(new Contexts("prod"))
         params.set("tablename", "my_table_name");
         params.set("tablename2", "my_table_name_2");
@@ -339,7 +340,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "tests for particular features and edge conditions part 1 testCasesChangeLog.yaml"() throws Exception {
         when:
         def path = "liquibase/parser/core/yaml/testCasesChangeLog.yaml"
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then: "before/after/position attributes are read correctly"
         ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getName() == "middlename";
@@ -400,7 +401,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "tests for particular features and edge conditions part 2 testCasesChangeLog.yaml"() throws Exception {
         when:
         def path = "liquibase/parser/core/yaml/testCasesChangeLog.yaml"
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
 
         then: "comment in sql is parsed correctly"
@@ -488,7 +489,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
     def "tests for particular features and edge conditions part 3 testCasesChangeLog.yaml"() throws Exception {
         when:
         def path = "liquibase/parser/core/yaml/testCasesChangeLog.yaml"
-        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParameters(), new JUnitResourceAccessor());
+        DatabaseChangeLog changeLog = new YamlChangeLogParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
 
         then: "complex preconditions are parsed"
