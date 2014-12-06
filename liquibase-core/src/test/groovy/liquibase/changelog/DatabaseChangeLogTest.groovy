@@ -139,13 +139,13 @@ create view sql_view as select * from sql_table;'''
         rootChangeLog.preconditions.nestedPreconditions.size() == 3
         ((RunningAsPrecondition) rootChangeLog.preconditions.nestedPreconditions[0]).username == "user1"
 
-        ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions.size() == 2
-        ((RunningAsPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions[0]).username == "testUser"
-        ((OrPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions[1]).nestedPreconditions.size() == 2
+        (rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions.size() == 2
+        ((RunningAsPrecondition) (rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions[0]).username == "testUser"
+        ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
-        ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions.size() == 2
-        ((RunningAsPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[0]).username == "otherUser"
-        ((OrPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[1]).nestedPreconditions.size() == 2
+        (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions.size() == 2
+        ((RunningAsPrecondition) (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[0]).username == "otherUser"
+        ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
         rootChangeLog.changeSets.size() == 3
         ((CreateTableChange) rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"
@@ -172,15 +172,15 @@ create view sql_view as select * from sql_table;'''
         rootChangeLog.preconditions.nestedPreconditions.size() == 4
         ((RunningAsPrecondition) rootChangeLog.preconditions.nestedPreconditions[0]).username == "user1"
 
-        ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions.size() == 0
+        (rootChangeLog.preconditions.nestedPreconditions[1]).nestedPreconditions.size() == 0
 
-        ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions.size() == 2
-        ((RunningAsPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[0]).username == "testUser"
-        ((OrPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[1]).nestedPreconditions.size() == 2
+        (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions.size() == 2
+        ((RunningAsPrecondition) (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[0]).username == "testUser"
+        ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
-        ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions.size() == 2
-        ((RunningAsPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions[0]).username == "otherUser"
-        ((OrPrecondition) ((PreconditionContainer) rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions[1]).nestedPreconditions.size() == 2
+        (rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions.size() == 2
+        ((RunningAsPrecondition) (rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions[0]).username == "otherUser"
+        ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
         rootChangeLog.changeSets.size() == 4
         ((CreateTableChange) rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"

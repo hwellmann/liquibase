@@ -12,11 +12,11 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.change.ExecutableChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeFactory;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.visitor.ChangeExecListener;
@@ -39,8 +39,8 @@ import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.Conditional;
 import liquibase.precondition.ErrorPrecondition;
 import liquibase.precondition.FailedPrecondition;
-import liquibase.precondition.Precondition;
 import liquibase.precondition.core.PreconditionContainer;
+import liquibase.precondition.core.PreconditionService;
 import liquibase.resource.ResourceAccessor;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.sql.visitor.SqlVisitor;
@@ -469,7 +469,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
 
             try {
                 if (preconditions != null) {
-                    preconditions.check(database, databaseChangeLog, this);
+                    PreconditionService service = new PreconditionService(preconditions);
+                    service.check(preconditions, database, databaseChangeLog, this);
                 }
             } catch (PreconditionFailedException e) {
                 if (listener != null) {
@@ -987,7 +988,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      * @see liquibase.changelog.IChangeSet#getPreconditions()
      */
     @Override
-    public Precondition getPreconditions() {
+    public PreconditionContainer getPreconditions() {
         return preconditions;
     }
 
@@ -995,8 +996,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      * @see liquibase.changelog.IChangeSet#setPreconditions(liquibase.precondition.core.PreconditionContainer)
      */
     @Override
-    public void setPreconditions(Precondition preconditionContainer) {
-        this.preconditions = (PreconditionContainer) preconditionContainer;
+    public void setPreconditions(PreconditionContainer preconditionContainer) {
+        this.preconditions = preconditionContainer;
     }
 
     /* (non-Javadoc)

@@ -20,6 +20,7 @@ import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
 import liquibase.precondition.core.DBMSPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
+import liquibase.precondition.core.PreconditionService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -121,7 +122,8 @@ public class ValidatingVisitorPreConditionsTest {
         boolean failedExceptionThrown = false;
         boolean errorExceptionThrown = false;
         try {
-            preCondition.check(mssqlDb, changeLog, changeSet1);
+            PreconditionService service = new PreconditionService(preCondition);
+            service.check(preCondition, mssqlDb, changeLog, changeSet1);
         } catch (PreconditionFailedException ex) {
             failedExceptionThrown = true;
         } catch (PreconditionErrorException ex) {

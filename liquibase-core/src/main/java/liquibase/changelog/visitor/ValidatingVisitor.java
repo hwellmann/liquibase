@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
@@ -27,6 +27,7 @@ import liquibase.logging.LogFactory;
 import liquibase.precondition.ErrorPrecondition;
 import liquibase.precondition.FailedPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
+import liquibase.precondition.core.PreconditionService;
 import liquibase.util.StringUtils;
 
 public class ValidatingVisitor implements ChangeSetVisitor {
@@ -54,12 +55,13 @@ public class ValidatingVisitor implements ChangeSetVisitor {
 
     public void validate(Database database, DatabaseChangeLogImpl changeLog) {
         this.database = database;
-        PreconditionContainer preconditions = (PreconditionContainer) changeLog.getPreconditions();
+        PreconditionContainer preconditions = changeLog.getPreconditions();
         try {
             if (preconditions == null) {
                 return;
             }
-            preconditions.check(database, changeLog, null);
+            PreconditionService service = new PreconditionService(preconditions);
+            service.check(preconditions, database, changeLog, null);
         } catch (PreconditionFailedException e) {
             LogFactory.getLogger().debug("Precondition Failed: "+e.getMessage(), e);
             failedPreconditions.addAll(e.getFailedPreconditions());

@@ -24,7 +24,6 @@ import liquibase.parser.ChangeLogParserFactory;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.Conditional;
-import liquibase.precondition.Precondition;
 import liquibase.precondition.core.PreconditionContainer;
 import liquibase.resource.ResourceAccessor;
 import liquibase.util.StreamUtil;
@@ -70,7 +69,7 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
      * @see liquibase.changelog.IDatabaseChangeLog#getPreconditions()
      */
     @Override
-    public Precondition getPreconditions() {
+    public PreconditionContainer getPreconditions() {
         return preconditionContainer;
     }
 
@@ -78,11 +77,11 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
      * @see liquibase.changelog.IDatabaseChangeLog#setPreconditions(liquibase.precondition.Precondition)
      */
     @Override
-    public void setPreconditions(Precondition precond) {
+    public void setPreconditions(PreconditionContainer precond) {
         if (precond == null) {
             this.preconditionContainer = new PreconditionContainer();
         } else {
-            preconditionContainer = (PreconditionContainer) precond;
+            preconditionContainer = precond;
         }
     }
 
@@ -389,12 +388,12 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
             LogFactory.getInstance().getLog().warning("included file " + relativeBaseFileName + "/" + fileName + " is not a recognized file type");
             return false;
         }
-        PreconditionContainer preconditions = (PreconditionContainer) changeLog.getPreconditions();
+        PreconditionContainer preconditions = changeLog.getPreconditions();
         if (preconditions != null) {
             if (null == this.getPreconditions()) {
                 this.setPreconditions(new PreconditionContainer());
             }
-            ((PreconditionContainer) this.getPreconditions()).addNestedPrecondition(preconditions);
+            this.getPreconditions().addNestedPrecondition(preconditions);
         }
         for (ChangeSet changeSet : changeLog.getChangeSets()) {
             this.changeSets.add(changeSet);

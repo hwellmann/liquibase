@@ -9,7 +9,7 @@ import liquibase.change.CheckSum;
 import liquibase.change.Change;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.parser.core.ParsedNode;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.core.PreconditionContainer;
 import liquibase.serializer.LiquibaseSerializable;
 
 public interface ChangeSet extends LiquibaseSerializable {
@@ -96,9 +96,9 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     boolean isCheckSumValid(CheckSum storedCheckSum);
 
-    Precondition getPreconditions();
+    PreconditionContainer getPreconditions();
 
-    void setPreconditions(Precondition preconditionContainer);
+    void setPreconditions(PreconditionContainer preconditionContainer);
 
     ChangeLogParameters getChangeLogParameters();
 

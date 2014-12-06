@@ -1,14 +1,18 @@
 package liquibase.precondition;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
+
 import liquibase.precondition.core.AndPrecondition;
 import liquibase.precondition.core.OrPrecondition;
-import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
 
 public class PreconditionFactoryTest {
 
@@ -27,7 +31,7 @@ public class PreconditionFactoryTest {
     @Test
     public void getInstance() {
         assertNotNull(PreconditionFactory.getInstance());
-        
+
         assertTrue(PreconditionFactory.getInstance() == PreconditionFactory.getInstance());
     }
 
@@ -50,7 +54,7 @@ public class PreconditionFactoryTest {
 
         assertEquals(0, factory.getPreconditions().size());
 
-        Class<? extends ExecutablePrecondition> precondition = AndPrecondition.class;
+        Class<? extends Precondition> precondition = AndPrecondition.class;
 
         factory.register(OrPrecondition.class);
         factory.register(precondition);
@@ -71,7 +75,7 @@ public class PreconditionFactoryTest {
     @SuppressWarnings("unchecked")
 	@Test
     public void builtInGeneratorsAreFound() {
-        Map<String, Class<? extends ExecutablePrecondition>> generators = PreconditionFactory.getInstance().getPreconditions();
+        Map<String, Class<? extends Precondition>> generators = PreconditionFactory.getInstance().getPreconditions();
         assertTrue(generators.size() > 5);
     }
 

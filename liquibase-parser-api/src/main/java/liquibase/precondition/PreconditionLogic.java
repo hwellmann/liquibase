@@ -1,24 +1,23 @@
 package liquibase.precondition;
 
-import liquibase.exception.SetupException;
+import java.util.ArrayList;
+import java.util.List;
+
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Marker interface for precondition logic tags (and,or, not)
  */
 public abstract class PreconditionLogic extends AbstractPrecondition {
-    private List<ExecutablePrecondition> nestedPreconditions = new ArrayList<ExecutablePrecondition>();
+    private List<Precondition> nestedPreconditions = new ArrayList<Precondition>();
 
-    public List<ExecutablePrecondition> getNestedPreconditions() {
+    public List<Precondition> getNestedPreconditions() {
         return this.nestedPreconditions;
     }
 
-    public void addNestedPrecondition(ExecutablePrecondition precondition) {
+    public void addNestedPrecondition(Precondition precondition) {
         if (precondition != null) {
             nestedPreconditions.add(precondition);
         }
@@ -33,8 +32,8 @@ public abstract class PreconditionLogic extends AbstractPrecondition {
         }
     }
 
-    protected ExecutablePrecondition toPrecondition(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        ExecutablePrecondition precondition = PreconditionFactory.getInstance().create(node.getName());
+    protected Precondition toPrecondition(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException {
+        Precondition precondition = PreconditionFactory.getInstance().create(node.getName());
         if (precondition == null) {
             return null;
         }

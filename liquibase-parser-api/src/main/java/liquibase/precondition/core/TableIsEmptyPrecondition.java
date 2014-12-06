@@ -1,10 +1,10 @@
 package liquibase.precondition.core;
 
-import liquibase.precondition.ExecutablePrecondition;
+import liquibase.precondition.Precondition;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(ExecutablePrecondition.class)
+@MetaInfServices(Precondition.class)
 public class TableIsEmptyPrecondition extends RowCountPrecondition {
 
     public TableIsEmptyPrecondition() {

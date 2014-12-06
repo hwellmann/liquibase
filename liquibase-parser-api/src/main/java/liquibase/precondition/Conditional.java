@@ -1,9 +1,11 @@
 package liquibase.precondition;
 
+import liquibase.precondition.core.PreconditionContainer;
+
 
 public interface Conditional {
-    public Precondition getPreconditions();
+    public PreconditionContainer getPreconditions();
 
-    public void setPreconditions(Precondition precond);
+    public void setPreconditions(PreconditionContainer precond);
 
 }

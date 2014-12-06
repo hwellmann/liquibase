@@ -5,19 +5,9 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.ChangeSet;
-import liquibase.database.Database;
-import liquibase.exception.CustomPreconditionErrorException;
-import liquibase.exception.CustomPreconditionFailedException;
-import liquibase.exception.PreconditionErrorException;
-import liquibase.exception.PreconditionFailedException;
-import liquibase.exception.ValidationErrors;
-import liquibase.exception.Warnings;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
-import liquibase.util.ObjectUtil;
 
 import org.kohsuke.MetaInfServices;
 
@@ -55,45 +45,22 @@ public class CustomPreconditionWrapper extends AbstractPrecondition {
         this.paramValues.put(name, value);
     }
 
-    @Override
-    public Warnings warn(Database database) {
-        return new Warnings();
+
+
+
+    /**
+     * @return the params
+     */
+    public SortedSet<String> getParams() {
+        return params;
     }
 
-    @Override
-    public ValidationErrors validate(Database database) {
-        return new ValidationErrors();
-    }
 
-    @Override
-    public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
-        CustomPrecondition customPrecondition;
-        try {
-//            System.out.println(classLoader.toString());
-            try {
-                customPrecondition = (CustomPrecondition) Class.forName(className, true, classLoader).newInstance();
-            } catch (ClassCastException e) { //fails in Ant in particular
-                customPrecondition = (CustomPrecondition) Class.forName(className).newInstance();
-            }
-        } catch (Exception e) {
-            throw new PreconditionFailedException("Could not open custom precondition class "+className, changeLog, this);
-        }
-
-        for (String param : params) {
-            try {
-                ObjectUtil.setProperty(customPrecondition, param, paramValues.get(param));
-            } catch (Exception e) {
-                throw new PreconditionFailedException("Error setting parameter "+param+" on custom precondition "+className, changeLog, this);
-            }
-        }
-
-        try {
-            customPrecondition.check(database);
-        } catch (CustomPreconditionFailedException e) {
-            throw new PreconditionFailedException(new FailedPrecondition("Custom Precondition Failed: "+e.getMessage(), changeLog, this));
-        } catch (CustomPreconditionErrorException e) {
-            throw new PreconditionErrorException(new ErrorPrecondition(e, changeLog, this));
-        }
+    /**
+     * @return the paramValues
+     */
+    public Map<String, String> getParamValues() {
+        return paramValues;
     }
 
     @Override

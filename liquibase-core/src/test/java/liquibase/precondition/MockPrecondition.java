@@ -1,34 +1,15 @@
 package liquibase.precondition;
 
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.ChangeSet;
-import liquibase.database.Database;
-import liquibase.exception.*;
+import java.util.Set;
+
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
-
-import java.util.Set;
 
 public class MockPrecondition implements ExecutablePrecondition {
     @Override
     public String getName() {
         return "mock";
-    }
-
-    @Override
-    public Warnings warn(Database database) {
-        return new Warnings();
-    }
-
-    @Override
-    public ValidationErrors validate(Database database) {
-        return new ValidationErrors();
-    }
-
-    @Override
-    public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
-        
     }
 
     @Override

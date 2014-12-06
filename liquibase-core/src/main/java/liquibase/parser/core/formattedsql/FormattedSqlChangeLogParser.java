@@ -10,9 +10,9 @@ import liquibase.Labels;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
-import liquibase.changelog.ChangeSet;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
 import liquibase.parser.ChangeLogParser;
@@ -216,7 +216,8 @@ public class FormattedSqlChangeLogParser implements ChangeLogParser {
                                 if (name != null) {
                                     String body = preconditionMatcher.group(2).trim();
                                     if ("sql-check".equals(name)) {
-                                        ((PreconditionContainer) changeSet.getPreconditions()).addNestedPrecondition(parseSqlCheckCondition(body));
+                                        PreconditionContainer container = changeSet.getPreconditions();
+                                        container.addNestedPrecondition(parseSqlCheckCondition(body));
                                     } else {
                                         throw new ChangeLogParseException("The '" + name + "' precondition type is not supported.");
                                     }

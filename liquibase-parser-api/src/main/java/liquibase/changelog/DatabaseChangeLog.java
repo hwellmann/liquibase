@@ -3,13 +3,13 @@ package liquibase.changelog;
 import java.util.List;
 
 import liquibase.database.ObjectQuotingStrategy;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.core.PreconditionContainer;
 
 public interface DatabaseChangeLog extends Comparable<DatabaseChangeLog> {
 
-    Precondition getPreconditions();
+    PreconditionContainer getPreconditions();
 
-    void setPreconditions(Precondition precond);
+    void setPreconditions(PreconditionContainer precond);
 
     ChangeLogParameters getChangeLogParameters();
 
