@@ -20,11 +20,12 @@ import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeLogIterator;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeLogParametersImpl;
-import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.ChangeLogValidator;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.filter.AfterTagChangeSetFilter;
 import liquibase.changelog.filter.AlreadyRanChangeSetFilter;
@@ -228,7 +229,7 @@ public class Liquibase {
 
             checkLiquibaseTables(true, changeLog, contexts, labelExpression);
 
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator changeLogIterator = getStandardChangelogIterator(contexts, labelExpression, changeLog);
 
@@ -319,7 +320,7 @@ public class Liquibase {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
 
             checkLiquibaseTables(true, changeLog, contexts, labelExpression);
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator logIterator = new ChangeLogIterator(changeLog,
                     new ShouldRunChangeSetFilter(database, ignoreClasspathPrefix),
@@ -422,7 +423,7 @@ public class Liquibase {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, contexts, labelExpression);
 
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
             changeLog.setIgnoreClasspathPrefix(ignoreClasspathPrefix);
 
             ChangeLogIterator logIterator = new ChangeLogIterator(database.getRanChangeSetList(), changeLog,
@@ -490,7 +491,7 @@ public class Liquibase {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, contexts, labelExpression);
 
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
             changeLog.setIgnoreClasspathPrefix(ignoreClasspathPrefix);
 
             List<RanChangeSet> ranChangeSetList = database.getRanChangeSetList();
@@ -546,7 +547,7 @@ public class Liquibase {
         try {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, contexts, labelExpression);
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
             changeLog.setIgnoreClasspathPrefix(ignoreClasspathPrefix);
 
             List<RanChangeSet> ranChangeSetList = database.getRanChangeSetList();
@@ -612,7 +613,7 @@ public class Liquibase {
         try {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(true, changeLog, contexts, labelExpression);
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator logIterator = new ChangeLogIterator(changeLog,
                     new NotRanChangeSetFilter(database.getRanChangeSetList()),
@@ -668,7 +669,7 @@ public class Liquibase {
         try {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, contexts, labelExpression);
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator logIterator = new ChangeLogIterator(changeLog,
                     new NotRanChangeSetFilter(database.getRanChangeSetList()),
@@ -708,7 +709,7 @@ public class Liquibase {
         try {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, contexts, labelExpression);
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator logIterator;
             if (count == null) {
@@ -885,7 +886,7 @@ public class Liquibase {
 
         checkLiquibaseTables(true, changeLog, contexts, labels);
 
-        changeLog.validate(database, contexts, labels);
+        validateChangeLog(changeLog, database, contexts, labels);
 
         ChangeLogIterator logIterator = getStandardChangelogIterator(contexts, labels, changeLog);
 
@@ -913,7 +914,7 @@ public class Liquibase {
 
         checkLiquibaseTables(true, changeLog, contexts, labelExpression);
 
-        changeLog.validate(database, contexts, labelExpression);
+        validateChangeLog(changeLog, database, contexts, labelExpression);
 
         ChangeLogIterator logIterator = getStandardChangelogIterator(contexts, labelExpression, changeLog);
 
@@ -972,7 +973,7 @@ public class Liquibase {
         changeLogParameters.setLabels(labelExpression);
 
         DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
-        changeLog.validate(database, contexts, labelExpression);
+        validateChangeLog(changeLog, database, contexts, labelExpression);
 
         ChangeLogIterator logIterator = new ChangeLogIterator(changeLog,
                 new ContextChangeSetFilter(contexts),
@@ -1089,7 +1090,7 @@ public class Liquibase {
             DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
             checkLiquibaseTables(false, changeLog, new Contexts(), new LabelExpression());
 
-            changeLog.validate(database, contexts, labelExpression);
+            validateChangeLog(changeLog, database, contexts, labelExpression);
 
             ChangeLogIterator logIterator = new ChangeLogIterator(changeLog,
                     new DbmsChangeSetFilter(database));
@@ -1128,7 +1129,17 @@ public class Liquibase {
     public void validate() throws LiquibaseException {
 
         DatabaseChangeLogImpl changeLog = getDatabaseChangeLog();
-        changeLog.validate(database);
+        validateChangeLog(changeLog, database);
+    }
+
+    private void validateChangeLog(DatabaseChangeLogImpl changeLog, Database database, Contexts contexts, LabelExpression labelExpression) throws LiquibaseException {
+        ChangeLogValidator validator = new ChangeLogValidator(changeLog);
+        validator.validate(database, contexts, labelExpression);
+    }
+
+    private void validateChangeLog(DatabaseChangeLogImpl changeLog, Database database) throws LiquibaseException {
+        ChangeLogValidator validator = new ChangeLogValidator(changeLog);
+        validator.validate(database);
     }
 
     public void setChangeLogParameter(String key, Object value) {

@@ -1,13 +1,14 @@
 package liquibase.changelog.visitor;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
-import liquibase.database.Database;
-import liquibase.exception.ValidationErrors;
-import java.util.ArrayList;
-import java.math.BigInteger;
-import java.util.List;
-import liquibase.change.core.CreateSequenceChange;
+import liquibase.changelog.ChangeLogValidator;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.RanChangeSet;
@@ -17,14 +18,11 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
-import liquibase.exception.Warnings;
-import liquibase.precondition.ExecutablePrecondition;
 import liquibase.precondition.core.DBMSPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -84,7 +82,7 @@ public class ValidatingVisitorPreConditionsTest {
         boolean exceptionThrown = false;
 
         try {
-            changeLog.validate(oracleDb, empty);
+            new ChangeLogValidator(changeLog).validate(oracleDb, empty);
         } catch (LiquibaseException ex) {
             exceptionThrown = true;
         }
@@ -168,7 +166,7 @@ public class ValidatingVisitorPreConditionsTest {
 
         try {
             // call the validate which gives the error
-            changeLog.validate(mssqlDb, empty);
+            new ChangeLogValidator(changeLog).validate(mssqlDb, empty);
         } catch (LiquibaseException ex) {
             System.out.println(ex.getMessage());
             exceptionThrown = true;
