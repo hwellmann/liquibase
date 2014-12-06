@@ -18,24 +18,6 @@ public interface ExecutableChangeSet extends LiquibaseSerializable, ChangeSet {
         NOT_RAN, ALREADY_RAN, RUN_AGAIN, MARK_RAN, INVALID_MD5SUM
     }
 
-    public enum ExecType {
-        EXECUTED("EXECUTED", false, true),
-        FAILED("FAILED", false, false),
-        SKIPPED("SKIPPED", false, false),
-        RERAN("RERAN", true, true),
-        MARK_RAN("MARK_RAN", false, true);
-
-        ExecType(String value, boolean ranBefore, boolean ran) {
-            this.value = value;
-            this.ranBefore = ranBefore;
-            this.ran = ran;
-        }
-
-        public final String value;
-        public final boolean ranBefore;
-        public final boolean ran;
-    }
-
     @Override
     void load(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException;
 

@@ -5,14 +5,32 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.change.CheckSum;
 import liquibase.change.Change;
+import liquibase.change.CheckSum;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.parser.core.ParsedNode;
 import liquibase.precondition.core.PreconditionContainer;
 import liquibase.serializer.LiquibaseSerializable;
 
 public interface ChangeSet extends LiquibaseSerializable {
+
+    public enum ExecType {
+        EXECUTED("EXECUTED", false, true),
+        FAILED("FAILED", false, false),
+        SKIPPED("SKIPPED", false, false),
+        RERAN("RERAN", true, true),
+        MARK_RAN("MARK_RAN", false, true);
+
+        ExecType(String value, boolean ranBefore, boolean ran) {
+            this.value = value;
+            this.ranBefore = ranBefore;
+            this.ran = ran;
+        }
+
+        public final String value;
+        public final boolean ranBefore;
+        public final boolean ran;
+    }
 
     public enum ValidationFailOption {
         HALT("HALT"),

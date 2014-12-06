@@ -14,7 +14,7 @@ public class RanChangeSet {
     private final CheckSum lastCheckSum;
     private final Date dateExecuted;
     private String tag;
-    private ChangeSetImpl.ExecType execType;
+    private ChangeSet.ExecType execType;
     private String description;
     private String comments;
 
@@ -22,7 +22,7 @@ public class RanChangeSet {
         this(changeSet, null);
     }
 
-    public RanChangeSet(ChangeSet changeSet, ChangeSetImpl.ExecType execType) {
+    public RanChangeSet(ChangeSet changeSet, ChangeSet.ExecType execType) {
         this(changeSet.getFilePath(),
              changeSet.getId(),
              changeSet.getAuthor(),
@@ -34,7 +34,7 @@ public class RanChangeSet {
             changeSet.getComments());
     }
 
-    public RanChangeSet(String changeLog, String id, String author, CheckSum lastCheckSum, Date dateExecuted, String tag, ExecutableChangeSet.ExecType execType, String description, String comments) {
+    public RanChangeSet(String changeLog, String id, String author, CheckSum lastCheckSum, Date dateExecuted, String tag, ChangeSet.ExecType execType, String description, String comments) {
         this.changeLog = changeLog;
         this.id = id;
         this.author = author;
@@ -81,7 +81,7 @@ public class RanChangeSet {
         this.tag = tag;
     }
 
-    public ChangeSetImpl.ExecType getExecType() {
+    public ChangeSet.ExecType getExecType() {
         return execType;
     }
 
