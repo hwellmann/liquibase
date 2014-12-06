@@ -4,7 +4,7 @@ import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.exception.SetupException;
 import static org.junit.Assert.*;
@@ -50,8 +50,8 @@ public class ValidatingVisitorTest {
         changeSet2.addChange(change2);
 
         ValidatingVisitor handler = new ValidatingVisitor(new ArrayList<RanChangeSet>());
-        handler.visit(changeSet1, new DatabaseChangeLog(), new MockDatabase(), null);
-        handler.visit(changeSet2, new DatabaseChangeLog(), new MockDatabase(), null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), new MockDatabase(), null);
+        handler.visit(changeSet2, new DatabaseChangeLogImpl(), new MockDatabase(), null);
 
         assertTrue(handler.validationPassed());
 
@@ -67,7 +67,7 @@ public class ValidatingVisitorTest {
         });
 
         ValidatingVisitor handler = new ValidatingVisitor(new ArrayList<RanChangeSet>());
-        handler.visit(changeSet1, new DatabaseChangeLog(), null, null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), null, null);
 
         assertEquals(1, handler.getSetupExceptions().size());
         assertEquals("Test message", handler.getSetupExceptions().get(0).getMessage());
@@ -79,8 +79,8 @@ public class ValidatingVisitorTest {
     public void visit_duplicate() throws Exception {
 
         ValidatingVisitor handler = new ValidatingVisitor(new ArrayList<RanChangeSet>());
-        handler.visit(changeSet1, new DatabaseChangeLog(), null, null);
-        handler.visit(changeSet1, new DatabaseChangeLog(), null, null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), null, null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), null, null);
 
         assertEquals(1, handler.getDuplicateChangeSets().size());
 
@@ -101,7 +101,7 @@ public class ValidatingVisitorTest {
 
         List<RanChangeSet> ran = new ArrayList<RanChangeSet>();
         ValidatingVisitor handler = new ValidatingVisitor(ran);
-        handler.visit(changeSet1, new DatabaseChangeLog(), null, null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), null, null);
 
         assertEquals(1, handler.getValidationErrors().getErrorMessages().size());
         assertTrue(handler.getValidationErrors().getErrorMessages().get(0).startsWith("Test message"));
@@ -124,7 +124,7 @@ public class ValidatingVisitorTest {
         List<RanChangeSet> ran = new ArrayList<RanChangeSet>();
         ran.add(new RanChangeSet(changeSet1));
         ValidatingVisitor handler = new ValidatingVisitor(ran);
-        handler.visit(changeSet1, new DatabaseChangeLog(), null, null);
+        handler.visit(changeSet1, new DatabaseChangeLogImpl(), null, null);
 
         assertEquals(0, handler.getSetupExceptions().size());
 

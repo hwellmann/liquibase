@@ -1,29 +1,34 @@
 package liquibase.changelog;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.RuntimeEnvironment;
-import liquibase.changelog.filter.*;
-import liquibase.changelog.visitor.SkippedChangeSetVisitor;
+import liquibase.changelog.filter.ChangeSetFilter;
+import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.changelog.visitor.ChangeSetVisitor;
-import liquibase.database.Database;
+import liquibase.changelog.visitor.SkippedChangeSetVisitor;
 import liquibase.exception.LiquibaseException;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 
-import java.util.*;
-
 public class ChangeLogIterator {
-    private DatabaseChangeLog databaseChangeLog;
+    private DatabaseChangeLogImpl databaseChangeLog;
     private List<ChangeSetFilter> changeSetFilters;
 
-    public ChangeLogIterator(DatabaseChangeLog databaseChangeLog, ChangeSetFilter... changeSetFilters) {
+    public ChangeLogIterator(DatabaseChangeLogImpl databaseChangeLog, ChangeSetFilter... changeSetFilters) {
         this.databaseChangeLog = databaseChangeLog;
         this.changeSetFilters = Arrays.asList(changeSetFilters);
     }
 
-    public ChangeLogIterator(List<RanChangeSet> changeSetList, DatabaseChangeLog changeLog, ChangeSetFilter... changeSetFilters) {
-        final List<ChangeSetImpl> changeSets = new ArrayList<ChangeSetImpl>();
+    public ChangeLogIterator(List<RanChangeSet> changeSetList, DatabaseChangeLogImpl changeLog, ChangeSetFilter... changeSetFilters) {
+        final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         for (RanChangeSet ranChangeSet : changeSetList) {
-        	ChangeSetImpl changeSet = changeLog.getChangeSet(ranChangeSet);
+        	ChangeSet changeSet = changeLog.getChangeSet(ranChangeSet);
         	if (changeSet != null) {
                 if (changeLog.ignoreClasspathPrefix()) {
                     changeSet.setFilePath(ranChangeSet.getChangeLog());
@@ -31,9 +36,9 @@ public class ChangeLogIterator {
         		changeSets.add(changeSet);
         	}
         }
-        this.databaseChangeLog = (new DatabaseChangeLog() {
+        this.databaseChangeLog = (new DatabaseChangeLogImpl() {
             @Override
-            public List<ChangeSetImpl> getChangeSets() {
+            public List<ChangeSet> getChangeSets() {
                 return changeSets;
             }
         });
@@ -46,12 +51,12 @@ public class ChangeLogIterator {
       databaseChangeLog.setRuntimeEnvironment(env);
       log.setChangeLog(databaseChangeLog);
         try {
-            List<ChangeSetImpl> changeSetList = new ArrayList<ChangeSetImpl>(databaseChangeLog.getChangeSets());
+            List<ChangeSet> changeSetList = new ArrayList<ChangeSet>(databaseChangeLog.getChangeSets());
             if (visitor.getDirection().equals(ChangeSetVisitor.Direction.REVERSE)) {
                 Collections.reverse(changeSetList);
             }
 
-            for (ChangeSetImpl changeSet : changeSetList) {
+            for (ChangeSet changeSet : changeSetList) {
                 boolean shouldVisit = true;
                 Set<ChangeSetFilterResult> reasonsAccepted = new HashSet<ChangeSetFilterResult>();
                 Set<ChangeSetFilterResult> reasonsDenied = new HashSet<ChangeSetFilterResult>();

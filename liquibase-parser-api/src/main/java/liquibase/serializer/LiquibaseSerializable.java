@@ -1,12 +1,10 @@
 package liquibase.serializer;
 
-import liquibase.exception.SetupException;
-import liquibase.parser.NamespaceDetails;
+import java.util.Set;
+
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
-
-import java.util.Set;
 
 public interface LiquibaseSerializable {
 

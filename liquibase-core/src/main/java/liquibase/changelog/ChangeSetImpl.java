@@ -38,6 +38,7 @@ import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.Conditional;
 import liquibase.precondition.ErrorPrecondition;
 import liquibase.precondition.FailedPrecondition;
+import liquibase.precondition.Precondition;
 import liquibase.precondition.core.PreconditionContainer;
 import liquibase.resource.ResourceAccessor;
 import liquibase.serializer.LiquibaseSerializable;
@@ -982,7 +983,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      * @see liquibase.changelog.IChangeSet#getPreconditions()
      */
     @Override
-    public PreconditionContainer getPreconditions() {
+    public Precondition getPreconditions() {
         return preconditions;
     }
 
@@ -990,8 +991,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      * @see liquibase.changelog.IChangeSet#setPreconditions(liquibase.precondition.core.PreconditionContainer)
      */
     @Override
-    public void setPreconditions(PreconditionContainer preconditionContainer) {
-        this.preconditions = preconditionContainer;
+    public void setPreconditions(Precondition preconditionContainer) {
+        this.preconditions = (PreconditionContainer) preconditionContainer;
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,8 @@
 package liquibase.changelog;
 
+import java.util.Date;
+import java.util.List;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.database.Database;
@@ -7,9 +10,6 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.DatabaseHistoryException;
 import liquibase.exception.LiquibaseException;
 import liquibase.util.PrioritizedService;
-
-import java.util.Date;
-import java.util.List;
 
 public interface ChangeLogHistoryService extends PrioritizedService {
 

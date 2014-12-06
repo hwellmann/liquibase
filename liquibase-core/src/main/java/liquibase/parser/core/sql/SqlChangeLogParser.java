@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.exception.ChangeLogParseException;
@@ -29,9 +29,9 @@ public class SqlChangeLogParser implements ChangeLogParser {
     }
 
     @Override
-    public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+    public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
 
-        DatabaseChangeLog changeLog = new DatabaseChangeLog();
+        DatabaseChangeLogImpl changeLog = new DatabaseChangeLogImpl();
         changeLog.setPhysicalFilePath(physicalChangeLogLocation);
 
         RawSQLChange change = new RawSQLChange();

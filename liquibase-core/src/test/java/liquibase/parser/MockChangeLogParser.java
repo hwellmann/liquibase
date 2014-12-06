@@ -1,6 +1,6 @@
 package liquibase.parser;
 
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.resource.ResourceAccessor;
@@ -30,7 +30,7 @@ public class MockChangeLogParser implements ChangeLogParser {
     }
 
     @Override
-    public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+    public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

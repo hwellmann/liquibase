@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 import liquibase.Labels;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
 import liquibase.parser.ChangeLogParser;
@@ -64,9 +64,9 @@ public class FormattedSqlChangeLogParser implements ChangeLogParser {
     }
 
     @Override
-    public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+    public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
 
-        DatabaseChangeLog changeLog = new DatabaseChangeLog();
+        DatabaseChangeLogImpl changeLog = new DatabaseChangeLogImpl();
         changeLog.setChangeLogParameters(changeLogParameters);
 
         changeLog.setPhysicalFilePath(physicalChangeLogLocation);
@@ -216,7 +216,7 @@ public class FormattedSqlChangeLogParser implements ChangeLogParser {
                                 if (name != null) {
                                     String body = preconditionMatcher.group(2).trim();
                                     if ("sql-check".equals(name)) {
-                                        changeSet.getPreconditions().addNestedPrecondition(parseSqlCheckCondition(body));
+                                        ((PreconditionContainer) changeSet.getPreconditions()).addNestedPrecondition(parseSqlCheckCondition(body));
                                     } else {
                                         throw new ChangeLogParseException("The '" + name + "' precondition type is not supported.");
                                     }

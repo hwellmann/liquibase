@@ -1,5 +1,11 @@
 package liquibase.changelog;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.Contexts;
 import liquibase.RuntimeEnvironment;
 import liquibase.changelog.filter.ChangeSetFilterResult;
@@ -8,22 +14,17 @@ import liquibase.changelog.filter.DbmsChangeSetFilter;
 import liquibase.changelog.visitor.ChangeSetVisitor;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
-import static org.junit.Assert.*;
-
 import liquibase.exception.LiquibaseException;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 public class ChangeLogIteratorTest {
-    private DatabaseChangeLog changeLog;
+    private DatabaseChangeLogImpl changeLog;
 
     @Before
     public void setUp() {
-        changeLog = new DatabaseChangeLog();
+        changeLog = new DatabaseChangeLogImpl();
         changeLog.addChangeSet(new ChangeSetImpl("1", "nvoxland", false, false, "/path/to/changelog", "test1", "mysql", null));
         changeLog.addChangeSet(new ChangeSetImpl("2", "nvoxland", false, false, "/path/to/changelog",  "test1", "oracle", null));
         changeLog.addChangeSet(new ChangeSetImpl("3", "nvoxland", false, false, "/path/to/changelog",  "test2", "mysql", null));
@@ -77,7 +78,7 @@ public class ChangeLogIteratorTest {
 
     private static class TestChangeSetVisitor implements ChangeSetVisitor {
 
-        public List<ChangeSetImpl> visitedChangeSets = new ArrayList<ChangeSetImpl>();
+        public List<ChangeSet> visitedChangeSets = new ArrayList<ChangeSet>();
 
 
         @Override
@@ -86,7 +87,7 @@ public class ChangeLogIteratorTest {
         }
 
         @Override
-        public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+        public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
             visitedChangeSets.add(changeSet);
         }
     }

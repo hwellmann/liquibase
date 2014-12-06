@@ -1,6 +1,9 @@
 package liquibase.exception;
 
-import liquibase.changelog.ChangeSetImpl;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.Set;
+
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.visitor.ValidatingVisitor;
 import liquibase.database.Database;
@@ -9,16 +12,12 @@ import liquibase.precondition.ErrorPrecondition;
 import liquibase.precondition.FailedPrecondition;
 import liquibase.util.StreamUtil;
 
-import java.io.PrintStream;
-import java.util.List;
-import java.util.Set;
-
 public class ValidationFailedException extends MigrationFailedException {
 
-    private List<ChangeSetImpl> invalidMD5Sums;
+    private List<ChangeSet> invalidMD5Sums;
     private List<FailedPrecondition> failedPreconditions;
     private List<ErrorPrecondition> errorPreconditions;
-    private Set<ChangeSetImpl> duplicateChangeSets;
+    private Set<ChangeSet> duplicateChangeSets;
     private List<SetupException> setupExceptions;
     private List<Throwable> changeValidationExceptions;
     private ValidationErrors validationErrors;
@@ -77,7 +76,7 @@ public class ValidationFailedException extends MigrationFailedException {
             message.append("     ").append(setupExceptions.size()).append(" changes have failures").append(StreamUtil.getLineSeparator());
             for (SetupException invalid : setupExceptions) {
                 message.append("          ").append(invalid.toString());
-                message.append(StreamUtil.getLineSeparator());                
+                message.append(StreamUtil.getLineSeparator());
             }
         }
         if(changeValidationExceptions.size() >0){
@@ -99,7 +98,7 @@ public class ValidationFailedException extends MigrationFailedException {
         return message.toString();
     }
 
-    public List<ChangeSetImpl> getInvalidMD5Sums() {
+    public List<ChangeSet> getInvalidMD5Sums() {
         return invalidMD5Sums;
     }
 
@@ -131,7 +130,7 @@ public class ValidationFailedException extends MigrationFailedException {
                 out.println("          "+duplicate.toString(false));
             }
         }
-        
+
         if(setupExceptions.size() >0) {
             out.println("     "+setupExceptions.size()+" changes had errors");
             for (SetupException setupEx : setupExceptions) {

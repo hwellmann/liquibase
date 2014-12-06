@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.List;
 import liquibase.change.core.CreateSequenceChange;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.OracleDatabase;
@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
  */
 public class ValidatingVisitorPreConditionsTest {
 
-    private DatabaseChangeLog changeLog;
+    private DatabaseChangeLogImpl changeLog;
     private ChangeSetImpl changeSet1;
 
     /**
@@ -40,7 +40,7 @@ public class ValidatingVisitorPreConditionsTest {
      */
     @Before
     public void setUp() {
-        changeLog = new DatabaseChangeLog();
+        changeLog = new DatabaseChangeLogImpl();
 
         changeSet1 = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
         changeLog.addChangeSet(changeSet1);

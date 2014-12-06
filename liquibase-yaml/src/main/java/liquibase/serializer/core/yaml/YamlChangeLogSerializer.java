@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.ChangeLogSerializer;
@@ -108,10 +109,10 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void write(List<ChangeSetImpl> changeSets, OutputStream out) throws IOException {
+    public void write(List<ChangeSet> changeSets, OutputStream out) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
         writer.write("databaseChangeLog:\n");
-        for (ChangeSetImpl changeSet : changeSets) {
+        for (ChangeSet changeSet : changeSets) {
             writer.write(StringUtils.indent(serialize(changeSet, true), 2));
             writer.write("\n");
         }
@@ -119,7 +120,7 @@ public class YamlChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

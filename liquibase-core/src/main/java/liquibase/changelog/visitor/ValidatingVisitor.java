@@ -1,32 +1,38 @@
 package liquibase.changelog.visitor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
-import liquibase.exception.*;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.PreconditionErrorException;
+import liquibase.exception.PreconditionFailedException;
+import liquibase.exception.SetupException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
+import liquibase.logging.LogFactory;
 import liquibase.precondition.ErrorPrecondition;
 import liquibase.precondition.FailedPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
-import liquibase.logging.LogFactory;
 import liquibase.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
 
 public class ValidatingVisitor implements ChangeSetVisitor {
 
-    private List<ChangeSetImpl> invalidMD5Sums = new ArrayList<ChangeSetImpl>();
+    private List<ChangeSet> invalidMD5Sums = new ArrayList<ChangeSet>();
     private List<FailedPrecondition> failedPreconditions = new ArrayList<FailedPrecondition>();
     private List<ErrorPrecondition> errorPreconditions = new ArrayList<ErrorPrecondition>();
-    private Set<ChangeSetImpl> duplicateChangeSets = new HashSet<ChangeSetImpl>();
+    private Set<ChangeSet> duplicateChangeSets = new HashSet<ChangeSet>();
     private List<SetupException> setupExceptions = new ArrayList<SetupException>();
     private List<Throwable> changeValidationExceptions = new ArrayList<Throwable>();
     private ValidationErrors validationErrors = new ValidationErrors();
@@ -44,9 +50,9 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         }
     }
 
-    public void validate(Database database, DatabaseChangeLog changeLog) {
+    public void validate(Database database, DatabaseChangeLogImpl changeLog) {
         this.database = database;
-        PreconditionContainer preconditions = changeLog.getPreconditions();
+        PreconditionContainer preconditions = (PreconditionContainer) changeLog.getPreconditions();
         try {
             if (preconditions == null) {
                 return;
@@ -75,7 +81,7 @@ public class ValidatingVisitor implements ChangeSetVisitor {
     }
 
     @Override
-    public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         RanChangeSet ranChangeSet = ranIndex.get(changeSet.toString(false));
         boolean ran = ranChangeSet != null;
         boolean shouldValidate = !ran || changeSet.shouldRunOnChange() || changeSet.shouldAlwaysRun();
@@ -85,12 +91,12 @@ public class ValidatingVisitor implements ChangeSetVisitor {
             } catch (SetupException se) {
                 setupExceptions.add(se);
             }
-            
-            
+
+
             if(shouldValidate){
                 warnings.addAll(change.warn(database));
-            
-                try {                
+
+                try {
                     ValidationErrors foundErrors = change.validate(database);
 
                     if (foundErrors != null && foundErrors.hasErrors()) {
@@ -124,7 +130,7 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         }
     }
 
-    public List<ChangeSetImpl> getInvalidMD5Sums() {
+    public List<ChangeSet> getInvalidMD5Sums() {
         return invalidMD5Sums;
     }
 
@@ -137,7 +143,7 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         return errorPreconditions;
     }
 
-    public Set<ChangeSetImpl> getDuplicateChangeSets() {
+    public Set<ChangeSet> getDuplicateChangeSets() {
         return duplicateChangeSets;
     }
 

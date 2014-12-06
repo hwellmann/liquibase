@@ -1,7 +1,7 @@
 package liquibase.parser.core.xml;
 
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
@@ -13,13 +13,13 @@ import java.text.ParseException;
 public abstract class AbstractChangeLogParser implements ChangeLogParser {
 
     @Override
-    public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+    public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
         ParsedNode parsedNode = parseToNode(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
         if (parsedNode == null) {
             return null;
         }
 
-        DatabaseChangeLog changeLog = new DatabaseChangeLog(physicalChangeLogLocation);
+        DatabaseChangeLogImpl changeLog = new DatabaseChangeLogImpl(physicalChangeLogLocation);
         changeLog.setChangeLogParameters(changeLogParameters);
         try {
             changeLog.load(parsedNode, resourceAccessor);

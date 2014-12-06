@@ -2,8 +2,9 @@ package liquibase.parser.core.xml;
 
 import liquibase.change.*;
 import liquibase.changelog.ChangeLogParametersImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
@@ -45,7 +46,7 @@ class XMLChangeLogSAXHandler extends DefaultHandler {
 		log = LogFactory.getLogger();
 		this.resourceAccessor = resourceAccessor;
 
-		databaseChangeLog = new DatabaseChangeLog();
+		databaseChangeLog = new DatabaseChangeLogImpl();
 		databaseChangeLog.setPhysicalFilePath(physicalChangeLogLocation);
 		databaseChangeLog.setChangeLogParameters(changeLogParameters);
 

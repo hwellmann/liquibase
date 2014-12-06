@@ -21,7 +21,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.parser.NamespaceDetails;
@@ -85,7 +85,7 @@ public class XMLChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void write(List<ChangeSetImpl> changeSets, OutputStream out) throws IOException {
+    public void write(List<ChangeSet> changeSets, OutputStream out) throws IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder documentBuilder;
@@ -137,7 +137,7 @@ public class XMLChangeLogSerializer implements ChangeLogSerializer {
         doc.appendChild(changeLogElement);
         setCurrentChangeLogFileDOM(doc);
 
-        for (ChangeSetImpl changeSet : changeSets) {
+        for (ChangeSet changeSet : changeSets) {
             doc.getDocumentElement().appendChild(createNode(changeSet));
         }
 
@@ -145,7 +145,7 @@ public class XMLChangeLogSerializer implements ChangeLogSerializer {
     }
 
     @Override
-    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
         FileInputStream in = new FileInputStream(changeLogFile);
         String existingChangeLog = StreamUtil.getStreamContents(in);
         in.close();

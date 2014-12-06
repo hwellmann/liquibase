@@ -1,13 +1,36 @@
 package liquibase.database;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import liquibase.CatalogAndSchema;
 import liquibase.change.Change;
 import liquibase.change.core.DropTableChange;
-import liquibase.changelog.*;
+import liquibase.changelog.ChangeLogHistoryServiceFactory;
+import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.RanChangeSet;
+import liquibase.changelog.StandardChangeLogHistoryService;
 import liquibase.configuration.ConfigurationProperty;
 import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
-import liquibase.database.core.*;
+import liquibase.database.core.OracleDatabase;
+import liquibase.database.core.PostgresDatabase;
+import liquibase.database.core.SQLiteDatabase;
+import liquibase.database.core.SybaseASADatabase;
+import liquibase.database.core.SybaseDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.diff.DiffGeneratorFactory;
 import liquibase.diff.DiffResult;
@@ -15,7 +38,13 @@ import liquibase.diff.compare.CompareControl;
 import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.DiffToChangeLog;
-import liquibase.exception.*;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.DatabaseHistoryException;
+import liquibase.exception.DateParseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.StatementNotSupportedOnDatabaseException;
+import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.lockservice.LockServiceFactory;
 import liquibase.logging.LogFactory;
@@ -30,21 +59,22 @@ import liquibase.statement.DatabaseFunction;
 import liquibase.statement.SequenceCurrentValueFunction;
 import liquibase.statement.SequenceNextValueFunction;
 import liquibase.statement.SqlStatement;
-import liquibase.statement.core.*;
+import liquibase.statement.core.GetViewDefinitionStatement;
+import liquibase.statement.core.RawCallStatement;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.*;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.ForeignKey;
+import liquibase.structure.core.Index;
+import liquibase.structure.core.PrimaryKey;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Sequence;
+import liquibase.structure.core.Table;
+import liquibase.structure.core.UniqueConstraint;
+import liquibase.structure.core.View;
 import liquibase.util.ISODateFormat;
 import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.math.BigInteger;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Pattern;
 
 
 /**
@@ -255,6 +285,7 @@ public abstract class AbstractJdbcDatabase implements Database {
     /**
      * @deprecated use {@link liquibase.CatalogAndSchema#standardize(Database)}
      */
+    @Deprecated
     public CatalogAndSchema correctSchema(final String catalog, final String schema) {
         return new CatalogAndSchema(catalog, schema).standardize(this);
     }
@@ -734,7 +765,7 @@ public abstract class AbstractJdbcDatabase implements Database {
 
 	        final long changeSetStarted = System.currentTimeMillis();
 	        DiffResult diffResult = DiffGeneratorFactory.getInstance().compare(new EmptyDatabaseSnapshot(this), snapshot, new CompareControl(snapshot.getSnapshotControl().getTypesToInclude()));
-            List<ChangeSetImpl> changeSets = new DiffToChangeLog(diffResult, new DiffOutputControl(true, true, false).addIncludedSchema(schemaToDrop)).generateChangeSets();
+            List<ChangeSet> changeSets = new DiffToChangeLog(diffResult, new DiffOutputControl(true, true, false).addIncludedSchema(schemaToDrop)).generateChangeSets();
 	        LogFactory.getLogger().debug(String.format("ChangeSet to Remove Database Objects generated in %d ms.", System.currentTimeMillis() - changeSetStarted));
 
             boolean previousAutoCommit = this.getAutoCommitMode();
@@ -859,7 +890,7 @@ public abstract class AbstractJdbcDatabase implements Database {
     @Override
     public String getViewDefinition(CatalogAndSchema schema, final String viewName) throws DatabaseException {
         schema = schema.customize(this);
-        String definition = (String) ExecutorService.getInstance().getExecutor(this).queryForObject(new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName), String.class);
+        String definition = ExecutorService.getInstance().getExecutor(this).queryForObject(new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName), String.class);
         if (definition == null) {
             return null;
         }
@@ -1000,6 +1031,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      *
      * @deprecated Know if you should quote the name or not, and use {@link #escapeColumnName(String, String, String, String)} which will quote things that look like functions, or leave it along as you see fit. Don't rely on this function guessing.
      */
+    @Deprecated
     @Override
     public String escapeColumnName(String catalogName, String schemaName, String tableName, String columnName, boolean quoteNamesThatMayBeFunctions) {
         if (quotingStrategy == ObjectQuotingStrategy.QUOTE_ALL_OBJECTS) {
@@ -1243,9 +1275,9 @@ public abstract class AbstractJdbcDatabase implements Database {
     public void executeRollbackStatements(final SqlStatement[] statements, final List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException {
         execute(statements, filterRollbackVisitors(sqlVisitors));
     }
-    
+
     @Override
-    public void executeRollbackStatements(final Change change, final List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException {        
+    public void executeRollbackStatements(final Change change, final List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException {
         final SqlStatement[] statements = change.generateRollbackStatements(this);
         executeRollbackStatements(statements, sqlVisitors);
     }
@@ -1272,10 +1304,10 @@ public abstract class AbstractJdbcDatabase implements Database {
                }
             }
         }
-        
+
         return rollbackVisitors;
     }
-    
+
     @Override
     public List<DatabaseFunction> getDateFunctions() {
         return dateFunctions;

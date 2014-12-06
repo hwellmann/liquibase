@@ -1,7 +1,27 @@
 package liquibase.diff.output.changelog;
 
-import liquibase.CatalogAndSchema;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import liquibase.change.Change;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
@@ -15,18 +35,10 @@ import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.logging.LogFactory;
 import liquibase.serializer.ChangeLogSerializer;
 import liquibase.serializer.ChangeLogSerializerFactory;
-import liquibase.serializer.LiquibaseSerializable;
 import liquibase.serializer.core.xml.XMLChangeLogSerializer;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.DatabaseObjectComparator;
-import liquibase.structure.core.*;
 import liquibase.util.StringUtils;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DiffToChangeLog {
 
@@ -122,18 +134,18 @@ public class DiffToChangeLog {
      */
     public void print(PrintStream out, ChangeLogSerializer changeLogSerializer) throws ParserConfigurationException, IOException, DatabaseException {
 
-        List<ChangeSetImpl> changeSets = generateChangeSets();
+        List<ChangeSet> changeSets = generateChangeSets();
 
         changeLogSerializer.write(changeSets, out);
 
         out.flush();
     }
 
-    public List<ChangeSetImpl> generateChangeSets() {
+    public List<ChangeSet> generateChangeSets() {
         final ChangeGeneratorFactory changeGeneratorFactory = ChangeGeneratorFactory.getInstance();
         DatabaseObjectComparator comparator = new DatabaseObjectComparator();
 
-        List<ChangeSetImpl> changeSets = new ArrayList<ChangeSetImpl>();
+        List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         List<Class<? extends DatabaseObject>> types = getOrderedOutputTypes(MissingObjectChangeGenerator.class);
         for (Class<? extends DatabaseObject> type : types) {
             ObjectQuotingStrategy quotingStrategy = ObjectQuotingStrategy.QUOTE_ALL_OBJECTS;
@@ -193,7 +205,7 @@ public class DiffToChangeLog {
         return types;
     }
 
-    private void addToChangeSets(Change[] changes, List<ChangeSetImpl> changeSets, ObjectQuotingStrategy quotingStrategy) {
+    private void addToChangeSets(Change[] changes, List<ChangeSet> changeSets, ObjectQuotingStrategy quotingStrategy) {
         if (changes != null) {
             ChangeSetImpl changeSet = new ChangeSetImpl(generateId(), getChangeSetAuthor(), false, false, null, changeSetContext,
                     null, false, quotingStrategy, null);

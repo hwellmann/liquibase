@@ -1,8 +1,7 @@
 package liquibase.changelog.visitor;
 
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
@@ -31,7 +30,7 @@ public class RollbackVisitor implements ChangeSetVisitor {
     }
 
     @Override
-    public void visit(ChangeSetImpl changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         LogFactory.getLogger().info("Rolling Back Changeset:" + changeSet);
         changeSet.rollback(this.database);
         this.database.removeRanStatus(changeSet);

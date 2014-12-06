@@ -66,6 +66,7 @@
         <module>liquibase-yaml</module>
         <module>liquibase-spring</module>
         <module>liquibase-util</module>
+        <module>liquibase-parser-api</module>
     </modules>
 
     <dependencyManagement>

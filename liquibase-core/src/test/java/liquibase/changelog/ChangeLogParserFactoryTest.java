@@ -122,7 +122,7 @@ public class ChangeLogParserFactoryTest {
     private static class MockChangeLogParser implements ChangeLogParser {
 
         @Override
-        public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+        public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
             return null;
         }
 

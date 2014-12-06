@@ -14,12 +14,12 @@ import liquibase.exception.MigrationFailedException;
 import liquibase.exception.RollbackFailedException;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
-import liquibase.precondition.core.PreconditionContainer;
+import liquibase.precondition.Precondition;
 import liquibase.resource.ResourceAccessor;
-import liquibase.serializer.LiquibaseSerializable.SerializationType;
+import liquibase.serializer.LiquibaseSerializable;
 import liquibase.sql.visitor.SqlVisitor;
 
-public interface ChangeSet {
+public interface ChangeSet extends LiquibaseSerializable {
 
     public enum RunStatus {
         NOT_RAN, ALREADY_RAN, RUN_AGAIN, MARK_RAN, INVALID_MD5SUM
@@ -67,8 +67,10 @@ public interface ChangeSet {
 
     CheckSum generateCheckSum();
 
+    @Override
     void load(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException;
 
+    @Override
     ParsedNode serialize();
 
     ExecType execute(DatabaseChangeLog databaseChangeLog, Database database)
@@ -147,9 +149,9 @@ public interface ChangeSet {
 
     boolean isCheckSumValid(CheckSum storedCheckSum);
 
-    PreconditionContainer getPreconditions();
+    Precondition getPreconditions();
 
-    void setPreconditions(PreconditionContainer preconditionContainer);
+    void setPreconditions(Precondition preconditionContainer);
 
     void addSqlVisitor(SqlVisitor sqlVisitor);
 
@@ -169,16 +171,22 @@ public interface ChangeSet {
 
     ObjectQuotingStrategy getObjectQuotingStrategy();
 
+    @Override
     String getSerializedObjectName();
 
+    @Override
     Set<String> getSerializableFields();
 
+    @Override
     Object getSerializableFieldValue(String field);
 
+    @Override
     SerializationType getSerializableFieldType(String field);
 
+    @Override
     String getSerializedObjectNamespace();
 
+    @Override
     String getSerializableFieldNamespace(String field);
 
     @Override

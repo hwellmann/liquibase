@@ -2,7 +2,7 @@ package liquibase;
 
 import liquibase.changelog.ChangeLogIterator;
 import liquibase.changelog.ChangeLogParametersImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.filter.ContextChangeSetFilter;
 import liquibase.changelog.filter.DbmsChangeSetFilter;
 import liquibase.changelog.filter.LabelChangeSetFilter;
@@ -44,7 +44,7 @@ public class LiquibaseTest {
 
     private ChangeLogParserFactory mockChangeLogParserFactory;
     private ChangeLogParser mockChangeLogParser;
-    private DatabaseChangeLog mockChangeLog;
+    private DatabaseChangeLogImpl mockChangeLog;
     private ChangeLogIterator mockChangeLogIterator;
 
     private Logger mockLogger;
@@ -75,7 +75,7 @@ public class LiquibaseTest {
         mockLockServiceFactory = mock(LockServiceFactory.class);
         mockChangeLogParserFactory = mock(ChangeLogParserFactory.class);
         mockChangeLogParser = mock(ChangeLogParser.class);
-        mockChangeLog = mock(DatabaseChangeLog.class);
+        mockChangeLog = mock(DatabaseChangeLogImpl.class);
         mockChangeLogIterator = mock(ChangeLogIterator.class);
 
         mockLogger = mock(Logger.class);

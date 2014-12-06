@@ -1,5 +1,7 @@
 package liquibase.changelog;
 
+import java.util.Date;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.changelog.filter.ContextChangeSetFilter;
@@ -8,8 +10,6 @@ import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.DatabaseHistoryException;
 import liquibase.logging.LogFactory;
-
-import java.util.Date;
 
 public abstract class AbstractChangeLogHistoryService implements ChangeLogHistoryService {
 
@@ -29,6 +29,7 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
 
     }
 
+    @Override
     public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         RanChangeSet foundRan = getRanChangeSet(changeSet);
 
@@ -59,10 +60,11 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
         }
     }
 
+    @Override
     public void upgradeChecksums(final DatabaseChangeLog databaseChangeLog, final Contexts contexts, LabelExpression labels) throws DatabaseException {
         for (RanChangeSet ranChangeSet : this.getRanChangeSets()) {
             if (ranChangeSet.getLastCheckSum() == null) {
-                ChangeSet changeSet = databaseChangeLog.getChangeSet(ranChangeSet);
+                ChangeSet changeSet = ((DatabaseChangeLogImpl) databaseChangeLog).getChangeSet(ranChangeSet);
                 if (changeSet != null && new ContextChangeSetFilter(contexts).accepts(changeSet).isAccepted() && new DbmsChangeSetFilter(getDatabase()).accepts(changeSet).isAccepted()) {
                     LogFactory.getLogger().debug("Updating null or out of date checksum on changeSet " + changeSet + " to correct value");
                     replaceChecksum(changeSet);

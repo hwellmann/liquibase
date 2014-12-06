@@ -25,7 +25,7 @@ import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
@@ -663,7 +663,7 @@ public abstract class AbstractIntegrationTest {
         clearDatabase(liquibase);
 
         liquibase = createLiquibase(completeChangeLog);
-        List<ChangeSetImpl> list = liquibase.listUnrunChangeSets(new Contexts(this.contexts), new LabelExpression());
+        List<ChangeSet> list = liquibase.listUnrunChangeSets(new Contexts(this.contexts), new LabelExpression());
 
         assertTrue(list.size() > 0);
 
@@ -972,7 +972,7 @@ public abstract class AbstractIntegrationTest {
         DiffResult diffResult = DiffGeneratorFactory.getInstance().compare(database, database, new CompareControl());
 
         DiffToChangeLog changeLogWriter = new DiffToChangeLog(diffResult, new DiffOutputControl(false, false, false));
-        List<ChangeSetImpl> changeSets = changeLogWriter.generateChangeSets();
+        List<ChangeSet> changeSets = changeLogWriter.generateChangeSets();
         assertEquals(0, changeSets.size());
     }
 

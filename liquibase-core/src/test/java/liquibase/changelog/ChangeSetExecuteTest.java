@@ -11,7 +11,7 @@ import liquibase.executor.ExecutorService;
 import org.junit.Test;
 
 /**
- * Tests for {@link liquibase.changelog.ChangeSetImpl#execute(DatabaseChangeLog, Database)}
+ * Tests for {@link liquibase.changelog.ChangeSetImpl#execute(DatabaseChangeLogImpl, Database)}
  */
 public class ChangeSetExecuteTest {
 
@@ -81,7 +81,7 @@ public class ChangeSetExecuteTest {
     	replay(database);
     	
     	ChangeSet changeSet = createTestChangeSet(true);
-    	changeSet.execute(new DatabaseChangeLog(), database);
+    	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
     }
@@ -99,7 +99,7 @@ public class ChangeSetExecuteTest {
     	replay(database);
     	
     	ChangeSet changeSet = createTestChangeSet(false);
-    	changeSet.execute(new DatabaseChangeLog(), database);
+    	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
     }
@@ -113,7 +113,7 @@ public class ChangeSetExecuteTest {
     	replay(database);
     	
     	ChangeSet changeSet = createTestChangeSet(true);
-    	changeSet.execute(new DatabaseChangeLog(), database);
+    	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
     }
@@ -127,7 +127,7 @@ public class ChangeSetExecuteTest {
     	replay(database);
     	
     	ChangeSet changeSet = createTestChangeSet(false);
-    	changeSet.execute(new DatabaseChangeLog(), database);
+    	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
     }

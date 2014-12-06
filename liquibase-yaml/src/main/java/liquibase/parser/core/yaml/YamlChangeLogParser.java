@@ -10,7 +10,7 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.logging.LogFactory;
@@ -48,7 +48,7 @@ public class YamlChangeLogParser implements ChangeLogParser {
     }
 
     @Override
-    public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
+    public DatabaseChangeLogImpl parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
         Yaml yaml = new Yaml();
 
         try {
@@ -98,7 +98,7 @@ public class YamlChangeLogParser implements ChangeLogParser {
 
             replaceParameters(parsedYaml, changeLogParameters);
 
-            DatabaseChangeLog changeLog = new DatabaseChangeLog(physicalChangeLogLocation);
+            DatabaseChangeLogImpl changeLog = new DatabaseChangeLogImpl(physicalChangeLogLocation);
             changeLog.setChangeLogParameters(changeLogParameters);
             ParsedNode databaseChangeLogNode = new ParsedNode(null, "databaseChangeLog");
             databaseChangeLogNode.setValue(rootList);

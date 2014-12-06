@@ -49,7 +49,7 @@ create view sql_view as select * from sql_table;'''
         def path = "com/example/path.xml"
         def path2 = "com/example/path2.xml"
         when:
-        def changeLog = new DatabaseChangeLog(path)
+        def changeLog = new DatabaseChangeLogImpl(path)
         changeLog.addChangeSet(new ChangeSetImpl("1", "auth", false, false, path, null, null, changeLog))
         changeLog.addChangeSet(new ChangeSetImpl("2", "auth", false, false, path, null, null, changeLog))
         changeLog.addChangeSet(new ChangeSetImpl("1", "other-auth", false, false, path, null, null, changeLog))
@@ -97,8 +97,8 @@ create view sql_view as select * from sql_table;'''
         }
         def nodeWithValue = new ParsedNode(null, "databaseChangeLog").addChildren([logicalFilePath: "com/example/logical.xml"]).setValue(children)
 
-        def changeLogFromChildren = new DatabaseChangeLog()
-        def changeLogFromValue = new DatabaseChangeLog()
+        def changeLogFromChildren = new DatabaseChangeLogImpl()
+        def changeLogFromValue = new DatabaseChangeLogImpl()
 
         changeLogFromValue.load(nodeWithChildren, resourceSupplier.simpleResourceAccessor)
         changeLogFromChildren.load(nodeWithValue, resourceSupplier.simpleResourceAccessor)
@@ -127,7 +127,7 @@ create view sql_view as select * from sql_table;'''
         when:
         def resourceAccessor = new MockResourceAccessor(["com/example/test1.xml": test1Xml, "com/example/test2.xml": test1Xml.replace("testUser", "otherUser").replace("person", "person2")])
 
-        def rootChangeLog = new DatabaseChangeLog("com/example/root.xml")
+        def rootChangeLog = new DatabaseChangeLogImpl("com/example/root.xml")
         rootChangeLog.load(new ParsedNode(null, "databaseChangeLog")
                 .addChild(new ParsedNode(null, "preConditions").addChildren([runningAs: [username: "user1"]]))
                 .addChildren([changeSet: [id: "1", author: "nvoxland", createTable: [tableName: "test_table", schemaName: "test_schema"]]])
@@ -161,7 +161,7 @@ create view sql_view as select * from sql_table;'''
                 "com/example/test.sql" : testSql
         ])
 
-        def rootChangeLog = new DatabaseChangeLog("com/example/root.xml")
+        def rootChangeLog = new DatabaseChangeLogImpl("com/example/root.xml")
         rootChangeLog.load(new ParsedNode(null, "databaseChangeLog")
                 .addChild(new ParsedNode(null, "preConditions").addChildren([runningAs: [username: "user1"]]))
                 .addChildren([changeSet: [id: "1", author: "nvoxland", createTable: [tableName: "test_table", schemaName: "test_schema"]]])
@@ -197,7 +197,7 @@ create view sql_view as select * from sql_table;'''
                 "com/example/children/file1.sql": "file 1",
                 "com/example/not/fileX.sql": "file X",
         ])
-        def changeLogFile = new DatabaseChangeLog("com/example/root.xml")
+        def changeLogFile = new DatabaseChangeLogImpl("com/example/root.xml")
         changeLogFile.includeAll("com/example/children", false, null, changeLogFile.getStandardChangeLogComparator(), resourceAccessor)
 
         then:

@@ -1,16 +1,11 @@
 package liquibase.serializer;
 
-import liquibase.change.Change;
-import liquibase.change.ColumnConfig;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.sql.visitor.SqlVisitor;
-
 import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+
+import liquibase.changelog.ChangeSet;
 
 
 public class MockChangeLogSerializer implements ChangeLogSerializer {
@@ -27,13 +22,13 @@ public class MockChangeLogSerializer implements ChangeLogSerializer {
     }
 
 	@Override
-    public void write(List<ChangeSetImpl> changeSets, OutputStream out)
+    public void write(List<ChangeSet> changeSets, OutputStream out)
 			throws IOException {
 		;
 	}
 
     @Override
-    public void append(ChangeSetImpl changeSet, File changeLogFile) throws IOException {
+    public void append(ChangeSet changeSet, File changeLogFile) throws IOException {
 
     }
 

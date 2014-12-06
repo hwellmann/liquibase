@@ -1,8 +1,9 @@
 package liquibase.changelog.visitor;
 
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
@@ -22,7 +23,7 @@ public class ChangeLogSyncVisitorTest {
     @Before
     public void setUp() {
         changeSet = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
-        databaseChangeLog = new DatabaseChangeLog();
+        databaseChangeLog = new DatabaseChangeLogImpl();
     }
 
     @Test
