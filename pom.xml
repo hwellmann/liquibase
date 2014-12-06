@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.liquibase</groupId>
@@ -34,19 +35,19 @@
     </scm>
 
     <developers>
-       <developer>
-         <id>nvoxland</id>
-         <name>Nathan Voxland</name>
-         <email>nathan@voxland.net</email>
-         <url>http://nathan.voxland.net</url>
-         <organizationUrl>http://nathan.voxland.net/</organizationUrl>
-         <roles>
-           <role>architect</role>
-           <role>developer</role>
-         </roles>
-         <timezone>-6</timezone>
-       </developer>
-     </developers>
+        <developer>
+            <id>nvoxland</id>
+            <name>Nathan Voxland</name>
+            <email>nathan@voxland.net</email>
+            <url>http://nathan.voxland.net</url>
+            <organizationUrl>http://nathan.voxland.net/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <maven.build.timestamp.format>E MMM dd hh:mm:ss zzz yyyy</maven.build.timestamp.format>
@@ -342,6 +343,15 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <sourcepath>../liquibase-core/src/main/java</sourcepath>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
             </plugins>
 
         </pluginManagement>
@@ -446,7 +456,7 @@
                 <sonar.jacoco.reportPath>${user.dir}/target/jacoco.exec</sonar.jacoco.reportPath>
                 <sonar.exclusions>**/*_.java</sonar.exclusions>
                 <sonar.jdbc.url>
-                  jdbc:postgresql://localhost/sonar
+                    jdbc:postgresql://localhost/sonar
                 </sonar.jdbc.url>
                 <sonar.jdbc.driverClassName>org.postgresql.Driver</sonar.jdbc.driverClassName>
                 <sonar.jdbc.username>sonar</sonar.jdbc.username>
