@@ -30,6 +30,12 @@
 
         <dependency>
             <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-parser-xml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
             <artifactId>liquibase-util</artifactId>
             <version>${project.version}</version>
         </dependency>

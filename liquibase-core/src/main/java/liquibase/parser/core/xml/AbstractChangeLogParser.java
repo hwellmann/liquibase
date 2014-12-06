@@ -1,14 +1,11 @@
 package liquibase.parser.core.xml;
 
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.core.ParsedNode;
 import liquibase.resource.ResourceAccessor;
-
-import java.text.ParseException;
 
 public abstract class AbstractChangeLogParser implements ChangeLogParser {
 
