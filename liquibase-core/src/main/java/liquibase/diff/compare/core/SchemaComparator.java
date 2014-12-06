@@ -34,8 +34,8 @@ public class SchemaComparator implements DatabaseObjectComparator {
             return false;
         }
 
-        CatalogAndSchema thisSchema = ((Schema) databaseObject1).toCatalogAndSchema().standardize(accordingTo);
-        CatalogAndSchema otherSchema = ((Schema) databaseObject2).toCatalogAndSchema().standardize(accordingTo);
+        CatalogAndSchema thisSchema = CatalogAndSchema.fromSchema((Schema) databaseObject1).standardize(accordingTo);
+        CatalogAndSchema otherSchema = CatalogAndSchema.fromSchema((Schema) databaseObject2).standardize(accordingTo);
 
         if (accordingTo.supportsCatalogs()) {
             if (thisSchema.getCatalogName() == null) {

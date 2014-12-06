@@ -1,5 +1,12 @@
 package liquibase.snapshot;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
 import liquibase.database.OfflineConnection;
@@ -10,9 +17,6 @@ import liquibase.servicelocator.ServiceLocator;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
 
 public class SnapshotGeneratorFactory {
 
@@ -92,7 +96,7 @@ public class SnapshotGeneratorFactory {
         if (example.getSchema() == null) {
             catalogAndSchema = database.getDefaultSchema();
         } else {
-            catalogAndSchema = example.getSchema().toCatalogAndSchema();
+            catalogAndSchema = CatalogAndSchema.fromSchema(example.getSchema());
         }
         DatabaseSnapshot snapshot = createSnapshot(catalogAndSchema, database, new SnapshotControl(database, example.getClass()));
         for (DatabaseObject obj : snapshot.get(example.getClass())) {

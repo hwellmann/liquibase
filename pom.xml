@@ -69,6 +69,7 @@
         <module>liquibase-util</module>
         <module>liquibase-parser-api</module>
         <module>liquibase-parser-xml</module>
+        <module>liquibase-db-model</module>
     </modules>
 
     <dependencyManagement>

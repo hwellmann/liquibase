@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.CatalogAndSchema;
 import liquibase.structure.AbstractDatabaseObject;
 import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
@@ -112,22 +111,22 @@ public class Schema extends AbstractDatabaseObject {
         }
     }
 
-    public CatalogAndSchema toCatalogAndSchema() {
-        String catalogName;
-        if (getCatalog() != null && getCatalog().isDefault()) {
-            catalogName = null;
-        } else {
-            catalogName = getCatalogName();
-        }
-
-        String schemaName;
-        if (isDefault()) {
-            schemaName = null;
-        } else {
-            schemaName = getName();
-        }
-        return new CatalogAndSchema(catalogName, schemaName);
-    }
+//    public CatalogAndSchema toCatalogAndSchema() {
+//        String catalogName;
+//        if (getCatalog() != null && getCatalog().isDefault()) {
+//            catalogName = null;
+//        } else {
+//            catalogName = getCatalogName();
+//        }
+//
+//        String schemaName;
+//        if (isDefault()) {
+//            schemaName = null;
+//        } else {
+//            schemaName = getName();
+//        }
+//        return new CatalogAndSchema(catalogName, schemaName);
+//    }
 
     protected Map<Class<? extends DatabaseObject>, Set<DatabaseObject>> getObjects() {
         return getAttribute("objects", Map.class);

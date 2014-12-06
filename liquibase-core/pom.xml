@@ -36,6 +36,12 @@
 
         <dependency>
             <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-db-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
             <artifactId>liquibase-util</artifactId>
             <version>${project.version}</version>
         </dependency>

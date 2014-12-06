@@ -1,5 +1,6 @@
 package liquibase.structure.core
 
+import liquibase.CatalogAndSchema
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -25,7 +26,7 @@ class SchemaTest extends Specification {
     @Unroll("#featureName: #schema -> #expected")
     def "toCatalogAndSchema"() {
         expect:
-        schema.toCatalogAndSchema().toString() == expected
+        CatalogAndSchema.fromSchema(schema).toString() == expected
 
         where:
         schema                                                                      | expected

@@ -1,20 +1,28 @@
 package liquibase.snapshot;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
+import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.parser.NamespaceDetails;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.DatabaseObjectCollection;
-import liquibase.structure.core.*;
-import liquibase.diff.compare.DatabaseObjectComparatorFactory;
-
-import java.util.*;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Schema;
 
 public abstract class DatabaseSnapshot implements LiquibaseSerializable{
 
@@ -137,7 +145,7 @@ public abstract class DatabaseSnapshot implements LiquibaseSerializable{
         }
 
         if (example instanceof Schema && example.getName() == null && (((Schema) example).getCatalog() == null || ((Schema) example).getCatalogName() == null)) {
-            CatalogAndSchema catalogAndSchema = ((Schema) example).toCatalogAndSchema().customize(database);
+            CatalogAndSchema catalogAndSchema = CatalogAndSchema.fromSchema((Schema) example).customize(database);
             example = (T) new Schema(catalogAndSchema.getCatalogName(), catalogAndSchema.getSchemaName());
         }
 

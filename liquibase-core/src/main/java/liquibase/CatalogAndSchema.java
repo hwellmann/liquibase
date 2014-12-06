@@ -159,4 +159,24 @@ public class CatalogAndSchema {
 
         return catalogName+"."+schemaName;
     }
+
+    public static CatalogAndSchema fromSchema(Schema schema) {
+        String catalogName;
+        if (schema.getCatalog() != null && schema.getCatalog().isDefault()) {
+            catalogName = null;
+        }
+        else {
+            catalogName = schema.getCatalogName();
+        }
+
+        String schemaName;
+        if (schema.isDefault()) {
+            schemaName = null;
+        }
+        else {
+            schemaName = schema.getName();
+        }
+        return new CatalogAndSchema(catalogName, schemaName);
+    }
+
 }

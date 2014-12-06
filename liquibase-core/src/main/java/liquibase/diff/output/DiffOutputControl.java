@@ -1,5 +1,8 @@
 package liquibase.diff.output;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import liquibase.CatalogAndSchema;
 import liquibase.database.Database;
 import liquibase.database.InternalDatabase;
@@ -9,9 +12,6 @@ import liquibase.diff.output.changelog.core.MissingDataExternalFileChangeGenerat
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.DatabaseObjectCollection;
 import liquibase.structure.core.Schema;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class DiffOutputControl {
 
@@ -96,7 +96,7 @@ public class DiffOutputControl {
     }
 
     public DiffOutputControl addIncludedSchema(Schema schema) {
-        this.includeSchemas.add(schema.toCatalogAndSchema());
+        this.includeSchemas.add(CatalogAndSchema.fromSchema(schema));
         return this;
     }
 
@@ -111,9 +111,9 @@ public class DiffOutputControl {
             if (schema == null) {
                 return true;
             }
-            CatalogAndSchema objectCatalogAndSchema = schema.toCatalogAndSchema().standardize(accordingTo);
+            CatalogAndSchema objectCatalogAndSchema = CatalogAndSchema.fromSchema(schema).standardize(accordingTo);
             for (CatalogAndSchema catalogAndSchema : includeSchemas) {
-                catalogAndSchema = schema.toCatalogAndSchema().standardize(accordingTo);
+                catalogAndSchema = CatalogAndSchema.fromSchema(schema).standardize(accordingTo);
                 if (objectCatalogAndSchema.equals(catalogAndSchema, accordingTo)) {
                     return true;
                 }
