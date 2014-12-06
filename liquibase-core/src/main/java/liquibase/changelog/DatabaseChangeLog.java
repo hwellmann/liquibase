@@ -5,7 +5,7 @@ import java.util.List;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.precondition.Precondition;
 
-public interface DatabaseChangeLog extends Comparable<DatabaseChangeLogImpl> {
+public interface DatabaseChangeLog extends Comparable<DatabaseChangeLog> {
 
     Precondition getPreconditions();
 

@@ -181,7 +181,7 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
     }
 
     @Override
-    public int compareTo(DatabaseChangeLogImpl o) {
+    public int compareTo(DatabaseChangeLog o) {
         return getFilePath().compareTo(o.getFilePath());
     }
 
