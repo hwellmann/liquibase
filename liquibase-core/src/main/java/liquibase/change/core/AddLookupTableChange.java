@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -34,7 +34,7 @@ import org.kohsuke.MetaInfServices;
 @DatabaseChange(name="addLookupTable",
         description = "Creates a lookup table containing values stored in a column and creates a foreign key to the new table.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddLookupTableChange extends AbstractChange {
 
     private String existingTableCatalogName;
@@ -155,7 +155,7 @@ public class AddLookupTableChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropForeignKeyConstraintChange dropFK = new DropForeignKeyConstraintChange();
         dropFK.setBaseTableSchemaName(getExistingTableSchemaName());
         dropFK.setBaseTableName(getExistingTableName());
@@ -165,7 +165,7 @@ public class AddLookupTableChange extends AbstractChange {
         dropTable.setSchemaName(getNewTableSchemaName());
         dropTable.setTableName(getNewTableName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 dropFK,
                 dropTable,
         };

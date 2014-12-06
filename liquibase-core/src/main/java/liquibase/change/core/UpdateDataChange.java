@@ -3,7 +3,7 @@ package liquibase.change.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -22,7 +22,7 @@ import liquibase.statement.core.UpdateStatement;
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name = "update", description = "Updates data in an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class UpdateDataChange extends AbstractModifyDataChange implements ChangeWithColumns<ColumnConfig> {
 
     private List<ColumnConfig> columns;

@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
@@ -20,7 +20,7 @@ import org.kohsuke.MetaInfServices;
  * Adds a unique constraint to an existing column.
  */
 @DatabaseChange(name="addUniqueConstraint", description = "Adds a unique constrant to an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddUniqueConstraintChange extends AbstractChange {
 
     private String catalogName;
@@ -215,13 +215,13 @@ public class AddUniqueConstraintChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropUniqueConstraintChange inverse = new DropUniqueConstraintChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setConstraintName(getConstraintName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse,
         };
     }

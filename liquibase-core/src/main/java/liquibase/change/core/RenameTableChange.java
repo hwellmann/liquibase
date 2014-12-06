@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -23,7 +23,7 @@ import org.kohsuke.MetaInfServices;
  * Renames an existing table.
  */
 @DatabaseChange(name="renameTable", description = "Renames an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class RenameTableChange extends AbstractChange {
 
     private String catalogName;
@@ -105,13 +105,13 @@ public class RenameTableChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         RenameTableChange inverse = new RenameTableChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setOldTableName(getNewTableName());
         inverse.setNewTableName(getOldTableName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

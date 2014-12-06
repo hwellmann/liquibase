@@ -2,7 +2,7 @@ package liquibase.diff.output.changelog.core;
 
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
@@ -41,7 +41,7 @@ public class ChangedPrimaryKeyChangeGenerator  implements ChangedObjectChangeGen
     }
 
     @Override
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         PrimaryKey pk = (PrimaryKey) changedObject;
 
         DropPrimaryKeyChange dropPkChange = new DropPrimaryKeyChange();
@@ -77,6 +77,6 @@ public class ChangedPrimaryKeyChangeGenerator  implements ChangedObjectChangeGen
             control.setAlreadyHandledChanged(new UniqueConstraint().setTable(pk.getTable()).setColumns(comparedColumns));
         }
 
-        return new Change[] { dropPkChange, addPkChange };
+        return new ExecutableChange[] { dropPkChange, addPkChange };
     }
 }

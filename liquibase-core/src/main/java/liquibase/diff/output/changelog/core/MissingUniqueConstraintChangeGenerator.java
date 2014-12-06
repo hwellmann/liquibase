@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
@@ -39,7 +39,7 @@ public class MissingUniqueConstraintChangeGenerator implements MissingObjectChan
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         UniqueConstraint uc = (UniqueConstraint) missingObject;
 
         if (uc.getTable() == null) {
@@ -75,7 +75,7 @@ public class MissingUniqueConstraintChangeGenerator implements MissingObjectChan
 //        }
 
 
-        return new Change[]{change};
+        return new ExecutableChange[]{change};
 
 
     }

@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddLookupTableChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -20,7 +20,7 @@ public class AddLookupTableChangeSupplier extends AbstractChangeSupplier<AddLook
     }
 
     @Override
-    public IChange[]  prepareDatabase(AddLookupTableChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(AddLookupTableChange change) throws DatabaseException {
         CreateTableChange createTableChange= new CreateTableChange();
         createTableChange.setCatalogName(change.getExistingTableCatalogName());
         createTableChange.setSchemaName(change.getExistingTableSchemaName());
@@ -29,7 +29,7 @@ public class AddLookupTableChangeSupplier extends AbstractChangeSupplier<AddLook
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("int"));
         createTableChange.addColumn(new ColumnConfig().setName(change.getExistingColumnName()).setType(change.getNewColumnDataType()));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

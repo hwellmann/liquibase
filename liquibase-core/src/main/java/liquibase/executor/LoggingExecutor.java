@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.SybaseASADatabase;
@@ -41,12 +41,12 @@ public class LoggingExecutor extends AbstractExecutor implements Executor {
     }
 
     @Override
-    public void execute(Change change) throws DatabaseException {
+    public void execute(ExecutableChange change) throws DatabaseException {
         execute(change, new ArrayList<SqlVisitor>());
     }
 
     @Override
-    public void execute(Change change, List<SqlVisitor> sqlVisitors) throws DatabaseException {
+    public void execute(ExecutableChange change, List<SqlVisitor> sqlVisitors) throws DatabaseException {
         SqlStatement[] sqlStatements = change.generateStatements(database);
         if (sqlStatements != null) {
             for (SqlStatement statement : sqlStatements) {

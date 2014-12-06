@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import static liquibase.Assert.assertNotNull;
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateSequenceChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.RenameSequenceChange;
@@ -18,13 +18,13 @@ public class RenameSequenceChangeSupplier extends AbstractChangeSupplier<RenameS
     }
 
     @Override
-    public IChange[]  prepareDatabase(RenameSequenceChange change) throws Exception {
+    public Change[]  prepareDatabase(RenameSequenceChange change) throws Exception {
         CreateSequenceChange createSequenceChange = new CreateSequenceChange();
         createSequenceChange.setCatalogName(change.getCatalogName());
         createSequenceChange.setSchemaName(change.getSchemaName());
         createSequenceChange.setSequenceName(change.getOldSequenceName());
 
-        return new IChange[] {createSequenceChange };
+        return new Change[] {createSequenceChange };
     }
 
     @Override

@@ -241,7 +241,7 @@ public class AbstractChangeTest extends Specification {
         Database database = new MockDatabase();
         new ExampleParamlessAbstractChange() {
             @Override
-            protected Change[] createInverses() {
+            protected ExecutableChange[] createInverses() {
                 return null;
             }
         }.generateRollbackStatements(database);
@@ -256,8 +256,8 @@ public class AbstractChangeTest extends Specification {
 
         SqlStatement[] rollbackStatements = new ExampleParamlessAbstractChange() {
             @Override
-            protected Change[] createInverses() {
-                return new Change[0];
+            protected ExecutableChange[] createInverses() {
+                return new ExecutableChange[0];
             }
         }.generateRollbackStatements(database);
 

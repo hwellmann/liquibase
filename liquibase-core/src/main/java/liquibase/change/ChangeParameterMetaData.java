@@ -22,14 +22,14 @@ import java.math.BigInteger;
 import java.util.*;
 
 /**
- * Static metadata about a {@link Change} parameter.
+ * Static metadata about a {@link ExecutableChange} parameter.
  * Instances of this class are tracked within {@link ChangeMetaData} and are immutable.
  */
 public class ChangeParameterMetaData {
 
     public static final String COMPUTE = "COMPUTE";
 
-    private Change change;
+    private ExecutableChange change;
     private String parameterName;
     private String description;
     private Map<String, Object> exampleValues;
@@ -43,7 +43,7 @@ public class ChangeParameterMetaData {
     private String mustEqualExisting;
     private LiquibaseSerializable.SerializationType serializationType;
 
-    public ChangeParameterMetaData(Change change, String parameterName, String displayName, String description, Map<String, Object> exampleValues, String since, Type dataType, String[] requiredForDatabase, String[] supportedDatabases, String mustEqualExisting, LiquibaseSerializable.SerializationType serializationType) {
+    public ChangeParameterMetaData(ExecutableChange change, String parameterName, String displayName, String description, Map<String, Object> exampleValues, String since, Type dataType, String[] requiredForDatabase, String[] supportedDatabases, String mustEqualExisting, LiquibaseSerializable.SerializationType serializationType) {
         if (parameterName == null) {
             throw new UnexpectedLiquibaseException("Unexpected null parameterName");
         }
@@ -97,7 +97,7 @@ public class ChangeParameterMetaData {
                 }
                 try {
                     if (!change.generateStatementsVolatile(database)) {
-                        Change testChange = change.getClass().newInstance();
+                        ExecutableChange testChange = change.getClass().newInstance();
                         ValidationErrors originalErrors = getStatementErrors(testChange, database);
                         this.setValue(testChange, this.getExampleValue(database));
                         ValidationErrors finalErrors = getStatementErrors(testChange, database);
@@ -137,7 +137,7 @@ public class ChangeParameterMetaData {
             for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
                 try {
                     if (!change.generateStatementsVolatile(database)) {
-                        Change testChange = change.getClass().newInstance();
+                        ExecutableChange testChange = change.getClass().newInstance();
                         ValidationErrors originalErrors = getStatementErrors(testChange, database);
                         this.setValue(testChange, this.getExampleValue(database));
                         ValidationErrors finalErrors = getStatementErrors(testChange, database);
@@ -165,7 +165,7 @@ public class ChangeParameterMetaData {
         return computedDatabases;
     }
 
-    private ValidationErrors getStatementErrors(Change testChange, Database database) {
+    private ValidationErrors getStatementErrors(ExecutableChange testChange, Database database) {
         ValidationErrors errors = new ValidationErrors();
         SqlStatement[] statements = testChange.generateStatements(database);
         for (SqlStatement statement : statements) {
@@ -238,7 +238,7 @@ public class ChangeParameterMetaData {
     /**
      * Returns the current value of this parameter for the given Change.
      */
-    public Object getCurrentValue(IChange change) {
+    public Object getCurrentValue(Change change) {
         try {
             for (PropertyDescriptor descriptor : Introspector.getBeanInfo(change.getClass()).getPropertyDescriptors()) {
                 if (descriptor.getDisplayName().equals(this.parameterName)) {
@@ -258,7 +258,7 @@ public class ChangeParameterMetaData {
     /**
      * Sets the value of this parameter on the given change.
      */
-    public void setValue(IChange change, Object value) {
+    public void setValue(Change change, Object value) {
         if (value instanceof String && !dataType.equals("string")) {
             try {
                 if (dataType.equals("bigInteger")) {

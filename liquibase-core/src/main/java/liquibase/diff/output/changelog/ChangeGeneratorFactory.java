@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
@@ -87,7 +87,7 @@ public class ChangeGeneratorFactory {
         return new ChangeGeneratorChain(generators);
     }
 
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (!control.shouldOutput(missingObject, comparisionDatabase)) {
             return null;
         }
@@ -99,7 +99,7 @@ public class ChangeGeneratorFactory {
         return chain.fixMissing(missingObject, control, referenceDatabase, comparisionDatabase);
     }
 
-    public Change[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (!control.shouldOutput(unexpectedObject, comparisionDatabase)) {
             return null;
         }
@@ -110,7 +110,7 @@ public class ChangeGeneratorFactory {
         return chain.fixUnexpected(unexpectedObject, control, referenceDatabase, comparisionDatabase);
     }
 
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (!control.shouldOutput(changedObject, comparisionDatabase)) {
             return null;
         }

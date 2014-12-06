@@ -8,7 +8,7 @@ package liquibase.statement;
  * If a particular statement.  The SqlStatement implementations do not actually generate SQL strings, that is left to the SqlGenerator implementations.
  * Instead, the purpose of the SqlStatement implementation is to hold the metadata required to generate the correct SQL for a particular database at a later time.
  *
- * @see liquibase.change.Change
+ * @see liquibase.change.ExecutableChange
  * @see liquibase.sqlgenerator.SqlGenerator
  * @see liquibase.sqlgenerator.SqlGeneratorFactory
  */

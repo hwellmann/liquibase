@@ -131,12 +131,12 @@ public class ChangeFactoryTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void getRegistry() {
-        ChangeFactory.getInstance().getRegistry().put("x", new TreeSet<Class<? extends Change>>());
+        ChangeFactory.getInstance().getRegistry().put("x", new TreeSet<Class<? extends ExecutableChange>>());
     }
 
     @Test
     public void create_exists() {
-        IChange change = ChangeFactory.getInstance().create("createTable");
+        Change change = ChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);
@@ -146,7 +146,7 @@ public class ChangeFactoryTest {
 
     @Test
     public void create_notExists() {
-        IChange change = ChangeFactory.getInstance().create("badChangeName");
+        Change change = ChangeFactory.getInstance().create("badChangeName");
 
         assertNull(change);
 
@@ -155,7 +155,7 @@ public class ChangeFactoryTest {
     @Test(expected = UnexpectedLiquibaseException.class)
     public void create_badClass() {
         ChangeFactory.getInstance().register(SometimesExceptionThrowingChange.class);
-        IChange change = ChangeFactory.getInstance().create("createTable");
+        Change change = ChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);

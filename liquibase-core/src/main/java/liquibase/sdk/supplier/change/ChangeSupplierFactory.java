@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeFactory;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
@@ -15,13 +15,13 @@ import liquibase.servicelocator.ServiceLocator;
 
 public class ChangeSupplierFactory {
 
-    public Set<Class<? extends Change>> getExtensionClasses() {
-        Set<Class<? extends Change>> classes = new HashSet<Class<? extends Change>>(Arrays.asList(ServiceLocator.getInstance().findClasses(Change.class)));
+    public Set<Class<? extends ExecutableChange>> getExtensionClasses() {
+        Set<Class<? extends ExecutableChange>> classes = new HashSet<Class<? extends ExecutableChange>>(Arrays.asList(ServiceLocator.getInstance().findClasses(ExecutableChange.class)));
         return classes;
     }
 
-    public Set<Change> getExtensionChanges() {
-        Set<Change> returnSet = new HashSet<Change>();
+    public Set<ExecutableChange> getExtensionChanges() {
+        Set<ExecutableChange> returnSet = new HashSet<ExecutableChange>();
         for (String change : ChangeFactory.getInstance().getDefinedChanges()) {
             returnSet.add(ChangeFactory.getInstance().create(change));
         }
@@ -30,20 +30,20 @@ public class ChangeSupplierFactory {
 
     public Set<String> getExtensionChangeNames() {
         Set<String> returnSet = new HashSet<String>();
-        for (Change change : getExtensionChanges()) {
+        for (ExecutableChange change : getExtensionChanges()) {
             returnSet.add(ChangeFactory.getInstance().getChangeMetaData(change).getName());
         }
         return returnSet;
     }
 
-    public void prepareDatabase(Change change, Database database) {
+    public void prepareDatabase(ExecutableChange change, Database database) {
         ChangeSupplier supplier = getSupplier(change);
 
         try {
-            IChange[] changes = supplier.prepareDatabase(change);
+            Change[] changes = supplier.prepareDatabase(change);
             if (changes != null) {
-                for (IChange prepareChange : changes) {
-                    ExecutorService.getInstance().getExecutor(database).execute((Change) prepareChange);
+                for (Change prepareChange : changes) {
+                    ExecutorService.getInstance().getExecutor(database).execute((ExecutableChange) prepareChange);
                 }
             }
         } catch (Exception e) {
@@ -51,14 +51,14 @@ public class ChangeSupplierFactory {
         }
     }
 
-    public void revertDatabase(Change change, Database database) {
+    public void revertDatabase(ExecutableChange change, Database database) {
         ChangeSupplier supplier = getSupplier(change);
 
         try {
-            IChange[] changes = supplier.revertDatabase(change);
+            Change[] changes = supplier.revertDatabase(change);
             if (changes != null) {
-                for (IChange revertChange : changes) {
-                    ExecutorService.getInstance().getExecutor(database).execute((Change) revertChange);
+                for (Change revertChange : changes) {
+                    ExecutorService.getInstance().getExecutor(database).execute((ExecutableChange) revertChange);
                 }
             }
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class ChangeSupplierFactory {
         }
     }
 
-    protected ChangeSupplier getSupplier(IChange change) {
+    protected ChangeSupplier getSupplier(Change change) {
         String supplierClassName = change.getClass().getName().replaceFirst("(.*)\\.(\\w+)", "$1\\.supplier\\.$2Supplier");
         try {
             Class supplierClass = Class.forName(supplierClassName);
@@ -80,7 +80,7 @@ public class ChangeSupplierFactory {
         }
     }
 
-    public ChangeSupplier getSupplier(Class<? extends Change> change) {
+    public ChangeSupplier getSupplier(Class<? extends ExecutableChange> change) {
         try {
             return getSupplier(change.newInstance());
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class ChangeSupplierFactory {
         }
     }
 
-    public boolean isValid(Change change, Database database) {
+    public boolean isValid(ExecutableChange change, Database database) {
         return getSupplier(change).isValid(change, database);
     }
 }

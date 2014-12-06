@@ -7,7 +7,7 @@ import java.util.Set;
 
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -45,7 +45,7 @@ import org.kohsuke.MetaInfServices;
  * Adds a column to an existing table.
  */
 @DatabaseChange(name="addColumn", description = "Adds a new column to an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddColumnChange extends AbstractChange implements ChangeWithColumns<AddColumnConfig> {
 
     private String catalogName;
@@ -191,8 +191,8 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
     }
 
     @Override
-    protected Change[] createInverses() {
-        List<Change> inverses = new ArrayList<Change>();
+    protected ExecutableChange[] createInverses() {
+        List<ExecutableChange> inverses = new ArrayList<ExecutableChange>();
 
         DropColumnChange inverse = new DropColumnChange();
         inverse.setSchemaName(getSchemaName());
@@ -211,7 +211,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
             inverse.addColumn(aColumn);
         }
         inverses.add(inverse);
-        return inverses.toArray(new Change[inverses.size()]);
+        return inverses.toArray(new ExecutableChange[inverses.size()]);
     }
 
     @Override

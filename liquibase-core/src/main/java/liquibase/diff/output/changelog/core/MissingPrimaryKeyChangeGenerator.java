@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
@@ -45,7 +45,7 @@ public class MissingPrimaryKeyChangeGenerator implements MissingObjectChangeGene
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         PrimaryKey pk = (PrimaryKey) missingObject;
 
         AddPrimaryKeyChange change = new AddPrimaryKeyChange();
@@ -68,7 +68,7 @@ public class MissingPrimaryKeyChangeGenerator implements MissingObjectChangeGene
 
         control.setAlreadyHandledMissing(pk.getBackingIndex());
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
 
     }
 }

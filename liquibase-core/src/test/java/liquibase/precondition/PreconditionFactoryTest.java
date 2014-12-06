@@ -50,7 +50,7 @@ public class PreconditionFactoryTest {
 
         assertEquals(0, factory.getPreconditions().size());
 
-        Class<? extends Precondition> precondition = AndPrecondition.class;
+        Class<? extends ExecutablePrecondition> precondition = AndPrecondition.class;
 
         factory.register(OrPrecondition.class);
         factory.register(precondition);
@@ -71,7 +71,7 @@ public class PreconditionFactoryTest {
     @SuppressWarnings("unchecked")
 	@Test
     public void builtInGeneratorsAreFound() {
-        Map<String, Class<? extends Precondition>> generators = PreconditionFactory.getInstance().getPreconditions();
+        Map<String, Class<? extends ExecutablePrecondition>> generators = PreconditionFactory.getInstance().getPreconditions();
         assertTrue(generators.size() > 5);
     }
 

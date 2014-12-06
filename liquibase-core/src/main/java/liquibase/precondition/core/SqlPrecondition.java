@@ -11,12 +11,12 @@ import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.executor.ExecutorService;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 import liquibase.statement.core.RawSqlStatement;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class SqlPrecondition extends AbstractPrecondition {
 
     private String expectedResult;

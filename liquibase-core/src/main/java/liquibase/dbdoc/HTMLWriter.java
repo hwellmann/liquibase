@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
@@ -30,13 +30,13 @@ public abstract class HTMLWriter {
         }
     }
 
-    protected abstract void writeCustomHTML(FileWriter fileWriter, Object object, List<Change> changes, Database database) throws IOException;
+    protected abstract void writeCustomHTML(FileWriter fileWriter, Object object, List<ExecutableChange> changes, Database database) throws IOException;
 
     private FileWriter createFileWriter(Object object) throws IOException {
         return new FileWriter(new File(outputDir, DBDocUtil.toFileName(object.toString().toLowerCase()) + ".html"));
     }
 
-    public void writeHTML(Object object, List<Change> ranChanges, List<Change> changesToRun, String changeLog) throws IOException, DatabaseHistoryException, DatabaseException {
+    public void writeHTML(Object object, List<ExecutableChange> ranChanges, List<ExecutableChange> changesToRun, String changeLog) throws IOException, DatabaseHistoryException, DatabaseException {
         FileWriter fileWriter = createFileWriter(object);
 
 
@@ -70,7 +70,7 @@ public abstract class HTMLWriter {
         fileWriter.append("<a href='http://www.liquibase.org' target='_TOP'>Liquibase ").append(LiquibaseUtil.getBuildVersion()).append("</a>");
     }
 
-    protected void writeBody(FileWriter fileWriter, Object object, List<Change> ranChanges, List<Change> changesToRun) throws IOException, DatabaseHistoryException, DatabaseException {
+    protected void writeBody(FileWriter fileWriter, Object object, List<ExecutableChange> ranChanges, List<ExecutableChange> changesToRun) throws IOException, DatabaseHistoryException, DatabaseException {
         writeCustomHTML(fileWriter, object, ranChanges, database);
         writeChanges("Pending Changes", fileWriter, changesToRun);
         writeChanges("Past Changes", fileWriter, ranChanges);
@@ -119,7 +119,7 @@ public abstract class HTMLWriter {
 
     protected abstract String createTitle(Object object);
 
-    protected void writeChanges(String title, FileWriter fileWriter, List<Change> changes) throws IOException, DatabaseHistoryException, DatabaseException {
+    protected void writeChanges(String title, FileWriter fileWriter, List<ExecutableChange> changes) throws IOException, DatabaseHistoryException, DatabaseException {
         fileWriter.append("<p><TABLE BORDER=\"1\" WIDTH=\"100%\" CELLPADDING=\"3\" CELLSPACING=\"0\" SUMMARY=\"\">\n");
         fileWriter.append("<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">\n");
         fileWriter.append("<TD COLSPAN='4'><FONT SIZE=\"+2\">\n");
@@ -132,7 +132,7 @@ public abstract class HTMLWriter {
         if (changes == null || changes.size() == 0) {
             fileWriter.append("<tr><td>None Found</td></tr>");
         } else {
-            for (Change change : changes) {
+            for (ExecutableChange change : changes) {
                 ExecutableChangeSet changeSet = (ExecutableChangeSet) change.getChangeSet();
                 if (!changeSet.equals(lastChangeSet)) {
                     lastChangeSet = changeSet;

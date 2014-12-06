@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.diff.DiffResult;
@@ -18,7 +18,7 @@ public class RawSQLChangeSupplier extends AbstractChangeSupplier<RawSQLChange>  
     }
 
     @Override
-    public IChange[]  prepareDatabase(RawSQLChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(RawSQLChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
 //        createTableChange.setCatalogName(change.getCatalogName());
 //        createTableChange.setSchemaName(change.getSchemaName());
@@ -26,7 +26,7 @@ public class RawSQLChangeSupplier extends AbstractChangeSupplier<RawSQLChange>  
         createTableChange.addColumn(new ColumnConfig().setName("name").setType("varchar(10)"));
         createTableChange.addColumn(new ColumnConfig().setName("address").setType("varchar(10)"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

@@ -12,13 +12,13 @@ import java.util.List;
  * Marker interface for precondition logic tags (and,or, not)
  */
 public abstract class PreconditionLogic extends AbstractPrecondition {
-    private List<Precondition> nestedPreconditions = new ArrayList<Precondition>();
+    private List<ExecutablePrecondition> nestedPreconditions = new ArrayList<ExecutablePrecondition>();
 
-    public List<Precondition> getNestedPreconditions() {
+    public List<ExecutablePrecondition> getNestedPreconditions() {
         return this.nestedPreconditions;
     }
 
-    public void addNestedPrecondition(Precondition precondition) {
+    public void addNestedPrecondition(ExecutablePrecondition precondition) {
         if (precondition != null) {
             nestedPreconditions.add(precondition);
         }
@@ -33,8 +33,8 @@ public abstract class PreconditionLogic extends AbstractPrecondition {
         }
     }
 
-    protected Precondition toPrecondition(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        Precondition precondition = PreconditionFactory.getInstance().create(node.getName());
+    protected ExecutablePrecondition toPrecondition(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException {
+        ExecutablePrecondition precondition = PreconditionFactory.getInstance().create(node.getName());
         if (precondition == null) {
             return null;
         }

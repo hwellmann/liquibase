@@ -1,6 +1,6 @@
 package liquibase.sqlgenerator;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.structure.DatabaseObject;
@@ -182,7 +182,7 @@ public class SqlGeneratorFactory {
         return new SqlGeneratorChain(sqlGenerators);
     }
 
-    public Sql[] generateSql(Change change, Database database) {
+    public Sql[] generateSql(ExecutableChange change, Database database) {
         SqlStatement[] sqlStatements = change.generateStatements(database);
         if (sqlStatements == null) {
             return new Sql[0];

@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractPrecondition extends AbstractLiquibaseSerializable implements Precondition {
+public abstract class AbstractPrecondition extends AbstractLiquibaseSerializable implements ExecutablePrecondition {
 
     @Override
     public String getSerializedObjectName() {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
@@ -28,7 +28,7 @@ import org.kohsuke.MetaInfServices;
 @DatabaseChange(name="addNotNullConstraint",
         description = "Adds a not-null constraint to an existing table. If a defaultNullValue attribute is passed, all null values for the column will be updated to the passed value before the constraint is applied.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddNotNullConstraintChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
@@ -184,14 +184,14 @@ public class AddNotNullConstraintChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropNotNullConstraintChange inverse = new DropNotNullConstraintChange();
         inverse.setColumnName(getColumnName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setColumnDataType(getColumnDataType());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

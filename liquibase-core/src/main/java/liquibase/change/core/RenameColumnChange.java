@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
@@ -26,7 +26,7 @@ import org.kohsuke.MetaInfServices;
  * Renames an existing column.
  */
 @DatabaseChange(name="renameColumn", description = "Renames an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class RenameColumnChange extends AbstractChange {
 
     private String catalogName;
@@ -186,7 +186,7 @@ public class RenameColumnChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         RenameColumnChange inverse = new RenameColumnChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
@@ -194,7 +194,7 @@ public class RenameColumnChange extends AbstractChange {
         inverse.setNewColumnName(getOldColumnName());
         inverse.setColumnDataType(getColumnDataType());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

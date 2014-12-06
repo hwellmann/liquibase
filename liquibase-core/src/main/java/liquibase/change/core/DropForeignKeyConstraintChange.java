@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -19,7 +19,7 @@ import org.kohsuke.MetaInfServices;
  * Drops an existing foreign key constraint.
  */
 @DatabaseChange(name="dropForeignKeyConstraint", description = "Drops an existing foreign key", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "foreignKey")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropForeignKeyConstraintChange extends AbstractChange {
     private String baseTableCatalogName;
     private String baseTableSchemaName;

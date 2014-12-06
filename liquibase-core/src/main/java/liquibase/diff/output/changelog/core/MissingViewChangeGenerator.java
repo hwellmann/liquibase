@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.CreateViewChange;
 import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
@@ -39,7 +39,7 @@ public class MissingViewChangeGenerator implements MissingObjectChangeGenerator 
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, final Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, final Database comparisonDatabase, ChangeGeneratorChain chain) {
         View view = (View) missingObject;
 
         CreateViewChange change = new CreateViewChange();
@@ -81,7 +81,7 @@ public class MissingViewChangeGenerator implements MissingObjectChangeGenerator 
             change.setFullDefinition(view.getContainsFullDefinition());
         }
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
 
     }
 }

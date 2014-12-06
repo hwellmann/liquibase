@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
@@ -41,7 +41,7 @@ public class UnexpectedColumnChangeGenerator implements UnexpectedObjectChangeGe
     }
 
     @Override
-    public Change[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Column column = (Column) unexpectedObject;
 //        if (!shouldModifyColumn(column)) {
 //            continue;
@@ -64,7 +64,7 @@ public class UnexpectedColumnChangeGenerator implements UnexpectedObjectChangeGe
         }
         change.setColumnName(column.getName());
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
 
     }
 }

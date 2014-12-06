@@ -9,7 +9,7 @@ import liquibase.exception.PreconditionFailedException;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 
 import org.kohsuke.MetaInfServices;
 
@@ -17,7 +17,7 @@ import org.kohsuke.MetaInfServices;
  * Precondition for specifying the type of database (oracle, mysql, etc.).
  */
 
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class DBMSPrecondition extends AbstractPrecondition {
     private String type;
 

@@ -1,6 +1,6 @@
 package liquibase.change.custom.supplier;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.custom.CustomChangeWrapper;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -12,9 +12,9 @@ public class CustomChangeWrapperSupplier extends AbstractChangeSupplier<CustomCh
     }
 
     @Override
-    public IChange[] prepareDatabase(CustomChangeWrapper change) throws Exception {
+    public Change[] prepareDatabase(CustomChangeWrapper change) throws Exception {
 
-        return new IChange[0];
+        return new Change[0];
     }
 
     @Override

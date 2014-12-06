@@ -1,7 +1,7 @@
 package liquibase.database;
 
 import liquibase.CatalogAndSchema;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
@@ -237,7 +237,7 @@ public interface Database extends PrioritizedService {
 
     boolean isSafeToRunUpdate() throws DatabaseException;
 
-    void executeStatements(Change change, DatabaseChangeLog changeLog, List<SqlVisitor> sqlVisitors) throws LiquibaseException;/*
+    void executeStatements(ExecutableChange change, DatabaseChangeLog changeLog, List<SqlVisitor> sqlVisitors) throws LiquibaseException;/*
 
      * Executes the statements passed as argument to a target {@link Database}
      *
@@ -247,12 +247,12 @@ public interface Database extends PrioritizedService {
      */
     void execute(SqlStatement[] statements, List<SqlVisitor> sqlVisitors) throws LiquibaseException;
 
-    void saveStatements(Change change, List<SqlVisitor> sqlVisitors, Writer writer) throws IOException, StatementNotSupportedOnDatabaseException, LiquibaseException;
+    void saveStatements(ExecutableChange change, List<SqlVisitor> sqlVisitors, Writer writer) throws IOException, StatementNotSupportedOnDatabaseException, LiquibaseException;
 
-    void executeRollbackStatements(Change change, List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException;
+    void executeRollbackStatements(ExecutableChange change, List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException;
     void executeRollbackStatements(SqlStatement[] statements, List<SqlVisitor> sqlVisitors) throws LiquibaseException, RollbackImpossibleException;
 
-    void saveRollbackStatement(Change change, List<SqlVisitor> sqlVisitors, Writer writer) throws IOException, RollbackImpossibleException, StatementNotSupportedOnDatabaseException, LiquibaseException;
+    void saveRollbackStatement(ExecutableChange change, List<SqlVisitor> sqlVisitors, Writer writer) throws IOException, RollbackImpossibleException, StatementNotSupportedOnDatabaseException, LiquibaseException;
 
     public Date parseDate(String dateAsString) throws DateParseException;
 

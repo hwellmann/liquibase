@@ -9,13 +9,13 @@ import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.executor.ExecutorService;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 import liquibase.statement.core.TableRowCountStatement;
 import liquibase.util.StringUtils;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class RowCountPrecondition extends AbstractPrecondition {
 
     private String catalogName;

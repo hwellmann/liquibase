@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -31,7 +31,7 @@ import org.kohsuke.MetaInfServices;
         description = "Adds a default value to the database definition for the specified column.\n" +
                 "One of defaultValue, defaultValueNumeric, defaultValueBoolean or defaultValueDate must be set",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddDefaultValueChange extends AbstractChange {
 
     private String catalogName;
@@ -212,14 +212,14 @@ public class AddDefaultValueChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropDefaultValueChange inverse = new DropDefaultValueChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setColumnName(getColumnName());
         inverse.setColumnDataType(getColumnDataType());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

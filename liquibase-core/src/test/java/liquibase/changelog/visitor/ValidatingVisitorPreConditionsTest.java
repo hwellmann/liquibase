@@ -18,7 +18,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
 import liquibase.exception.Warnings;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 import liquibase.precondition.core.DBMSPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
 import org.junit.Before;

@@ -3,7 +3,7 @@ package liquibase.change.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -24,7 +24,7 @@ import org.kohsuke.MetaInfServices;
                 "\n" +
                 "A value of NULL in a cell will be converted to a database NULL rather than the string 'NULL'",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table", since = "2.0")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class LoadUpdateDataChange extends LoadDataChange {
     private String primaryKey;
     private Boolean onlyUpdate = Boolean.FALSE;

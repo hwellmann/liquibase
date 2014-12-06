@@ -1,6 +1,6 @@
 package liquibase.changelog.visitor;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
@@ -62,7 +62,7 @@ public interface ChangeExecListener {
 
     void preconditionErrored(PreconditionErrorException error, PreconditionContainer.ErrorOption onError);
 
-    void willRun(IChange change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
+    void willRun(Change change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
 
-    void ran(IChange change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
+    void ran(Change change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
 }

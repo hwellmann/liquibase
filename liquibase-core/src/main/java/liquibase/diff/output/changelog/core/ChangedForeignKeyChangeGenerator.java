@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
@@ -39,7 +39,7 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
     }
 
     @Override
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         ForeignKey fk = (ForeignKey) changedObject;
 
         StringUtils.StringUtilsFormatter formatter = new StringUtils.StringUtilsFormatter<Column>() {
@@ -77,6 +77,6 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
             control.setAlreadyHandledChanged(fk.getBackingIndex());
         }
 
-        return new Change[] { dropFkChange, addFkChange };
+        return new ExecutableChange[] { dropFkChange, addFkChange };
     }
 }

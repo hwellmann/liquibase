@@ -11,23 +11,23 @@ import java.util.concurrent.ConcurrentHashMap;
  * For XML-based changelogs, the tag name is the command name.
  * Change implementations are looked up via the {@link ServiceLocator}.
  *
- * @see liquibase.change.Change
+ * @see liquibase.change.ExecutableChange
  */
 public class ChangeFactory {
 
     private static ChangeFactory instance;
 
-    private Map<String, SortedSet<Class<? extends Change>>> registry = new ConcurrentHashMap<String, SortedSet<Class<? extends Change>>>();
-    private Map<Class<? extends Change>, ChangeMetaData> metaDataByClass = new ConcurrentHashMap<Class<? extends Change>, ChangeMetaData>();
+    private Map<String, SortedSet<Class<? extends ExecutableChange>>> registry = new ConcurrentHashMap<String, SortedSet<Class<? extends ExecutableChange>>>();
+    private Map<Class<? extends ExecutableChange>, ChangeMetaData> metaDataByClass = new ConcurrentHashMap<Class<? extends ExecutableChange>, ChangeMetaData>();
 
     private ChangeFactory() {
     }
 
     private void init() {
-        Class<? extends Change>[] classes;
-        classes = ServiceLocator.getInstance().findClasses(Change.class);
+        Class<? extends ExecutableChange>[] classes;
+        classes = ServiceLocator.getInstance().findClasses(ExecutableChange.class);
 
-        for (Class<? extends Change> clazz : classes) {
+        for (Class<? extends ExecutableChange> clazz : classes) {
             //noinspection unchecked
             register(clazz);
         }
@@ -56,15 +56,15 @@ public class ChangeFactory {
      * Register a new Change class.
      * Normally called automatically by ChangeFactory on all Change implementations found by the ServiceLocator, but it can be called manually if needed.
      */
-    public void register(Class<? extends Change> changeClass) {
+    public void register(Class<? extends ExecutableChange> changeClass) {
         try {
-            Change instance = changeClass.newInstance();
+            ExecutableChange instance = changeClass.newInstance();
             ChangeMetaData metaData = getChangeMetaData(instance);
             String name = metaData.getName();
             if (registry.get(name) == null) {
-                registry.put(name, new TreeSet<Class<? extends Change>>(new Comparator<Class<? extends Change>>() {
+                registry.put(name, new TreeSet<Class<? extends ExecutableChange>>(new Comparator<Class<? extends ExecutableChange>>() {
                     @Override
-                    public int compare(Class<? extends Change> o1, Class<? extends Change> o2) {
+                    public int compare(Class<? extends ExecutableChange> o1, Class<? extends ExecutableChange> o2) {
                         try {
                             return -1 * new Integer(getChangeMetaData(o1.newInstance()).getPriority()).compareTo(getChangeMetaData(o2.newInstance()).getPriority());
                         } catch (Exception e) {
@@ -80,14 +80,14 @@ public class ChangeFactory {
     }
 
     public ChangeMetaData getChangeMetaData(String change) {
-        Change changeObj = create(change);
+        ExecutableChange changeObj = create(change);
         if (changeObj == null) {
             return null;
         }
         return getChangeMetaData(changeObj);
     }
 
-    public ChangeMetaData getChangeMetaData(Change change) {
+    public ChangeMetaData getChangeMetaData(ExecutableChange change) {
         if (!metaDataByClass.containsKey(change.getClass())) {
             metaDataByClass.put(change.getClass(), change.createChangeMetaData());
         }
@@ -105,7 +105,7 @@ public class ChangeFactory {
      * Return the registry of all Changes found. Key is the change name and the values are a sorted set of implementations, ordered by Priority descending.
      * Normally used only for information/debugging purposes. The returned map is read only.
      */
-    public Map<String, SortedSet<Class<? extends Change>>> getRegistry() {
+    public Map<String, SortedSet<Class<? extends ExecutableChange>>> getRegistry() {
         return Collections.unmodifiableMap(registry);
     }
 
@@ -129,8 +129,8 @@ public class ChangeFactory {
      * Create a new Change implementation for the given change name. The class of the constructed object will be the Change implementation with the highest priority.
      * Each call to create will return a new instance of the Change.
      */
-    public Change create(String name) {
-        SortedSet<Class<? extends Change>> classes = registry.get(name);
+    public ExecutableChange create(String name) {
+        SortedSet<Class<? extends ExecutableChange>> classes = registry.get(name);
 
         if (classes == null) {
             return null;
@@ -146,14 +146,14 @@ public class ChangeFactory {
     public String[] getAllChangeNamespaces() {
         Set<String> namespaces = new HashSet<String>();
         for (String changeName : getDefinedChanges()) {
-            Change change = create(changeName);
+            ExecutableChange change = create(changeName);
             namespaces.add(change.getSerializedObjectNamespace());
         }
 
         return namespaces.toArray(new String[namespaces.size()]);
     }
 
-    public Map<String, Object> getParameters(Change change) {
+    public Map<String, Object> getParameters(ExecutableChange change) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         ChangeMetaData changeMetaData = getChangeMetaData(change);
         for (ChangeParameterMetaData param : changeMetaData.getParameters().values()) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ColumnConfig;
 import liquibase.change.core.InsertDataChange;
 import liquibase.database.Database;
@@ -54,7 +54,7 @@ public class MissingDataChangeGenerator implements MissingObjectChangeGenerator 
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain) {
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -76,7 +76,7 @@ public class MissingDataChangeGenerator implements MissingObjectChangeGenerator 
                 columnNames.add(rs.getMetaData().getColumnName(i+1));
             }
 
-            List<Change> changes = new ArrayList<Change>();
+            List<ExecutableChange> changes = new ArrayList<ExecutableChange>();
             while (rs.next()) {
                 InsertDataChange change = new InsertDataChange();
                 if (outputControl.getIncludeCatalog()) {
@@ -121,7 +121,7 @@ public class MissingDataChangeGenerator implements MissingObjectChangeGenerator 
                 changes.add(change);
             }
 
-            return changes.toArray(new Change[changes.size()]);
+            return changes.toArray(new ExecutableChange[changes.size()]);
         } catch (Exception e) {
             throw new UnexpectedLiquibaseException(e);
         } finally {

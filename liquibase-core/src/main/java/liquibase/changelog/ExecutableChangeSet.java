@@ -59,4 +59,6 @@ public interface ExecutableChangeSet extends LiquibaseSerializable, ChangeSet {
 
     List<SqlVisitor> getSqlVisitors();
 
+    boolean supportsRollback(Database database);
+
 }

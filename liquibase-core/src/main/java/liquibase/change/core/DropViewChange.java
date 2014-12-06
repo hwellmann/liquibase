@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -18,7 +18,7 @@ import org.kohsuke.MetaInfServices;
  * Drops an existing view.
  */
 @DatabaseChange(name="dropView", description = "Drops an existing view", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "view")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropViewChange extends AbstractChange {
     private String catalogName;
     private String schemaName;

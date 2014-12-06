@@ -3,7 +3,7 @@ package liquibase.change.core;
 import java.math.BigInteger;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -20,7 +20,7 @@ import org.kohsuke.MetaInfServices;
  * Creates a new sequence.
  */
 @DatabaseChange(name="createSequence", description = "Creates a new database sequence", priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class CreateSequenceChange extends AbstractChange {
 
     private String catalogName;
@@ -170,12 +170,12 @@ public class CreateSequenceChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropSequenceChange inverse = new DropSequenceChange();
         inverse.setSequenceName(getSequenceName());
         inverse.setSchemaName(getSchemaName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
@@ -40,7 +40,7 @@ public class UnexpectedForeignKeyChangeGenerator implements UnexpectedObjectChan
     }
 
     @Override
-    public Change[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         ForeignKey fk = (ForeignKey) unexpectedObject;
 
         DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
@@ -64,7 +64,7 @@ public class UnexpectedForeignKeyChangeGenerator implements UnexpectedObjectChan
             control.setAlreadyHandledUnexpected(backingIndex);
 //        }
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
 
     }
 }

@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddNotNullConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -20,7 +20,7 @@ public class AddNotNullConstraintChangeSupplier extends AbstractChangeSupplier<A
     }
 
     @Override
-    public IChange[]  prepareDatabase(AddNotNullConstraintChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(AddNotNullConstraintChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -32,7 +32,7 @@ public class AddNotNullConstraintChangeSupplier extends AbstractChangeSupplier<A
         createTableChange.addColumn(new ColumnConfig().setName(change.getColumnName()).setType(type));
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("varchar(10)"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

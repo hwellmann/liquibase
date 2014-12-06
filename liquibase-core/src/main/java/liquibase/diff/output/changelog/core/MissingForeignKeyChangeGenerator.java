@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
@@ -44,7 +44,7 @@ public class MissingForeignKeyChangeGenerator implements MissingObjectChangeGene
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         ForeignKey fk = (ForeignKey) missingObject;
 
         AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
@@ -94,6 +94,6 @@ public class MissingForeignKeyChangeGenerator implements MissingObjectChangeGene
             control.setAlreadyHandledMissing(backingIndex);
 //        }
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
     }
 }

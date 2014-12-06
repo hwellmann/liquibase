@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -16,7 +16,7 @@ public class AddUniqueConstraintChangeSupplier extends AbstractChangeSupplier<Ad
     }
 
     @Override
-    public IChange[]  prepareDatabase(AddUniqueConstraintChange change) throws Exception {
+    public Change[]  prepareDatabase(AddUniqueConstraintChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -27,7 +27,7 @@ public class AddUniqueConstraintChangeSupplier extends AbstractChangeSupplier<Ad
         }
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("int"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
 
     }
 

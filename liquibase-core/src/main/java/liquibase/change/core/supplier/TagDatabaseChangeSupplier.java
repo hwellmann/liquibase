@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import static liquibase.Assert.assertTrue;
 import liquibase.change.AbstractChange;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ChangeSetImpl;
@@ -23,8 +23,8 @@ public class TagDatabaseChangeSupplier extends AbstractChangeSupplier<TagDatabas
     }
 
     @Override
-    public IChange[] prepareDatabase(TagDatabaseChange change) throws Exception {
-        return new IChange[]{new AbstractChange() {
+    public Change[] prepareDatabase(TagDatabaseChange change) throws Exception {
+        return new Change[]{new AbstractChange() {
             @Override
             public String getConfirmationMessage() {
                 return "Custom change";

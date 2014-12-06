@@ -1,6 +1,6 @@
 package liquibase.dbdoc;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.structure.core.Column;
@@ -25,7 +25,7 @@ public class TableWriter extends HTMLWriter {
     }
 
     @Override
-    protected void writeCustomHTML(FileWriter fileWriter, Object object, List<Change> changes, Database database) throws IOException {
+    protected void writeCustomHTML(FileWriter fileWriter, Object object, List<ExecutableChange> changes, Database database) throws IOException {
     	final Table table = (Table) object;
     	writeTableRemarks(fileWriter, table, database);
 		writeColumns(fileWriter, table, database);

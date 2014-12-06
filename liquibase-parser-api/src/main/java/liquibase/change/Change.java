@@ -3,8 +3,9 @@ package liquibase.change;
 import liquibase.changelog.ChangeSet;
 import liquibase.exception.SetupException;
 import liquibase.resource.ResourceAccessor;
+import liquibase.serializer.LiquibaseSerializable;
 
-public interface IChange {
+public interface Change extends LiquibaseSerializable {
 
     /**
      * This method will be called by the changlelog parsing process after all of the

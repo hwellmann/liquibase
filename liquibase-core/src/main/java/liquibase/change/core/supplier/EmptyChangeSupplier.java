@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.EmptyChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -13,7 +13,7 @@ public class EmptyChangeSupplier extends AbstractChangeSupplier<EmptyChange>  {
     }
 
     @Override
-    public IChange[] prepareDatabase(EmptyChange change) throws Exception {
+    public Change[] prepareDatabase(EmptyChange change) throws Exception {
         return null;
     }
 

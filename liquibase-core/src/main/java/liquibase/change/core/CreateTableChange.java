@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -39,7 +39,7 @@ import org.kohsuke.MetaInfServices;
  * Creates a new table.
  */
 @DatabaseChange(name="createTable", description = "Create Table", priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class CreateTableChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private List<ColumnConfig> columns;
@@ -154,13 +154,13 @@ public class CreateTableChange extends AbstractChange implements ChangeWithColum
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropTableChange inverse = new DropTableChange();
         inverse.setCatalogName(getCatalogName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

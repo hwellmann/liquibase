@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
@@ -20,7 +20,7 @@ public class ChangeGeneratorChain {
         }
     }
 
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (missingObject == null) {
             return null;
         }
@@ -41,7 +41,7 @@ public class ChangeGeneratorChain {
             return null;
         }
 
-        Change[] changes = ((MissingObjectChangeGenerator) changeGenerators.next()).fixMissing(missingObject, control, referenceDatabase, comparisionDatabase, this);
+        ExecutableChange[] changes = ((MissingObjectChangeGenerator) changeGenerators.next()).fixMissing(missingObject, control, referenceDatabase, comparisionDatabase, this);
         if (changes == null) {
             return null;
         }
@@ -51,7 +51,7 @@ public class ChangeGeneratorChain {
         return changes;
     }
 
-    public Change[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (unexpectedObject == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public class ChangeGeneratorChain {
             return null;
         }
 
-        Change[] changes = ((UnexpectedObjectChangeGenerator) changeGenerators.next()).fixUnexpected(unexpectedObject, control, referenceDatabase, comparisionDatabase, this);
+        ExecutableChange[] changes = ((UnexpectedObjectChangeGenerator) changeGenerators.next()).fixUnexpected(unexpectedObject, control, referenceDatabase, comparisionDatabase, this);
         if (changes == null) {
             return null;
         }
@@ -82,7 +82,7 @@ public class ChangeGeneratorChain {
         return changes;
     }
 
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisionDatabase) {
         if (changedObject == null) {
             return null;
         }
@@ -103,7 +103,7 @@ public class ChangeGeneratorChain {
             return null;
         }
 
-        Change[] changes = ((ChangedObjectChangeGenerator) changeGenerators.next()).fixChanged(changedObject, differences, control, referenceDatabase, comparisionDatabase, this);
+        ExecutableChange[] changes = ((ChangedObjectChangeGenerator) changeGenerators.next()).fixChanged(changedObject, differences, control, referenceDatabase, comparisionDatabase, this);
         if (changes == null) {
             return null;
         }

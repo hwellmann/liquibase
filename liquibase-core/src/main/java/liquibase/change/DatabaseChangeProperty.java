@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Annotation used by {@link AbstractChange } to declare {@link ChangeParameterMetaData} information.
  * The annotation should be placed on the read method.
  * This annotation should not be checked for outside AbstractChange, if any code is trying to determine the
- * metadata provided by this annotation, it should get it from {@link liquibase.change.Change#getChangeMetaData()}
+ * metadata provided by this annotation, it should get it from {@link liquibase.change.ExecutableChange#getChangeMetaData()}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

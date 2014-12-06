@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -18,7 +18,7 @@ import org.kohsuke.MetaInfServices;
  * Renames an existing view.
  */
 @DatabaseChange(name="renameView", description = "Renames an existing view", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "view")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class RenameViewChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
@@ -67,12 +67,12 @@ public class RenameViewChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         RenameViewChange inverse = new RenameViewChange();
         inverse.setOldViewName(getNewViewName());
         inverse.setNewViewName(getOldViewName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

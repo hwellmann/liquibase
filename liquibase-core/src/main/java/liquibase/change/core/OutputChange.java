@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -18,7 +18,7 @@ import liquibase.util.StringUtils;
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="output", description = "Logs a message and continues execution.", priority = ChangeMetaData.PRIORITY_DEFAULT, since = "3.3")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class OutputChange extends AbstractChange {
 
     private String message;

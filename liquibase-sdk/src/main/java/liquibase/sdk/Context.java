@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
 import liquibase.sqlgenerator.SqlGenerator;
 
@@ -21,7 +21,7 @@ public class Context {
 
     public static final String LIQUIBASE_SDK_PROPERTIES_FILENAME = "liquibase.sdk.properties";
     private static Context instance;
-    private static final List<Class<?>> extensionInterfaces = Arrays.asList(Change.class, SqlGenerator.class);
+    private static final List<Class<?>> extensionInterfaces = Arrays.asList(ExecutableChange.class, SqlGenerator.class);
 
     private boolean initialized = false;
 

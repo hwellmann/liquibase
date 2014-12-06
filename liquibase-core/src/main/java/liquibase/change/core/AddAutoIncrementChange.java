@@ -3,7 +3,7 @@ package liquibase.change.core;
 import java.math.BigInteger;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -32,7 +32,7 @@ import org.kohsuke.MetaInfServices;
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column",
         databaseNotes = {@DatabaseChangeNote(database = "sqlite", notes = "If the column type is not INTEGER it is converted to INTEGER")}
 )
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddAutoIncrementChange extends AbstractChange {
 
     private String catalogName;

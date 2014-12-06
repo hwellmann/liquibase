@@ -3,7 +3,7 @@ package liquibase.change.core;
 import java.math.BigInteger;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -20,7 +20,7 @@ import org.kohsuke.MetaInfServices;
  * Modifies properties of an existing sequence. StartValue is not allowed since we cannot alter the starting sequence number
  */
 @DatabaseChange(name="alterSequence", description = "Alter properties of an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AlterSequenceChange extends AbstractChange {
 
     private String catalogName;

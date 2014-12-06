@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -37,7 +37,7 @@ import org.kohsuke.MetaInfServices;
 @DatabaseChange(name="executeCommand",
         description = "Executes a system command. Because this refactoring doesn't generate SQL like most, using LiquiBase commands such as migrateSQL may not work as expected. Therefore, if at all possible use refactorings that generate SQL.",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class ExecuteShellCommandChange extends AbstractChange {
 
     private String executable;

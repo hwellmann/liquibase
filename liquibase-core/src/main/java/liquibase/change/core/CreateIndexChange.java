@@ -6,7 +6,7 @@ import java.util.List;
 
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -26,7 +26,7 @@ import org.kohsuke.MetaInfServices;
  * Creates an index on an existing column.
  */
 @DatabaseChange(name="createIndex", description = "Creates an index on an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "index")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class CreateIndexChange extends AbstractChange implements ChangeWithColumns<AddColumnConfig> {
 
     private String catalogName;
@@ -120,13 +120,13 @@ public class CreateIndexChange extends AbstractChange implements ChangeWithColum
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropIndexChange inverse = new DropIndexChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setIndexName(getIndexName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

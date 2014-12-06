@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddAutoIncrementChange;
 import liquibase.change.core.AddDefaultValueChange;
 import liquibase.change.core.AddNotNullConstraintChange;
@@ -57,7 +57,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
     }
 
     @Override
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Column column = (Column) changedObject;
         if (column.getRelation() instanceof View) {
             return null;
@@ -67,17 +67,17 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
             return null;
         }
 
-        List<Change> changes = new ArrayList<Change>();
+        List<ExecutableChange> changes = new ArrayList<ExecutableChange>();
 
         handleTypeDifferences(column, differences, control, changes, referenceDatabase, comparisonDatabase);
         handleNullableDifferences(column, differences, control, changes, referenceDatabase, comparisonDatabase);
         handleDefaultValueDifferences(column, differences, control, changes, referenceDatabase, comparisonDatabase);
         handleAutoIncrementDifferences(column, differences, control, changes, referenceDatabase, comparisonDatabase);
 
-        return changes.toArray(new Change[changes.size()]);
+        return changes.toArray(new ExecutableChange[changes.size()]);
     }
 
-    protected void handleNullableDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<Change> changes, Database referenceDatabase, Database comparisonDatabase) {
+    protected void handleNullableDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<ExecutableChange> changes, Database referenceDatabase, Database comparisonDatabase) {
         Difference nullableDifference = differences.getDifference("nullable");
         if (nullableDifference != null && nullableDifference.getReferenceValue() != null) {
             boolean nullable = (Boolean) nullableDifference.getReferenceValue();
@@ -109,7 +109,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
         }
     }
 
-    protected void handleAutoIncrementDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<Change> changes, Database referenceDatabase, Database comparisonDatabase) {
+    protected void handleAutoIncrementDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<ExecutableChange> changes, Database referenceDatabase, Database comparisonDatabase) {
         Difference difference = differences.getDifference("autoIncrementInformation");
         if (difference != null) {
             if (difference.getReferenceValue() == null) {
@@ -131,7 +131,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
         }
     }
 
-    protected void handleTypeDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<Change> changes, Database referenceDatabase, Database comparisonDatabase) {
+    protected void handleTypeDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<ExecutableChange> changes, Database referenceDatabase, Database comparisonDatabase) {
         Difference typeDifference = differences.getDifference("type");
         if (typeDifference != null) {
             ModifyDataTypeChange change = new ModifyDataTypeChange();
@@ -150,7 +150,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
         }
     }
 
-    protected void handleDefaultValueDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<Change> changes, Database referenceDatabase, Database comparisonDatabase) {
+    protected void handleDefaultValueDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<ExecutableChange> changes, Database referenceDatabase, Database comparisonDatabase) {
         Difference difference = differences.getDifference("defaultValue");
 
         if (difference != null) {

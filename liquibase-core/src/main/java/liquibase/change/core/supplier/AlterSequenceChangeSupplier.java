@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AlterSequenceChange;
 import liquibase.change.core.CreateSequenceChange;
 import liquibase.diff.DiffResult;
@@ -17,13 +17,13 @@ public class AlterSequenceChangeSupplier extends AbstractChangeSupplier<AlterSeq
     }
 
     @Override
-    public IChange[]  prepareDatabase(AlterSequenceChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(AlterSequenceChange change) throws DatabaseException {
         CreateSequenceChange createSequenceChange = new CreateSequenceChange();
         createSequenceChange.setCatalogName(change.getCatalogName());
         createSequenceChange.setSchemaName(change.getSchemaName());
         createSequenceChange.setSequenceName(change.getSequenceName());
 
-        return new IChange[] {createSequenceChange };
+        return new Change[] {createSequenceChange };
     }
 
     @Override

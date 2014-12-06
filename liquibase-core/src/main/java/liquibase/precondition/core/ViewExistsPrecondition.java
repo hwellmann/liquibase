@@ -8,14 +8,14 @@ import liquibase.exception.PreconditionFailedException;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.precondition.AbstractPrecondition;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.View;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class ViewExistsPrecondition extends AbstractPrecondition {
     private String catalogName;
     private String schemaName;

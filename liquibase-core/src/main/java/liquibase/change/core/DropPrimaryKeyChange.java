@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
@@ -25,7 +25,7 @@ import org.kohsuke.MetaInfServices;
  * Removes an existing primary key.
  */
 @DatabaseChange(name="dropPrimaryKey", description = "Drops an existing primary key", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "primaryKey")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropPrimaryKeyChange extends AbstractChange {
     private String catalogName;
     private String schemaName;

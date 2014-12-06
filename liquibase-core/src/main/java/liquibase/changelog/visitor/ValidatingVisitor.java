@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
-import liquibase.change.IChange;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
@@ -87,8 +87,8 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         RanChangeSet ranChangeSet = ranIndex.get(changeSet.toString(false));
         boolean ran = ranChangeSet != null;
         boolean shouldValidate = !ran || changeSet.shouldRunOnChange() || changeSet.shouldAlwaysRun();
-        for (IChange c : changeSet.getChanges()) {
-            Change change = (Change) c;
+        for (Change c : changeSet.getChanges()) {
+            ExecutableChange change = (ExecutableChange) c;
             try {
                 change.finishInitialization();
             } catch (SetupException se) {

@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -21,7 +21,7 @@ import org.kohsuke.MetaInfServices;
  * Creates a primary key out of an existing column or set of columns.
  */
 @DatabaseChange(name="addPrimaryKey", description = "Adds creates a primary key out of an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class AddPrimaryKeyChange extends AbstractChange {
 
     private String catalogName;
@@ -178,13 +178,13 @@ public class AddPrimaryKeyChange extends AbstractChange {
 //    }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropPrimaryKeyChange inverse = new DropPrimaryKeyChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setConstraintName(getConstraintName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse,
         };
     }

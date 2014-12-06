@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.CreateIndexChange;
 import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
@@ -43,7 +43,7 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
     }
 
     @Override
-    public Change[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Index index = (Index) changedObject;
 
         DropIndexChange dropIndexChange = new DropIndexChange();
@@ -95,6 +95,6 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
             }
         }
 
-        return new Change[] { dropIndexChange, addIndexChange };
+        return new ExecutableChange[] { dropIndexChange, addIndexChange };
     }
 }

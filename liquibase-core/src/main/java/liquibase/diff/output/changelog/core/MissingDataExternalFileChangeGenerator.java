@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.LoadDataChange;
 import liquibase.change.core.LoadDataColumnConfig;
 import liquibase.database.Database;
@@ -46,7 +46,7 @@ public class MissingDataExternalFileChangeGenerator extends MissingDataChangeGen
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl outputControl, Database referenceDatabase, Database comparisionDatabase, ChangeGeneratorChain chain) {
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -149,7 +149,7 @@ public class MissingDataExternalFileChangeGenerator extends MissingDataChangeGen
                 change.addColumn(columnConfig);
             }
 
-            return new Change[]{
+            return new ExecutableChange[]{
                     change
             };
         } catch (Exception e) {

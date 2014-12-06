@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -25,7 +25,7 @@ import org.kohsuke.MetaInfServices;
  * Inserts data into an existing table.
  */
 @DatabaseChange(name="insert", description = "Inserts data into an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class InsertDataChange extends AbstractChange implements ChangeWithColumns<ColumnConfig>, DbmsTargetedChange {
 
     private String catalogName;
@@ -139,7 +139,7 @@ public class InsertDataChange extends AbstractChange implements ChangeWithColumn
     }
 
     /**
-     * @see liquibase.change.Change#getConfirmationMessage()
+     * @see liquibase.change.ExecutableChange#getConfirmationMessage()
      */
     @Override
     public String getConfirmationMessage() {

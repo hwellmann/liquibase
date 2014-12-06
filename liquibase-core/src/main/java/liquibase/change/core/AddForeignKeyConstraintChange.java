@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
@@ -27,7 +27,7 @@ import org.kohsuke.MetaInfServices;
  * Adds a foreign key constraint to an existing column.
  */
  @DatabaseChange(name="addForeignKeyConstraint", description = "Adds a foreign key constraint to an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
- @MetaInfServices(Change.class)
+ @MetaInfServices(ExecutableChange.class)
 public class AddForeignKeyConstraintChange extends AbstractChange {
 
     private String baseTableCatalogName;
@@ -257,13 +257,13 @@ public class AddForeignKeyConstraintChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         DropForeignKeyConstraintChange inverse = new DropForeignKeyConstraintChange();
         inverse.setBaseTableSchemaName(getBaseTableSchemaName());
         inverse.setBaseTableName(getBaseTableName());
         inverse.setConstraintName(getConstraintName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

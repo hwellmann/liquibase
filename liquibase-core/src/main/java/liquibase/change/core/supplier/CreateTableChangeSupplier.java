@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -14,7 +14,7 @@ public class CreateTableChangeSupplier extends AbstractChangeSupplier<CreateTabl
     }
 
     @Override
-    public IChange[] prepareDatabase(CreateTableChange change) throws Exception {
+    public Change[] prepareDatabase(CreateTableChange change) throws Exception {
         return null;
     }
 

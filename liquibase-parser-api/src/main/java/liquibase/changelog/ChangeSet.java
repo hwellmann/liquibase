@@ -5,10 +5,8 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.change.Change;
 import liquibase.change.CheckSum;
-import liquibase.change.IChange;
-import liquibase.database.Database;
+import liquibase.change.Change;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.parser.core.ParsedNode;
 import liquibase.precondition.Precondition;
@@ -46,9 +44,9 @@ public interface ChangeSet extends LiquibaseSerializable {
     /**
      * Returns an unmodifiable list of changes.  To add one, use the addRefactoing method.
      */
-    List<IChange> getChanges();
+    List<Change> getChanges();
 
-    void addChange(IChange change);
+    void addChange(Change change);
 
     String getId();
 
@@ -74,13 +72,11 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     boolean isRunInTransaction();
 
-    IChange[] getRollBackChanges();
+    Change[] getRollBackChanges();
 
     void addRollBackSQL(String sql);
 
     void addRollbackChange(Change change);
-
-    boolean supportsRollback(Database database);
 
     String getDescription();
 

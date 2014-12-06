@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropAllForeignKeyConstraintsChange;
@@ -19,7 +19,7 @@ public class DropAllForeignKeyConstraintsChangeSupplier extends AbstractChangeSu
     }
 
     @Override
-    public IChange[]  prepareDatabase(DropAllForeignKeyConstraintsChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(DropAllForeignKeyConstraintsChange change) throws DatabaseException {
         CreateTableChange createBaseTable = new CreateTableChange();
         createBaseTable.setCatalogName(change.getBaseTableCatalogName());
         createBaseTable.setSchemaName(change.getBaseTableSchemaName());
@@ -39,7 +39,7 @@ public class DropAllForeignKeyConstraintsChangeSupplier extends AbstractChangeSu
         createFKChange.setReferencedColumnNames("id");
         createFKChange.setConstraintName("fk_test");
 
-        return new IChange[] {createBaseTable, createFKChange };
+        return new Change[] {createBaseTable, createFKChange };
 
     }
 

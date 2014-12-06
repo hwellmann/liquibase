@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.ModifyDataTypeChange;
 import liquibase.diff.DiffResult;
@@ -18,7 +18,7 @@ public class ModifyDataTypeChangeSupplier extends AbstractChangeSupplier<ModifyD
     }
 
     @Override
-    public IChange[]  prepareDatabase(ModifyDataTypeChange change) throws Exception {
+    public Change[]  prepareDatabase(ModifyDataTypeChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -32,7 +32,7 @@ public class ModifyDataTypeChangeSupplier extends AbstractChangeSupplier<ModifyD
         createTableChange.addColumn(new ColumnConfig().setName(change.getColumnName()).setType(dataType));
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("varchar(10)"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
 
     }
 

@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -19,7 +19,7 @@ import org.kohsuke.MetaInfServices;
  * Drops a not-null constraint from an existing column.
  */
 @DatabaseChange(name="dropNotNullConstraint", description = "Makes a column nullable", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropNotNullConstraintChange extends AbstractChange {
 
     private String catalogName;
@@ -138,14 +138,14 @@ public class DropNotNullConstraintChange extends AbstractChange {
 //    }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         AddNotNullConstraintChange inverse = new AddNotNullConstraintChange();
         inverse.setColumnName(getColumnName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setColumnDataType(getColumnDataType());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -45,7 +45,7 @@ import org.kohsuke.MetaInfServices;
                 "Once the date format string is set, Liquibase will then call the SimpleDateFormat.parse() method attempting to parse the input string so that it can return a Date/Time. If problems occur, then a ParseException is thrown and the input string is treated as a String for the INSERT command to be generated.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table",
         since="1.7")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class LoadDataChange extends AbstractChange implements ChangeWithColumns<LoadDataColumnConfig> {
 
     private String catalogName;

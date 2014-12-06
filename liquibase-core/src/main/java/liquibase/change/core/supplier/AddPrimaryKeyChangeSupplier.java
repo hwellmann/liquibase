@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -19,7 +19,7 @@ public class AddPrimaryKeyChangeSupplier extends AbstractChangeSupplier<AddPrima
     }
 
     @Override
-    public IChange[]  prepareDatabase(AddPrimaryKeyChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(AddPrimaryKeyChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -29,7 +29,7 @@ public class AddPrimaryKeyChangeSupplier extends AbstractChangeSupplier<AddPrima
         }
         createTableChange.addColumn(new ColumnConfig().setName("not_id").setType("int"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

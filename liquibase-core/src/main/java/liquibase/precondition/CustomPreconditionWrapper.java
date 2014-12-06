@@ -21,7 +21,7 @@ import liquibase.util.ObjectUtil;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class CustomPreconditionWrapper extends AbstractPrecondition {
 
     private String className;

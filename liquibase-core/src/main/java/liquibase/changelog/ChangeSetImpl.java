@@ -12,11 +12,11 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeFactory;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.visitor.ChangeExecListener;
@@ -59,7 +59,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
     /**
      * List of change objects defined in this changeset
      */
-    private List<IChange> changes;
+    private List<Change> changes;
 
     /**
      * "id" specified in changeLog file.  Combination of id+author+filePath must be unique
@@ -171,7 +171,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
     }
 
     public ChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
-        this.changes = new ArrayList<IChange>();
+        this.changes = new ArrayList<Change>();
         log = LogFactory.getLogger();
         this.changeLog = databaseChangeLog;
     }
@@ -226,7 +226,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
     @Override
     public CheckSum generateCheckSum() {
         StringBuffer stringToMD5 = new StringBuffer();
-        for (IChange change : getChanges()) {
+        for (Change change : getChanges()) {
             stringToMD5.append(change.generateCheckSum()).append(":");
         }
 
@@ -368,8 +368,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             if (changeSet == null) {
                 throw new ParsedNodeException("Change set "+new ChangeSetImpl(changeSetId, changeSetAuthor, false, false, changeSetPath, null, null, null).toString(false)+" does not exist");
             }
-            for (IChange change : changeSet.getChanges()) {
-                addRollbackChange((Change) change);
+            for (Change change : changeSet.getChanges()) {
+                addRollbackChange(change);
             }
             return;
         }
@@ -400,8 +400,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
         }
     }
 
-    protected Change toChange(ParsedNode value, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        Change change = ChangeFactory.getInstance().create(value.getName());
+    protected ExecutableChange toChange(ParsedNode value, ResourceAccessor resourceAccessor) throws ParsedNodeException {
+        ExecutableChange change = ChangeFactory.getInstance().create(value.getName());
         if (change == null) {
             return null;
         } else {
@@ -534,7 +534,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             }
 
             if (!skipChange) {
-                for (IChange change : changes) {
+                for (Change change : changes) {
                     try {
                         change.finishInitialization();
                     } catch (SetupException se) {
@@ -543,8 +543,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
                 }
 
                 log.debug("Reading ChangeSet: " + toString());
-                for (IChange c : getChanges()) {
-                    Change change = (Change) c;
+                for (Change c : getChanges()) {
+                    ExecutableChange change = (ExecutableChange) c;
                     if ((!(change instanceof DbmsTargetedChange)) || DatabaseList.definitionMatches(((DbmsTargetedChange) change).getDbms(), database, true)) {
                         if (listener != null) {
                             listener.willRun(change, this, changeLog, database);
@@ -620,7 +620,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             if (hasCustomRollbackChanges()) {
 
                 final List<SqlStatement> statements = new LinkedList<SqlStatement>();
-                for (Change rollback : rollBackChanges) {
+                for (Change change : rollBackChanges) {
+                    ExecutableChange rollback = (ExecutableChange) change;
                     if (((rollback instanceof DbmsTargetedChange)) && !DatabaseList.definitionMatches(((DbmsTargetedChange) rollback).getDbms(), database, true)) {
                         continue;
                     }
@@ -634,9 +635,9 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
                 }
 
             } else {
-                List<IChange> changes = getChanges();
+                List<Change> changes = getChanges();
                 for (int i = changes.size() - 1; i >= 0; i--) {
-                    Change change = (Change) changes.get(i);
+                    ExecutableChange change = (ExecutableChange) changes.get(i);
                     database.executeRollbackStatements(change, sqlVisitors);
                 }
             }
@@ -677,7 +678,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      * @see liquibase.changelog.IChangeSet#getChanges()
      */
     @Override
-    public List<IChange> getChanges() {
+    public List<Change> getChanges() {
         return Collections.unmodifiableList(changes);
     }
 
@@ -685,7 +686,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      * @see liquibase.changelog.IChangeSet#addChange(liquibase.change.Change)
      */
     @Override
-    public void addChange(IChange change) {
+    public void addChange(Change change) {
         if (change == null) {
             return;
         }
@@ -809,8 +810,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      * @see liquibase.changelog.IChangeSet#getRollBackChanges()
      */
     @Override
-    public IChange[] getRollBackChanges() {
-        return rollBackChanges.toArray(new Change[rollBackChanges.size()]);
+    public Change[] getRollBackChanges() {
+        return rollBackChanges.toArray(new ExecutableChange[rollBackChanges.size()]);
     }
 
     /* (non-Javadoc)
@@ -852,8 +853,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             return true;
         }
 
-        for (IChange change : getChanges()) {
-            if (!((Change)change).supportsRollback(database)) {
+        for (Change change : getChanges()) {
+            if (!((ExecutableChange)change).supportsRollback(database)) {
                 return false;
             }
         }
@@ -865,16 +866,16 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      */
     @Override
     public String getDescription() {
-        List<IChange> changes = getChanges();
+        List<Change> changes = getChanges();
         if (changes.size() == 0) {
             return "Empty";
         }
 
         StringBuffer returnString = new StringBuffer();
-        Class<? extends Change> lastChangeClass = null;
+        Class<? extends ExecutableChange> lastChangeClass = null;
         int changeCount = 0;
-        for (IChange c : changes) {
-            Change change = (Change) c;
+        for (Change c : changes) {
+            ExecutableChange change = (ExecutableChange) c;
             if (change.getClass().equals(lastChangeClass)) {
                 changeCount++;
             } else if (changeCount > 1) {

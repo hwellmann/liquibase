@@ -1,6 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
@@ -36,7 +36,7 @@ public class UnexpectedTableChangeGenerator implements UnexpectedObjectChangeGen
     }
 
     @Override
-    public Change[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Table unexpectedTable = (Table) unexpectedObject;
 
         DropTableChange change = new DropTableChange();
@@ -61,7 +61,7 @@ public class UnexpectedTableChangeGenerator implements UnexpectedObjectChangeGen
             control.setAlreadyHandledUnexpected(unexpectedTable.getPrimaryKey().getBackingIndex());
         }
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
 
     }
 }

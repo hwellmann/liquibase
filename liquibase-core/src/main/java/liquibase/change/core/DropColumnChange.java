@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
@@ -31,7 +31,7 @@ import org.kohsuke.MetaInfServices;
  * Drops an existing column from a table.
  */
 @DatabaseChange(name = "dropColumn", description = "Drop existing column(s)", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropColumnChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private String catalogName;

@@ -3,12 +3,11 @@ package liquibase.change;
 import java.util.Set;
 
 import liquibase.database.Database;
-import liquibase.serializer.LiquibaseSerializable;
-import liquibase.structure.DatabaseObject;
 import liquibase.exception.RollbackImpossibleException;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.statement.SqlStatement;
+import liquibase.structure.DatabaseObject;
 
 /**
  * Interface all changes (refactorings) implement.
@@ -18,7 +17,7 @@ import liquibase.statement.SqlStatement;
  * @see ChangeFactory
  * @see Database
  */
-public interface Change extends LiquibaseSerializable, IChange {
+public interface ExecutableChange extends Change {
 
     public ChangeMetaData createChangeMetaData();
 

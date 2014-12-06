@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -26,7 +26,7 @@ import org.kohsuke.MetaInfServices;
  * Creates a new view.
  */
 @DatabaseChange(name="createView", description = "Create a new database view", priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class CreateViewChange extends AbstractChange {
 
     private String catalogName;
@@ -122,12 +122,12 @@ public class CreateViewChange extends AbstractChange {
 	}
 
 	@Override
-	protected Change[] createInverses() {
+	protected ExecutableChange[] createInverses() {
 		DropViewChange inverse = new DropViewChange();
 		inverse.setViewName(getViewName());
 		inverse.setSchemaName(getSchemaName());
 
-		return new Change[] { inverse };
+		return new ExecutableChange[] { inverse };
 	}
 
     @Override

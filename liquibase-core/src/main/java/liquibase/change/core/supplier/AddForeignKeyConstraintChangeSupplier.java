@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -20,7 +20,7 @@ public class AddForeignKeyConstraintChangeSupplier extends AbstractChangeSupplie
     }
 
     @Override
-    public IChange[]  prepareDatabase(AddForeignKeyConstraintChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(AddForeignKeyConstraintChange change) throws DatabaseException {
         CreateTableChange createBaseTable = new CreateTableChange();
         createBaseTable.setCatalogName(change.getBaseTableCatalogName());
         createBaseTable.setSchemaName(change.getBaseTableSchemaName());
@@ -37,7 +37,7 @@ public class AddForeignKeyConstraintChangeSupplier extends AbstractChangeSupplie
             createReferencedTable.addColumn(new ColumnConfig().setName(columnName).setType("int").setConstraints(new ConstraintsConfig().setPrimaryKey(true)));
         }
 
-        return new IChange[] {createBaseTable, createReferencedTable };
+        return new Change[] {createBaseTable, createReferencedTable };
     }
 
     @Override

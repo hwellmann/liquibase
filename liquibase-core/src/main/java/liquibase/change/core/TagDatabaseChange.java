@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
@@ -15,7 +15,7 @@ import liquibase.statement.core.TagDatabaseStatement;
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="tagDatabase", description = "Applies a tag to the database for future rollback", priority = ChangeMetaData.PRIORITY_DEFAULT, since = "1.6")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class TagDatabaseChange extends AbstractChange {
 
     private String tag;
@@ -51,8 +51,8 @@ public class TagDatabaseChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
-        return new Change[0];
+    protected ExecutableChange[] createInverses() {
+        return new ExecutableChange[0];
     }
 
     @Override

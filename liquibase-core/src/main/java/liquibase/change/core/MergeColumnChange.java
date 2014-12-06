@@ -6,7 +6,7 @@ import java.util.List;
 
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
@@ -26,7 +26,7 @@ import org.kohsuke.MetaInfServices;
  * Combines data from two existing columns into a new column and drops the original columns.
  */
 @DatabaseChange(name="mergeColumns", description = "Concatenates the values in two columns, joins them by with string, and stores the resulting value in a new column.", priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class MergeColumnChange extends AbstractChange {
 
     private String catalogName;

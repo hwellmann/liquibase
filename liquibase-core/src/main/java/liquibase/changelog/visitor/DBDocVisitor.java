@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
-import liquibase.change.IChange;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
@@ -46,13 +46,13 @@ public class DBDocVisitor implements ChangeSetVisitor {
     private Database database;
 
     private SortedSet<ChangeLogInfo> changeLogs;
-    private Map<DatabaseObject, List<Change>> changesByObject;
-    private Map<String, List<Change>> changesByAuthor;
+    private Map<DatabaseObject, List<ExecutableChange>> changesByObject;
+    private Map<String, List<ExecutableChange>> changesByAuthor;
 
-    private Map<DatabaseObject, List<Change>> changesToRunByObject;
-    private Map<String, List<Change>> changesToRunByAuthor;
-    private List<Change> changesToRun;
-    private List<Change> recentChanges;
+    private Map<DatabaseObject, List<ExecutableChange>> changesToRunByObject;
+    private Map<String, List<ExecutableChange>> changesToRunByAuthor;
+    private List<ExecutableChange> changesToRun;
+    private List<ExecutableChange> recentChanges;
 
     private String rootChangeLogName;
     private DatabaseChangeLog rootChangeLog;
@@ -62,14 +62,14 @@ public class DBDocVisitor implements ChangeSetVisitor {
     public DBDocVisitor(Database database) {
         this.database = database;
 
-        changesByObject = new HashMap<DatabaseObject, List<Change>>();
-        changesByAuthor = new HashMap<String, List<Change>>();
+        changesByObject = new HashMap<DatabaseObject, List<ExecutableChange>>();
+        changesByAuthor = new HashMap<String, List<ExecutableChange>>();
         changeLogs = new TreeSet<ChangeLogInfo>();
 
-        changesToRunByObject = new HashMap<DatabaseObject, List<Change>>();
-        changesToRunByAuthor = new HashMap<String, List<Change>>();
-        changesToRun = new ArrayList<Change>();
-        recentChanges = new ArrayList<Change>();
+        changesToRunByObject = new HashMap<DatabaseObject, List<ExecutableChange>>();
+        changesToRunByAuthor = new HashMap<String, List<ExecutableChange>>();
+        changesToRun = new ArrayList<ExecutableChange>();
+        recentChanges = new ArrayList<ExecutableChange>();
     }
 
     @Override
@@ -89,15 +89,15 @@ public class DBDocVisitor implements ChangeSetVisitor {
         }
 
         if (!changesByAuthor.containsKey(changeSet.getAuthor())) {
-            changesByAuthor.put(changeSet.getAuthor(), new ArrayList<Change>());
+            changesByAuthor.put(changeSet.getAuthor(), new ArrayList<ExecutableChange>());
         }
         if (!changesToRunByAuthor.containsKey(changeSet.getAuthor())) {
-            changesToRunByAuthor.put(changeSet.getAuthor(), new ArrayList<Change>());
+            changesToRunByAuthor.put(changeSet.getAuthor(), new ArrayList<ExecutableChange>());
         }
 
         boolean toRun = runStatus.equals(ExecutableChangeSet.RunStatus.NOT_RAN) || runStatus.equals(ExecutableChangeSet.RunStatus.RUN_AGAIN);
-        for (IChange c : changeSet.getChanges()) {
-            Change change = (Change) c;
+        for (Change c : changeSet.getChanges()) {
+            ExecutableChange change = (ExecutableChange) c;
             if (toRun) {
                 changesToRunByAuthor.get(changeSet.getAuthor()).add(change);
                 changesToRun.add(change);
@@ -113,19 +113,19 @@ public class DBDocVisitor implements ChangeSetVisitor {
             changeLogs.add(changeLogInfo);
         }
 
-        for (IChange c : changeSet.getChanges()) {
-            Change change = (Change) c;
+        for (Change c : changeSet.getChanges()) {
+            ExecutableChange change = (ExecutableChange) c;
             Set<DatabaseObject> affectedDatabaseObjects = change.getAffectedDatabaseObjects(database);
             if (affectedDatabaseObjects != null) {
                 for (DatabaseObject dbObject : affectedDatabaseObjects) {
                     if (toRun) {
                         if (!changesToRunByObject.containsKey(dbObject)) {
-                            changesToRunByObject.put(dbObject, new ArrayList<Change>());
+                            changesToRunByObject.put(dbObject, new ArrayList<ExecutableChange>());
                         }
                         changesToRunByObject.get(dbObject).add(change);
                     } else {
                        if (!changesByObject.containsKey(dbObject)) {
-                           changesByObject.put(dbObject, new ArrayList<Change>());
+                           changesByObject.put(dbObject, new ArrayList<ExecutableChange>());
                        }
                        changesByObject.get(dbObject).add(change);
                     }

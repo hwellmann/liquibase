@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -18,7 +18,7 @@ import org.kohsuke.MetaInfServices;
  * Renames an existing table.
  */
 @DatabaseChange(name="renameSequence", description = "Renames an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class RenameSequenceChange extends AbstractChange {
 
     private String catalogName;
@@ -74,13 +74,13 @@ public class RenameSequenceChange extends AbstractChange {
     }
 
     @Override
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         RenameSequenceChange inverse = new RenameSequenceChange();
         inverse.setSchemaName(getSchemaName());
         inverse.setOldSequenceName(getNewSequenceName());
         inverse.setNewSequenceName(getOldSequenceName());
 
-        return new Change[]{
+        return new ExecutableChange[]{
                 inverse
         };
     }

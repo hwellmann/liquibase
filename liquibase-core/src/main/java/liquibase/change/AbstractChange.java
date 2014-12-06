@@ -33,13 +33,13 @@ import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
 /**
- * Standard superclass to simplify {@link Change } implementations. You can implement Change directly, this class is purely for convenience but recommended.
+ * Standard superclass to simplify {@link ExecutableChange } implementations. You can implement Change directly, this class is purely for convenience but recommended.
  * <p></p>
  * By default, this base class relies on annotations such as {@link DatabaseChange} and {@link DatabaseChangeProperty}
  * and delegating logic to the {@link liquibase.sqlgenerator.SqlGenerator} objects created to do the actual change work.
  * Place the @DatabaseChangeProperty annotations on the read "get" methods to control property metadata.
  */
-public abstract class AbstractChange implements Change {
+public abstract class AbstractChange implements ExecutableChange {
 
     private ResourceAccessor resourceAccessor;
 
@@ -430,7 +430,7 @@ public abstract class AbstractChange implements Change {
      *
      */
     private SqlStatement[] generateRollbackStatementsFromInverse(Database database) throws RollbackImpossibleException {
-        Change[] inverses = createInverses();
+        ExecutableChange[] inverses = createInverses();
         if (inverses == null) {
             throw new RollbackImpossibleException("No inverse to " + getClass().getName() + " created");
         }
@@ -438,7 +438,7 @@ public abstract class AbstractChange implements Change {
         List<SqlStatement> statements = new ArrayList<SqlStatement>();
 
         try {
-            for (Change inverse : inverses) {
+            for (ExecutableChange inverse : inverses) {
                 if (!inverse.supports(database)) {
                     throw new RollbackImpossibleException(ChangeFactory.getInstance().getChangeMetaData(inverse).getName() + " is not supported on " + database.getShortName());
                 }
@@ -460,7 +460,7 @@ public abstract class AbstractChange implements Change {
      * @return Return null if there is no corresponding inverse and therefore automatic rollback is not possible. Return an empty array to have a no-op rollback.
      * @also #generateRollbackStatements #supportsRollback
      */
-    protected Change[] createInverses() {
+    protected ExecutableChange[] createInverses() {
         return null;
     }
 

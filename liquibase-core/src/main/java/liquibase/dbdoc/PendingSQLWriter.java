@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeFactory;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
@@ -33,7 +33,7 @@ public class PendingSQLWriter extends HTMLWriter {
     }
 
     @Override
-    protected void writeBody(FileWriter fileWriter, Object object, List<Change> ranChanges, List<Change> changesToRun) throws IOException, DatabaseHistoryException, DatabaseException {
+    protected void writeBody(FileWriter fileWriter, Object object, List<ExecutableChange> ranChanges, List<ExecutableChange> changesToRun) throws IOException, DatabaseHistoryException, DatabaseException {
 
         Executor oldTemplate = ExecutorService.getInstance().getExecutor(database);
         LoggingExecutor loggingExecutor = new LoggingExecutor(ExecutorService.getInstance().getExecutor(database), fileWriter, database);
@@ -48,7 +48,7 @@ public class PendingSQLWriter extends HTMLWriter {
 
             ChangeSet lastRunChangeSet = null;
 
-            for (Change change : changesToRun) {
+            for (ExecutableChange change : changesToRun) {
                 ExecutableChangeSet thisChangeSet = (ExecutableChangeSet) change.getChangeSet();
                 if (thisChangeSet.equals(lastRunChangeSet)) {
                     continue;
@@ -69,6 +69,6 @@ public class PendingSQLWriter extends HTMLWriter {
     }
 
     @Override
-    protected void writeCustomHTML(FileWriter fileWriter, Object object, List<Change> changes, Database database) throws IOException {
+    protected void writeCustomHTML(FileWriter fileWriter, Object object, List<ExecutableChange> changes, Database database) throws IOException {
     }
 }

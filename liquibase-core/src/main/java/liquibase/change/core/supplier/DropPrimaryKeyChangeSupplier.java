@@ -2,7 +2,7 @@ package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.diff.DiffResult;
@@ -18,7 +18,7 @@ public class DropPrimaryKeyChangeSupplier extends AbstractChangeSupplier<DropPri
     }
 
     @Override
-    public IChange[]  prepareDatabase(DropPrimaryKeyChange change) throws DatabaseException {
+    public Change[]  prepareDatabase(DropPrimaryKeyChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -26,7 +26,7 @@ public class DropPrimaryKeyChangeSupplier extends AbstractChangeSupplier<DropPri
         createTableChange.addColumn(new ColumnConfig().setName("id").setType("int").setConstraints(new ConstraintsConfig().setNullable(false).setPrimaryKey(true).setPrimaryKeyName(change.getConstraintName())));
         createTableChange.addColumn(new ColumnConfig().setName("not_id").setType("int"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

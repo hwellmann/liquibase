@@ -2,7 +2,7 @@ package liquibase.sqlgenerator.core;
 
 import java.util.List;
 
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeSet;
@@ -67,9 +67,9 @@ public class MarkChangeSetRanGenerator extends AbstractSqlGenerator<MarkChangeSe
                         .addColumnValue("LIQUIBASE", LiquibaseUtil.getBuildVersion().replaceAll("SNAPSHOT", "SNP"));
 
                 String tag = null;
-                List<IChange> changes = changeSet.getChanges();
+                List<Change> changes = changeSet.getChanges();
                 if (changes != null && changes.size() == 1) {
-                    IChange change = changes.get(0);
+                    Change change = changes.get(0);
                     if (change instanceof TagDatabaseChange) {
                         TagDatabaseChange tagChange = (TagDatabaseChange) change;
                         tag = tagChange.getTag();

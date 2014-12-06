@@ -1,6 +1,6 @@
 package liquibase.verify.change;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeFactory;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeParameterMetaData;
@@ -44,7 +44,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 TestState state = new TestState(name.getMethodName(), changeName, database.getShortName(), TestState.Type.SQL);
                 state.addComment("Database: " + database.getShortName());
 
-                Change change = changeFactory.create(changeName);
+                ExecutableChange change = changeFactory.create(changeName);
                 if (!change.supports(database)) {
                     continue;
                 }
@@ -95,7 +95,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                     continue;
                 }
 
-                Change change = changeFactory.create(changeName);
+                ExecutableChange change = changeFactory.create(changeName);
                 if (!change.supports(database)) {
                     continue;
                 }
@@ -147,7 +147,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 TestState state = new TestState(name.getMethodName(), changeName, database.getShortName(), TestState.Type.SQL);
                 state.addComment("Database: " + database.getShortName());
 
-                Change baseChange = changeFactory.create(changeName);
+                ExecutableChange baseChange = changeFactory.create(changeName);
                 if (!baseChange.supports(database)) {
                     continue;
                 }
@@ -170,7 +170,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                     }
                 });
                 for (List<String> permutation : paramLists) {
-                    Change change = changeFactory.create(changeName);
+                    ExecutableChange change = changeFactory.create(changeName);
                     change.setResourceAccessor(new JUnitResourceAccessor());
 //
                     for (String paramName : new TreeSet<String>(changeMetaData.getRequiredParameters(database).keySet())) {

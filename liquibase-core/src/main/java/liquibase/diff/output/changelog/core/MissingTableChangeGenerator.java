@@ -2,7 +2,7 @@ package liquibase.diff.output.changelog.core;
 
 import java.util.Date;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.change.core.CreateTableChange;
@@ -46,7 +46,7 @@ public class MissingTableChangeGenerator implements MissingObjectChangeGenerator
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Table missingTable = (Table) missingObject;
 
         PrimaryKey primaryKey = missingTable.getPrimaryKey();
@@ -112,7 +112,7 @@ public class MissingTableChangeGenerator implements MissingObjectChangeGenerator
         }
 
 
-        return new Change[] {
+        return new ExecutableChange[] {
                 change
         };
     }

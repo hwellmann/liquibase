@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractSQLChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -29,7 +29,7 @@ import org.kohsuke.MetaInfServices;
         "A single line comment starting with <space>--<space> and finishing at the end of the line\n" +
         "Note: By default it will attempt to split statements on a ';' or 'go' at the end of lines. Because of this, if you have a comment or some other non-statement ending ';' or 'go', don't have it at the end of a line or you will get invalid SQL.",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class RawSQLChange extends AbstractSQLChange {
 
     private String comment;

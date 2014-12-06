@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import liquibase.change.AbstractSQLChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
@@ -41,7 +41,7 @@ import org.kohsuke.MetaInfServices;
                 "A multiline comment that starts with /* and ends with */.\n" +
                 "A single line comment starting with <space>--<space> and finishing at the end of the line",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class SQLFileChange extends AbstractSQLChange {
 
     private String path;

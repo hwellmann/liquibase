@@ -11,7 +11,7 @@ import liquibase.exception.PreconditionFailedException;
 import liquibase.exception.ValidationErrors;
 import liquibase.exception.Warnings;
 import liquibase.precondition.FailedPrecondition;
-import liquibase.precondition.Precondition;
+import liquibase.precondition.ExecutablePrecondition;
 import liquibase.precondition.PreconditionLogic;
 
 import org.kohsuke.MetaInfServices;
@@ -19,7 +19,7 @@ import org.kohsuke.MetaInfServices;
 /**
  * Container class for all preconditions on a change log.
  */
-@MetaInfServices(Precondition.class)
+@MetaInfServices(ExecutablePrecondition.class)
 public class AndPrecondition extends PreconditionLogic {
 
     @Override
@@ -41,7 +41,7 @@ public class AndPrecondition extends PreconditionLogic {
     public void check(Database database, DatabaseChangeLog changeLog, ChangeSet changeSet) throws PreconditionFailedException, PreconditionErrorException {
         boolean allPassed = true;
         List<FailedPrecondition> failures = new ArrayList<FailedPrecondition>();
-        for (Precondition precondition : getNestedPreconditions()) {
+        for (ExecutablePrecondition precondition : getNestedPreconditions()) {
             try {
                 precondition.check(database, changeLog, changeSet);
             } catch (PreconditionFailedException e) {

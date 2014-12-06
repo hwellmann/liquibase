@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.RenameTableChange;
 import liquibase.diff.DiffResult;
@@ -16,7 +16,7 @@ public class RenameTableChangeSupplier extends AbstractChangeSupplier<RenameTabl
     }
 
     @Override
-    public IChange[]  prepareDatabase(RenameTableChange change) throws Exception {
+    public Change[]  prepareDatabase(RenameTableChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -24,7 +24,7 @@ public class RenameTableChangeSupplier extends AbstractChangeSupplier<RenameTabl
         createTableChange.addColumn(new ColumnConfig().setName("id").setType("int"));
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("varchar(10)"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

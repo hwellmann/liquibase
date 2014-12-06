@@ -1,6 +1,6 @@
 package liquibase.change.core;
 
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
@@ -14,7 +14,7 @@ import liquibase.statement.core.DeleteStatement;
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="delete", description = "Deletes data from an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DeleteDataChange extends AbstractModifyDataChange {
 
 

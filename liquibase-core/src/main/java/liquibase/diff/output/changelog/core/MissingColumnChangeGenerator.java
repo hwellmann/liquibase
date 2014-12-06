@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ConstraintsConfig;
 import liquibase.change.core.AddColumnChange;
 import liquibase.database.Database;
@@ -43,7 +43,7 @@ public class MissingColumnChangeGenerator implements MissingObjectChangeGenerato
     }
 
     @Override
-    public Change[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
+    public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Column column = (Column) missingObject;
 //        if (!shouldModifyColumn(column)) {
 //            continue;
@@ -106,6 +106,6 @@ public class MissingColumnChangeGenerator implements MissingObjectChangeGenerato
 
         change.addColumn(columnConfig);
 
-        return new Change[] { change };
+        return new ExecutableChange[] { change };
     }
 }

@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.ColumnConfig;
-import liquibase.change.IChange;
+import liquibase.change.Change;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.CreateViewChange;
 import liquibase.diff.DiffResult;
@@ -16,7 +16,7 @@ public class CreateViewChangeSupplier extends AbstractChangeSupplier<CreateViewC
     }
 
     @Override
-    public IChange[]  prepareDatabase(CreateViewChange change) throws Exception {
+    public Change[]  prepareDatabase(CreateViewChange change) throws Exception {
 
         CreateTableChange createTableChange = new CreateTableChange();
 //        createTableChange.setCatalogName(change.getCatalogName());
@@ -25,7 +25,7 @@ public class CreateViewChangeSupplier extends AbstractChangeSupplier<CreateViewC
         createTableChange.addColumn(new ColumnConfig().setName("id").setType("int"));
         createTableChange.addColumn(new ColumnConfig().setName("name").setType("varchar(255)"));
 
-        return new IChange[] {createTableChange };
+        return new Change[] {createTableChange };
     }
 
     @Override

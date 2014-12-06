@@ -1,7 +1,7 @@
 package liquibase.change.core;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
@@ -21,7 +21,7 @@ import org.kohsuke.MetaInfServices;
  * Removes an existing unique constraint.
  */
 @DatabaseChange(name="dropUniqueConstraint", description = "Drops an existing unique constraint", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "uniqueConstraint")
-@MetaInfServices(Change.class)
+@MetaInfServices(ExecutableChange.class)
 public class DropUniqueConstraintChange extends AbstractChange {
     private String catalogName;
     private String schemaName;
