@@ -1,42 +1,33 @@
 package liquibase.parser.core.xml;
 
-import liquibase.change.*;
-import liquibase.changelog.ChangeLogParametersImpl;
-import liquibase.changelog.DatabaseChangeLogImpl;
+import java.util.Stack;
+
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
-import liquibase.exception.ChangeLogParseException;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
-import liquibase.parser.ChangeLogParserFactory;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
-import liquibase.precondition.PreconditionFactory;
 import liquibase.resource.ResourceAccessor;
-import liquibase.sql.visitor.SqlVisitorFactory;
-import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
 class XMLChangeLogSAXHandler extends DefaultHandler {
 
-    private final ChangeFactory changeFactory;
-    private final PreconditionFactory preconditionFactory;
-    private final SqlVisitorFactory sqlVisitorFactory;
-    private final ChangeLogParserFactory changeLogParserFactory;
+//    private final ChangeFactory changeFactory;
+//    private final PreconditionFactory preconditionFactory;
+//    private final SqlVisitorFactory sqlVisitorFactory;
+//    private final ChangeLogParserFactory changeLogParserFactory;
 
     protected Logger log;
 
 	private final DatabaseChangeLog databaseChangeLog;
-	private final ResourceAccessor resourceAccessor;
-	private final ChangeLogParameters changeLogParameters;
+//	private final ResourceAccessor resourceAccessor;
+//	private final ChangeLogParameters changeLogParameters;
     private final Stack<ParsedNode> nodeStack = new Stack();
     private Stack<StringBuffer> textStack = new Stack<StringBuffer>();
     private ParsedNode databaseChangeLogTree;
@@ -44,22 +35,22 @@ class XMLChangeLogSAXHandler extends DefaultHandler {
 
     protected XMLChangeLogSAXHandler(String physicalChangeLogLocation, ResourceAccessor resourceAccessor, ChangeLogParameters changeLogParameters) {
 		log = LogFactory.getLogger();
-		this.resourceAccessor = resourceAccessor;
+		//this.resourceAccessor = resourceAccessor;
 
 		databaseChangeLog = new DatabaseChangeLogImpl();
 		databaseChangeLog.setPhysicalFilePath(physicalChangeLogLocation);
 		databaseChangeLog.setChangeLogParameters(changeLogParameters);
 
-        if (changeLogParameters == null) {
-            this.changeLogParameters = new ChangeLogParametersImpl();
-        } else {
-            this.changeLogParameters = changeLogParameters;
-        }
-
-        changeFactory = ChangeFactory.getInstance();
-        preconditionFactory = PreconditionFactory.getInstance();
-        sqlVisitorFactory = SqlVisitorFactory.getInstance();
-        changeLogParserFactory = ChangeLogParserFactory.getInstance();
+//        if (changeLogParameters == null) {
+//            this.changeLogParameters = new ChangeLogParametersImpl();
+//        } else {
+//            this.changeLogParameters = changeLogParameters;
+//        }
+//
+//        changeFactory = ChangeFactory.getInstance();
+//        preconditionFactory = PreconditionFactory.getInstance();
+//        sqlVisitorFactory = SqlVisitorFactory.getInstance();
+//        changeLogParserFactory = ChangeLogParserFactory.getInstance();
     }
 
 	public DatabaseChangeLog getDatabaseChangeLog() {

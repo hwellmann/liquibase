@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import liquibase.RuntimeEnvironment;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.SetupException;
@@ -41,7 +40,6 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
     private List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
     private ChangeLogParameters changeLogParameters;
 
-    private RuntimeEnvironment runtimeEnvironment;
     private boolean ignoreClasspathPrefix = false;
 
     public DatabaseChangeLogImpl() {
@@ -49,20 +47,6 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
 
     public DatabaseChangeLogImpl(String physicalFilePath) {
         this.physicalFilePath = physicalFilePath;
-    }
-
-    /* (non-Javadoc)
-     * @see liquibase.changelog.IDatabaseChangeLog#getRuntimeEnvironment()
-     */
-    public RuntimeEnvironment getRuntimeEnvironment() {
-        return runtimeEnvironment;
-    }
-
-    /* (non-Javadoc)
-     * @see liquibase.changelog.IDatabaseChangeLog#setRuntimeEnvironment(liquibase.RuntimeEnvironment)
-     */
-    public void setRuntimeEnvironment(RuntimeEnvironment runtimeEnvironment) {
-        this.runtimeEnvironment = runtimeEnvironment;
     }
 
     /* (non-Javadoc)

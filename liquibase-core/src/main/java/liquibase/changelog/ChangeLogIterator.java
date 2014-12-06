@@ -48,7 +48,6 @@ public class ChangeLogIterator {
 
     public void run(ChangeSetVisitor visitor, RuntimeEnvironment env) throws LiquibaseException {
       Logger log = LogFactory.getLogger();
-      databaseChangeLog.setRuntimeEnvironment(env);
       log.setChangeLog(databaseChangeLog);
         try {
             List<ChangeSet> changeSetList = new ArrayList<ChangeSet>(databaseChangeLog.getChangeSets());
@@ -86,7 +85,6 @@ public class ChangeLogIterator {
             }
         } finally {
             log.setChangeLog(null);
-            databaseChangeLog.setRuntimeEnvironment(null);
         }
     }
 
