@@ -1,32 +1,45 @@
 package liquibase.changelog.visitor;
 
-import liquibase.CatalogAndSchema;
-import liquibase.change.Change;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.filter.ChangeSetFilterResult;
-import liquibase.database.Database;
-import liquibase.dbdoc.*;
-import liquibase.diff.compare.CompareControl;
-import liquibase.snapshot.DatabaseSnapshot;
-import liquibase.snapshot.SnapshotControl;
-import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.DatabaseHistoryException;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.ResourceAccessor;
-import liquibase.structure.core.Column;
-import liquibase.structure.core.Schema;
-import liquibase.structure.core.Table;
-import liquibase.util.StreamUtil;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import liquibase.change.Change;
+import liquibase.change.IChange;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.filter.ChangeSetFilterResult;
+import liquibase.database.Database;
+import liquibase.dbdoc.AuthorListWriter;
+import liquibase.dbdoc.AuthorWriter;
+import liquibase.dbdoc.ChangeLogListWriter;
+import liquibase.dbdoc.ChangeLogWriter;
+import liquibase.dbdoc.ColumnWriter;
+import liquibase.dbdoc.HTMLWriter;
+import liquibase.dbdoc.PendingChangesWriter;
+import liquibase.dbdoc.PendingSQLWriter;
+import liquibase.dbdoc.RecentChangesWriter;
+import liquibase.dbdoc.TableListWriter;
+import liquibase.dbdoc.TableWriter;
+import liquibase.exception.DatabaseHistoryException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ResourceAccessor;
+import liquibase.snapshot.DatabaseSnapshot;
+import liquibase.snapshot.SnapshotControl;
+import liquibase.snapshot.SnapshotGeneratorFactory;
+import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Table;
+import liquibase.util.StreamUtil;
 
 public class DBDocVisitor implements ChangeSetVisitor {
 
@@ -65,7 +78,7 @@ public class DBDocVisitor implements ChangeSetVisitor {
     }
 
     @Override
-    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         ChangeSetImpl.RunStatus runStatus = this.database.getRunStatus(changeSet);
         if (rootChangeLogName == null) {
             rootChangeLogName = changeSet.getFilePath();
@@ -82,8 +95,9 @@ public class DBDocVisitor implements ChangeSetVisitor {
             changesToRunByAuthor.put(changeSet.getAuthor(), new ArrayList<Change>());
         }
 
-        boolean toRun = runStatus.equals(ChangeSet.RunStatus.NOT_RAN) || runStatus.equals(ChangeSet.RunStatus.RUN_AGAIN);
-        for (Change change : changeSet.getChanges()) {
+        boolean toRun = runStatus.equals(ExecutableChangeSet.RunStatus.NOT_RAN) || runStatus.equals(ExecutableChangeSet.RunStatus.RUN_AGAIN);
+        for (IChange c : changeSet.getChanges()) {
+            Change change = (Change) c;
             if (toRun) {
                 changesToRunByAuthor.get(changeSet.getAuthor()).add(change);
                 changesToRun.add(change);
@@ -99,7 +113,8 @@ public class DBDocVisitor implements ChangeSetVisitor {
             changeLogs.add(changeLogInfo);
         }
 
-        for (Change change : changeSet.getChanges()) {
+        for (IChange c : changeSet.getChanges()) {
+            Change change = (Change) c;
             Set<DatabaseObject> affectedDatabaseObjects = change.getAffectedDatabaseObjects(database);
             if (affectedDatabaseObjects != null) {
                 for (DatabaseObject dbObject : affectedDatabaseObjects) {

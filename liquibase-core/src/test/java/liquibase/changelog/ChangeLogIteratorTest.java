@@ -78,7 +78,7 @@ public class ChangeLogIteratorTest {
 
     private static class TestChangeSetVisitor implements ChangeSetVisitor {
 
-        public List<ChangeSet> visitedChangeSets = new ArrayList<ChangeSet>();
+        public List<ExecutableChangeSet> visitedChangeSets = new ArrayList<ExecutableChangeSet>();
 
 
         @Override
@@ -87,7 +87,7 @@ public class ChangeLogIteratorTest {
         }
 
         @Override
-        public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+        public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
             visitedChangeSets.add(changeSet);
         }
     }

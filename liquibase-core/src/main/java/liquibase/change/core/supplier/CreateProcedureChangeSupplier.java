@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateProcedureChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropProcedureChange;
@@ -17,7 +17,7 @@ public class CreateProcedureChangeSupplier extends AbstractChangeSupplier<Create
     }
 
     @Override
-    public Change[] prepareDatabase(CreateProcedureChange change) throws Exception {
+    public IChange[] prepareDatabase(CreateProcedureChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -26,7 +26,7 @@ public class CreateProcedureChangeSupplier extends AbstractChangeSupplier<Create
         createTableChange.addColumn(new ColumnConfig().setName("first_name").setType("varchar(50)"));
         createTableChange.addColumn(new ColumnConfig().setName("last_name").setType("varchar(50)"));
 
-        return new Change[] {createTableChange };
+        return new IChange[] {createTableChange };
 
     }
 
@@ -36,7 +36,7 @@ public class CreateProcedureChangeSupplier extends AbstractChangeSupplier<Create
     }
 
     @Override
-    public Change[] revertDatabase(CreateProcedureChange change) throws Exception {
+    public IChange[] revertDatabase(CreateProcedureChange change) throws Exception {
         DropTableChange dropTableChange = new DropTableChange();
         dropTableChange.setCatalogName(change.getCatalogName());
         dropTableChange.setSchemaName(change.getSchemaName());
@@ -47,7 +47,7 @@ public class CreateProcedureChangeSupplier extends AbstractChangeSupplier<Create
         dropProcedureChange.setSchemaName(change.getSchemaName());
         dropProcedureChange.setProcedureName("new_customer");
 
-        return new Change[] {
+        return new IChange[] {
                 dropProcedureChange,
                 dropTableChange
         };

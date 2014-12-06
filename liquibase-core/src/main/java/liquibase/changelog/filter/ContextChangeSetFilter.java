@@ -1,7 +1,7 @@
 package liquibase.changelog.filter;
 
 import liquibase.Contexts;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.sql.visitor.SqlVisitor;
 
 import java.util.*;
@@ -18,7 +18,7 @@ public class ContextChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         List<SqlVisitor> visitorsToRemove = new ArrayList<SqlVisitor>();
         for (SqlVisitor visitor : changeSet.getSqlVisitors()) {
             if (visitor.getContexts() != null && !visitor.getContexts().matches(contexts)) {

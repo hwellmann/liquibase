@@ -1,6 +1,6 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class NotRanChangeSetFilter implements ChangeSetFilter {
 
     @Override
     @SuppressWarnings({"RedundantIfStatement"})
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         for (RanChangeSet ranChangeSet : ranChangeSets) {
             if (ranChangeSet.getId().equalsIgnoreCase(changeSet.getId())
                     && ranChangeSet.getAuthor().equalsIgnoreCase(changeSet.getAuthor())

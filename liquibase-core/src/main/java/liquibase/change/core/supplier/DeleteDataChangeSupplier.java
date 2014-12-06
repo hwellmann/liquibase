@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DeleteDataChange;
 import liquibase.change.core.InsertDataChange;
@@ -16,7 +16,7 @@ public class DeleteDataChangeSupplier extends AbstractChangeSupplier<DeleteDataC
     }
 
     @Override
-    public Change[]  prepareDatabase(DeleteDataChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(DeleteDataChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -38,7 +38,7 @@ public class DeleteDataChangeSupplier extends AbstractChangeSupplier<DeleteDataC
         insertDataChange2.addColumn(new ColumnConfig().setName("id").setType("int").setValueNumeric(1));
         insertDataChange2.addColumn(new ColumnConfig().setName("name").setType("varchar(255)").setValue("Row A"));
 
-        return new Change[] {createTableChange, insertDataChange1, insertDataChange2 };
+        return new IChange[] {createTableChange, insertDataChange1, insertDataChange2 };
     }
 
     @Override

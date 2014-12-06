@@ -1,6 +1,7 @@
 package liquibase.sdk.supplier.change;
 
 import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.database.Database;
 import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
@@ -8,12 +9,12 @@ import liquibase.exception.DatabaseException;
 import java.util.Collection;
 import java.util.List;
 
-public interface ChangeSupplier<T extends Change> {
-    Change[] prepareDatabase(T change) throws Exception;
+public interface ChangeSupplier<T extends IChange> {
+    IChange[] prepareDatabase(T change) throws Exception;
 
     void checkDiffResult(DiffResult diffResult, T change) throws Exception;
 
-    Change[] revertDatabase(T change) throws Exception;
+    IChange[] revertDatabase(T change) throws Exception;
 
     Collection<Change> getAllParameterPermutations(Database database) throws Exception;
 

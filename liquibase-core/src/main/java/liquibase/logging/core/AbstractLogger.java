@@ -1,6 +1,6 @@
 package liquibase.logging.core;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.logging.LogLevel;
@@ -9,7 +9,7 @@ import liquibase.logging.Logger;
 public abstract class AbstractLogger implements Logger {
     private LogLevel logLevel;
     private DatabaseChangeLog databaseChangeLog;
-    private ChangeSet changeSet;
+    private ExecutableChangeSet changeSet;
 
     @Override
     public LogLevel getLogLevel() {
@@ -62,6 +62,6 @@ public abstract class AbstractLogger implements Logger {
 
     @Override
     public void setChangeSet(Object changeSet) {
-        this.changeSet = (ChangeSet) changeSet;
+        this.changeSet = (ExecutableChangeSet) changeSet;
     }
 }

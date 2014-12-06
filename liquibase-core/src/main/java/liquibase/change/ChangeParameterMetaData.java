@@ -238,7 +238,7 @@ public class ChangeParameterMetaData {
     /**
      * Returns the current value of this parameter for the given Change.
      */
-    public Object getCurrentValue(Change change) {
+    public Object getCurrentValue(IChange change) {
         try {
             for (PropertyDescriptor descriptor : Introspector.getBeanInfo(change.getClass()).getPropertyDescriptors()) {
                 if (descriptor.getDisplayName().equals(this.parameterName)) {
@@ -258,7 +258,7 @@ public class ChangeParameterMetaData {
     /**
      * Sets the value of this parameter on the given change.
      */
-    public void setValue(Change change, Object value) {
+    public void setValue(IChange change, Object value) {
         if (value instanceof String && !dataType.equals("string")) {
             try {
                 if (dataType.equals("bigInteger")) {

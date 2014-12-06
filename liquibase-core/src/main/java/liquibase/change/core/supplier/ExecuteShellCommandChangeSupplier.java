@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.ExecuteShellCommandChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -12,7 +12,7 @@ public class ExecuteShellCommandChangeSupplier extends AbstractChangeSupplier<Ex
     }
 
     @Override
-    public Change[] prepareDatabase(ExecuteShellCommandChange change) throws Exception {
+    public IChange[] prepareDatabase(ExecuteShellCommandChange change) throws Exception {
         return null;
     }
 

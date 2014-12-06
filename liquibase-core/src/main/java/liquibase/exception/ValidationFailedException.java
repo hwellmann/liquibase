@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.visitor.ValidatingVisitor;
 import liquibase.database.Database;
 import liquibase.logging.LogFactory;
@@ -14,10 +14,10 @@ import liquibase.util.StreamUtil;
 
 public class ValidationFailedException extends MigrationFailedException {
 
-    private List<ChangeSet> invalidMD5Sums;
+    private List<ExecutableChangeSet> invalidMD5Sums;
     private List<FailedPrecondition> failedPreconditions;
     private List<ErrorPrecondition> errorPreconditions;
-    private Set<ChangeSet> duplicateChangeSets;
+    private Set<ExecutableChangeSet> duplicateChangeSets;
     private List<SetupException> setupExceptions;
     private List<Throwable> changeValidationExceptions;
     private ValidationErrors validationErrors;
@@ -45,7 +45,7 @@ public class ValidationFailedException extends MigrationFailedException {
                 if (i > 25) {
                     break;
                 }
-                ChangeSet invalid = invalidMD5Sums.get(i);
+                ExecutableChangeSet invalid = invalidMD5Sums.get(i);
 
                 message.append("          ").append(invalid.toString(false)).append(" is now: ").append(invalid.generateCheckSum());
                 message.append(StreamUtil.getLineSeparator());
@@ -67,7 +67,7 @@ public class ValidationFailedException extends MigrationFailedException {
         }
         if (duplicateChangeSets.size() > 0) {
             message.append("     ").append(duplicateChangeSets.size()).append(" change sets had duplicate identifiers").append(StreamUtil.getLineSeparator());
-            for (ChangeSet invalid : duplicateChangeSets) {
+            for (ExecutableChangeSet invalid : duplicateChangeSets) {
                 message.append("          ").append(invalid.toString(false));
                 message.append(StreamUtil.getLineSeparator());
             }
@@ -98,7 +98,7 @@ public class ValidationFailedException extends MigrationFailedException {
         return message.toString();
     }
 
-    public List<ChangeSet> getInvalidMD5Sums() {
+    public List<ExecutableChangeSet> getInvalidMD5Sums() {
         return invalidMD5Sums;
     }
 
@@ -106,7 +106,7 @@ public class ValidationFailedException extends MigrationFailedException {
         out.println("Validation Error: ");
         if (invalidMD5Sums.size() > 0) {
             out.println("     "+invalidMD5Sums.size()+" change sets have changed since they were ran against the database");
-            for (ChangeSet changeSet : invalidMD5Sums) {
+            for (ExecutableChangeSet changeSet : invalidMD5Sums) {
                 out.println("          "+changeSet.toString(false));
             }
         }
@@ -126,7 +126,7 @@ public class ValidationFailedException extends MigrationFailedException {
 
         if (duplicateChangeSets.size() > 0) {
             out.println("     "+duplicateChangeSets.size()+" change sets had duplicate identifiers");
-            for (ChangeSet duplicate : duplicateChangeSets) {
+            for (ExecutableChangeSet duplicate : duplicateChangeSets) {
                 out.println("          "+duplicate.toString(false));
             }
         }

@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.InsertDataChange;
 import liquibase.database.Database;
@@ -9,7 +9,6 @@ import liquibase.diff.DiffResult;
 import liquibase.executor.ExecutorService;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.statement.core.RawSqlStatement;
-
 import static liquibase.Assert.assertTrue;
 
 public class InsertDataChangeSupplier extends AbstractChangeSupplier<InsertDataChange>  {
@@ -19,7 +18,7 @@ public class InsertDataChangeSupplier extends AbstractChangeSupplier<InsertDataC
     }
 
     @Override
-    public Change[]  prepareDatabase(InsertDataChange change) throws Exception {
+    public IChange[]  prepareDatabase(InsertDataChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -28,7 +27,7 @@ public class InsertDataChangeSupplier extends AbstractChangeSupplier<InsertDataC
             createTableChange.addColumn(column);
         }
 
-        return new Change[] {createTableChange };
+        return new IChange[] {createTableChange };
     }
 
     @Override

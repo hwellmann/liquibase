@@ -33,7 +33,7 @@ public interface ChangeLogHistoryService extends PrioritizedService {
 
     RanChangeSet getRanChangeSet(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
-    ChangeSetImpl.RunStatus getRunStatus(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
+    ChangeSetImpl.RunStatus getRunStatus(ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
     /**
      * Returns the date the given changeSet was ran. Returns null if changeSet was not null.

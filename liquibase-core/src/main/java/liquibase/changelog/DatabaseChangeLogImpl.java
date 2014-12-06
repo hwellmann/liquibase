@@ -268,8 +268,8 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
         }
     }
 
-    public ChangeSet getChangeSet(RanChangeSet ranChangeSet) {
-        return getChangeSet(ranChangeSet.getChangeLog(), ranChangeSet.getAuthor(), ranChangeSet.getId());
+    public ExecutableChangeSet getChangeSet(RanChangeSet ranChangeSet) {
+        return (ExecutableChangeSet) getChangeSet(ranChangeSet.getChangeLog(), ranChangeSet.getAuthor(), ranChangeSet.getId());
     }
 
     public void load(ParsedNode parsedNode, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
@@ -440,7 +440,7 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
         return true;
     }
 
-    protected ChangeSet createChangeSet(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
+    protected ExecutableChangeSet createChangeSet(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
         ChangeSetImpl changeSet = new ChangeSetImpl(this);
         changeSet.setChangeLogParameters(this.getChangeLogParameters());
         try {

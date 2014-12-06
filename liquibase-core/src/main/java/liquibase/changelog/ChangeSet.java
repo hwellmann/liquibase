@@ -7,41 +7,14 @@ import liquibase.ContextExpression;
 import liquibase.Labels;
 import liquibase.change.Change;
 import liquibase.change.CheckSum;
-import liquibase.changelog.visitor.ChangeExecListener;
+import liquibase.change.IChange;
 import liquibase.database.Database;
 import liquibase.database.ObjectQuotingStrategy;
-import liquibase.exception.MigrationFailedException;
-import liquibase.exception.RollbackFailedException;
 import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.Precondition;
-import liquibase.resource.ResourceAccessor;
 import liquibase.serializer.LiquibaseSerializable;
-import liquibase.sql.visitor.SqlVisitor;
 
 public interface ChangeSet extends LiquibaseSerializable {
-
-    public enum RunStatus {
-        NOT_RAN, ALREADY_RAN, RUN_AGAIN, MARK_RAN, INVALID_MD5SUM
-    }
-
-    public enum ExecType {
-        EXECUTED("EXECUTED", false, true),
-        FAILED("FAILED", false, false),
-        SKIPPED("SKIPPED", false, false),
-        RERAN("RERAN", true, true),
-        MARK_RAN("MARK_RAN", false, true);
-
-        ExecType(String value, boolean ranBefore, boolean ran) {
-            this.value = value;
-            this.ranBefore = ranBefore;
-            this.ran = ran;
-        }
-
-        public final String value;
-        public final boolean ranBefore;
-        public final boolean ran;
-    }
 
     public enum ValidationFailOption {
         HALT("HALT"),
@@ -68,31 +41,14 @@ public interface ChangeSet extends LiquibaseSerializable {
     CheckSum generateCheckSum();
 
     @Override
-    void load(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException;
-
-    @Override
     ParsedNode serialize();
-
-    ExecType execute(DatabaseChangeLog databaseChangeLog, Database database)
-        throws MigrationFailedException;
-
-    /**
-     * This method will actually execute each of the changes in the list against the
-     * specified database.
-     *
-     * @return should change set be marked as ran
-     */
-    ExecType execute(DatabaseChangeLog databaseChangeLog, ChangeExecListener listener,
-        Database database) throws MigrationFailedException;
-
-    void rollback(Database database) throws RollbackFailedException;
 
     /**
      * Returns an unmodifiable list of changes.  To add one, use the addRefactoing method.
      */
-    List<Change> getChanges();
+    List<IChange> getChanges();
 
-    void addChange(Change change);
+    void addChange(IChange change);
 
     String getId();
 
@@ -108,11 +64,6 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     DatabaseChangeLog getChangeLog();
 
-    String toString(boolean includeMD5Sum);
-
-    @Override
-    String toString();
-
     String getComments();
 
     void setComments(String comments);
@@ -123,7 +74,7 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     boolean isRunInTransaction();
 
-    Change[] getRollBackChanges();
+    IChange[] getRollBackChanges();
 
     void addRollBackSQL(String sql);
 
@@ -152,10 +103,6 @@ public interface ChangeSet extends LiquibaseSerializable {
     Precondition getPreconditions();
 
     void setPreconditions(Precondition preconditionContainer);
-
-    void addSqlVisitor(SqlVisitor sqlVisitor);
-
-    List<SqlVisitor> getSqlVisitors();
 
     ChangeLogParameters getChangeLogParameters();
 
@@ -188,11 +135,5 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     @Override
     String getSerializableFieldNamespace(String field);
-
-    @Override
-    boolean equals(Object obj);
-
-    @Override
-    int hashCode();
 
 }

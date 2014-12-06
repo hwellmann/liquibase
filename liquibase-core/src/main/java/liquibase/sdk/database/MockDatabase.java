@@ -14,8 +14,9 @@ import liquibase.CatalogAndSchema;
 import liquibase.Liquibase;
 import liquibase.change.Change;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
@@ -448,7 +449,7 @@ public class MockDatabase implements Database, InternalDatabase {
     }
 
     @Override
-    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ChangeSetImpl.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return null;
     }
 

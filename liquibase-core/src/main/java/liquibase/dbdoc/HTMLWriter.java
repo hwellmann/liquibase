@@ -1,21 +1,22 @@
 package liquibase.dbdoc;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.ExecutableChangeSet.RunStatus;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.DatabaseHistoryException;
 import liquibase.util.LiquibaseUtil;
 import liquibase.util.StringUtils;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
 
 public abstract class HTMLWriter {
     protected File outputDir;
@@ -132,22 +133,23 @@ public abstract class HTMLWriter {
             fileWriter.append("<tr><td>None Found</td></tr>");
         } else {
             for (Change change : changes) {
-                if (!change.getChangeSet().equals(lastChangeSet)) {
-                    lastChangeSet = change.getChangeSet();
+                ExecutableChangeSet changeSet = (ExecutableChangeSet) change.getChangeSet();
+                if (!changeSet.equals(lastChangeSet)) {
+                    lastChangeSet = changeSet;
                     fileWriter.append("<TR BGCOLOR=\"#EEEEFF\" CLASS=\"TableSubHeadingColor\">\n");
-                    writeTD(fileWriter, "<a href='../changelogs/"+DBDocUtil.toFileName(change.getChangeSet().getFilePath())+".html'>"+change.getChangeSet().getFilePath()+"</a>");
-                    writeTD(fileWriter, change.getChangeSet().getId());
-                    writeTD(fileWriter, "<a href='../authors/"+DBDocUtil.toFileName(change.getChangeSet().getAuthor().toLowerCase())+".html'>"+StringUtils.escapeHtml(change.getChangeSet().getAuthor().toLowerCase())+"</a>");
+                    writeTD(fileWriter, "<a href='../changelogs/"+DBDocUtil.toFileName(changeSet.getFilePath())+".html'>"+changeSet.getFilePath()+"</a>");
+                    writeTD(fileWriter, changeSet.getId());
+                    writeTD(fileWriter, "<a href='../authors/"+DBDocUtil.toFileName(changeSet.getAuthor().toLowerCase())+".html'>"+StringUtils.escapeHtml(changeSet.getAuthor().toLowerCase())+"</a>");
 
-                    ChangeSetImpl.RunStatus runStatus = database.getRunStatus(change.getChangeSet());
-                    if (runStatus.equals(ChangeSet.RunStatus.NOT_RAN)) {
-                        String anchor = change.getChangeSet().toString(false).replaceAll("\\W","_");
+                    ChangeSetImpl.RunStatus runStatus = database.getRunStatus(changeSet);
+                    if (runStatus.equals(RunStatus.NOT_RAN)) {
+                        String anchor = changeSet.toString(false).replaceAll("\\W","_");
                         writeTD(fileWriter, "NOT YET RAN [<a href='../pending/sql.html#"+ anchor +"'>SQL</a>]");
-                    } else if (runStatus.equals(ChangeSet.RunStatus.INVALID_MD5SUM)) {
+                    } else if (runStatus.equals(RunStatus.INVALID_MD5SUM)) {
                         writeTD(fileWriter, "INVALID MD5SUM");
-                    } else if (runStatus.equals(ChangeSet.RunStatus.ALREADY_RAN)) {
-                        writeTD(fileWriter, "Executed "+ DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(database.getRanDate(change.getChangeSet())));
-                    } else if (runStatus.equals(ChangeSet.RunStatus.RUN_AGAIN)) {
+                    } else if (runStatus.equals(RunStatus.ALREADY_RAN)) {
+                        writeTD(fileWriter, "Executed "+ DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(database.getRanDate(changeSet)));
+                    } else if (runStatus.equals(RunStatus.RUN_AGAIN)) {
                         writeTD(fileWriter, "Executed, WILL RUN AGAIN");
                     } else {
                         throw new RuntimeException("Unknown run status: "+runStatus);
@@ -155,8 +157,8 @@ public abstract class HTMLWriter {
 
                     fileWriter.append("</TR>");
 
-                    if (StringUtils.trimToNull(change.getChangeSet().getComments()) != null) {
-                        fileWriter.append("<TR><TD BGCOLOR='#EEEEFF' CLASS='TableSubHeadingColor' colspan='4'>").append(change.getChangeSet().getComments()).append("</TD></TR>");
+                    if (StringUtils.trimToNull(changeSet.getComments()) != null) {
+                        fileWriter.append("<TR><TD BGCOLOR='#EEEEFF' CLASS='TableSubHeadingColor' colspan='4'>").append(changeSet.getComments()).append("</TD></TR>");
                     }
 
                 }
@@ -167,7 +169,7 @@ public abstract class HTMLWriter {
         }
 
         fileWriter.append("</TABLE>");
-        fileWriter.append("&nbsp;</P>");        
+        fileWriter.append("&nbsp;</P>");
 
     }
 }

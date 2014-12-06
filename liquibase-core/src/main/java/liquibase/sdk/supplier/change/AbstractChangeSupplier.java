@@ -8,7 +8,7 @@ import liquibase.util.CollectionUtil;
 
 import java.util.*;
 
-public abstract class AbstractChangeSupplier<T extends Change> implements ChangeSupplier<T> {
+public abstract class AbstractChangeSupplier<T extends IChange> implements ChangeSupplier<T> {
 
     private final String changeName;
 
@@ -25,7 +25,7 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
     }
 
     @Override
-    public Change[] revertDatabase(T change) throws Exception {
+    public IChange[] revertDatabase(T change) throws Exception {
         return null;
     }
 

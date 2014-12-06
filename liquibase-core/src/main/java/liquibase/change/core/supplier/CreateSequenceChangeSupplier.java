@@ -1,11 +1,10 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateSequenceChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Sequence;
-
 import static liquibase.Assert.assertNotNull;
 
 public class CreateSequenceChangeSupplier extends AbstractChangeSupplier<CreateSequenceChange>  {
@@ -15,7 +14,7 @@ public class CreateSequenceChangeSupplier extends AbstractChangeSupplier<CreateS
     }
 
     @Override
-    public Change[] prepareDatabase(CreateSequenceChange change) throws Exception {
+    public IChange[] prepareDatabase(CreateSequenceChange change) throws Exception {
         return null;
     }
 

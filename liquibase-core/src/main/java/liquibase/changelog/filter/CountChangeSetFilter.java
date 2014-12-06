@@ -1,6 +1,6 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 
 public class CountChangeSetFilter implements ChangeSetFilter {
 
@@ -12,7 +12,7 @@ public class CountChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         changeSetsSeen++;
 
         if (changeSetsSeen <= changeSetsToAllow) {

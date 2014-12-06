@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.AddAutoIncrementChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -12,7 +12,6 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
-
 import static liquibase.Assert.assertNotNull;
 import static liquibase.Assert.assertNull;
 
@@ -23,7 +22,7 @@ public class AddAutoIncrementChangeSupplier extends AbstractChangeSupplier<AddAu
     }
 
     @Override
-    public Change[] prepareDatabase(AddAutoIncrementChange change) throws DatabaseException {
+    public IChange[] prepareDatabase(AddAutoIncrementChange change) throws DatabaseException {
         CreateTableChange createTable = new CreateTableChange();
         createTable.setCatalogName(change.getCatalogName());
         createTable.setSchemaName(change.getSchemaName());
@@ -34,7 +33,7 @@ public class AddAutoIncrementChangeSupplier extends AbstractChangeSupplier<AddAu
         }
         createTable.addColumn(new ColumnConfig().setName(change.getColumnName()).setType(dataType).setConstraints(new ConstraintsConfig().setPrimaryKey(true).setNullable(false)));
 
-        return new Change[] {createTable};
+        return new IChange[] {createTable};
     }
 
     @Override

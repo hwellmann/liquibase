@@ -1,8 +1,9 @@
 package liquibase.changelog.visitor;
 
-import liquibase.change.Change;
-import liquibase.changelog.ChangeSet;
+import liquibase.change.IChange;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.PreconditionErrorException;
 import liquibase.exception.PreconditionFailedException;
@@ -29,7 +30,7 @@ public interface ChangeExecListener {
    * @param runStatus
    *          of the current change from the database
    */
-  void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ChangeSet.RunStatus runStatus);
+  void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ExecutableChangeSet.RunStatus runStatus);
 
   /**
    * Called after the given changeset is run.
@@ -43,7 +44,7 @@ public interface ChangeExecListener {
    * @param execType
    *          is the result
    */
-  void ran(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ChangeSet.ExecType execType);
+  void ran(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, ExecutableChangeSet.ExecType execType);
 
   /**
    * Called after a change is rolled back.
@@ -61,7 +62,7 @@ public interface ChangeExecListener {
 
     void preconditionErrored(PreconditionErrorException error, PreconditionContainer.ErrorOption onError);
 
-    void willRun(Change change, ChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
+    void willRun(IChange change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
 
-    void ran(Change change, ChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
+    void ran(IChange change, ExecutableChangeSet changeSet, DatabaseChangeLog changeLog, Database database);
 }

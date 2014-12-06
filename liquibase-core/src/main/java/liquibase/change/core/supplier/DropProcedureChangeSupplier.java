@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateProcedureChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropProcedureChange;
@@ -10,7 +10,6 @@ import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.StoredProcedure;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropProcedureChangeSupplier extends AbstractChangeSupplier<DropProcedureChange> {
@@ -20,7 +19,7 @@ public class DropProcedureChangeSupplier extends AbstractChangeSupplier<DropProc
     }
 
     @Override
-    public Change[]  prepareDatabase(DropProcedureChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(DropProcedureChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -37,7 +36,7 @@ public class DropProcedureChangeSupplier extends AbstractChangeSupplier<DropProc
                 "   MODIFIES SQL DATA\n" +
                 "   INSERT INTO CUSTOMERS (first_name, last_name) VALUES (firstname, lastname)");
 
-        return new Change[] {
+        return new IChange[] {
                 createTableChange,
                 createProcedureChange
         };

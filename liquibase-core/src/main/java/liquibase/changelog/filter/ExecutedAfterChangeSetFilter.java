@@ -1,6 +1,6 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.util.ISODateFormat;
 import liquibase.util.StringUtils;
@@ -29,7 +29,7 @@ public class ExecutedAfterChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         if (changeLogsAfterDate.contains(changeLogToString(changeSet.getId(), changeSet.getAuthor(), changeSet.getFilePath()))) {
             return new ChangeSetFilterResult(true, "Change set ran after "+ new ISODateFormat().format(new java.sql.Timestamp(date.getTime())), this.getClass());
         } else {

@@ -16,6 +16,7 @@ import liquibase.change.Change;
 import liquibase.change.ChangeFactory;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
+import liquibase.change.IChange;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.visitor.ChangeExecListener;
@@ -51,14 +52,14 @@ import liquibase.util.StringUtils;
 /**
  * Encapsulates a changeSet and all its associated changes.
  */
-public class ChangeSetImpl implements Conditional, LiquibaseSerializable, ChangeSet {
+public class ChangeSetImpl implements Conditional, LiquibaseSerializable, ExecutableChangeSet {
 
     private ChangeLogParameters changeLogParameters;
 
     /**
      * List of change objects defined in this changeset
      */
-    private List<Change> changes;
+    private List<IChange> changes;
 
     /**
      * "id" specified in changeLog file.  Combination of id+author+filePath must be unique
@@ -170,7 +171,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
     }
 
     public ChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
-        this.changes = new ArrayList<Change>();
+        this.changes = new ArrayList<IChange>();
         log = LogFactory.getLogger();
         this.changeLog = databaseChangeLog;
     }
@@ -225,7 +226,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
     @Override
     public CheckSum generateCheckSum() {
         StringBuffer stringToMD5 = new StringBuffer();
-        for (Change change : getChanges()) {
+        for (IChange change : getChanges()) {
             stringToMD5.append(change.generateCheckSum()).append(":");
         }
 
@@ -367,8 +368,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
             if (changeSet == null) {
                 throw new ParsedNodeException("Change set "+new ChangeSetImpl(changeSetId, changeSetAuthor, false, false, changeSetPath, null, null, null).toString(false)+" does not exist");
             }
-            for (Change change : changeSet.getChanges()) {
-                addRollbackChange(change);
+            for (IChange change : changeSet.getChanges()) {
+                addRollbackChange((Change) change);
             }
             return;
         }
@@ -533,7 +534,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
             }
 
             if (!skipChange) {
-                for (Change change : changes) {
+                for (IChange change : changes) {
                     try {
                         change.finishInitialization();
                     } catch (SetupException se) {
@@ -542,7 +543,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
                 }
 
                 log.debug("Reading ChangeSet: " + toString());
-                for (Change change : getChanges()) {
+                for (IChange c : getChanges()) {
+                    Change change = (Change) c;
                     if ((!(change instanceof DbmsTargetedChange)) || DatabaseList.definitionMatches(((DbmsTargetedChange) change).getDbms(), database, true)) {
                         if (listener != null) {
                             listener.willRun(change, this, changeLog, database);
@@ -632,9 +634,9 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
                 }
 
             } else {
-                List<Change> changes = getChanges();
+                List<IChange> changes = getChanges();
                 for (int i = changes.size() - 1; i >= 0; i--) {
-                    Change change = changes.get(i);
+                    Change change = (Change) changes.get(i);
                     database.executeRollbackStatements(change, sqlVisitors);
                 }
             }
@@ -675,7 +677,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      * @see liquibase.changelog.IChangeSet#getChanges()
      */
     @Override
-    public List<Change> getChanges() {
+    public List<IChange> getChanges() {
         return Collections.unmodifiableList(changes);
     }
 
@@ -683,7 +685,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      * @see liquibase.changelog.IChangeSet#addChange(liquibase.change.Change)
      */
     @Override
-    public void addChange(Change change) {
+    public void addChange(IChange change) {
         if (change == null) {
             return;
         }
@@ -807,7 +809,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      * @see liquibase.changelog.IChangeSet#getRollBackChanges()
      */
     @Override
-    public Change[] getRollBackChanges() {
+    public IChange[] getRollBackChanges() {
         return rollBackChanges.toArray(new Change[rollBackChanges.size()]);
     }
 
@@ -850,8 +852,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
             return true;
         }
 
-        for (Change change : getChanges()) {
-            if (!change.supportsRollback(database)) {
+        for (IChange change : getChanges()) {
+            if (!((Change)change).supportsRollback(database)) {
                 return false;
             }
         }
@@ -863,7 +865,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
      */
     @Override
     public String getDescription() {
-        List<Change> changes = getChanges();
+        List<IChange> changes = getChanges();
         if (changes.size() == 0) {
             return "Empty";
         }
@@ -871,7 +873,8 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
         StringBuffer returnString = new StringBuffer();
         Class<? extends Change> lastChangeClass = null;
         int changeCount = 0;
-        for (Change change : changes) {
+        for (IChange c : changes) {
+            Change change = (Change) c;
             if (change.getClass().equals(lastChangeClass)) {
                 changeCount++;
             } else if (changeCount > 1) {
@@ -1193,7 +1196,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Change
         if (!(obj instanceof ChangeSetImpl)) {
             return false;
         }
-        return this.toString(false).equals(((ChangeSet) obj).toString(false));
+        return this.toString(false).equals(((ExecutableChangeSet) obj).toString(false));
     }
 
     /* (non-Javadoc)

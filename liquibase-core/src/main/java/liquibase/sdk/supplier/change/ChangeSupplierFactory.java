@@ -1,14 +1,17 @@
 package liquibase.sdk.supplier.change;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import liquibase.change.Change;
 import liquibase.change.ChangeFactory;
+import liquibase.change.IChange;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.sdk.exception.UnexpectedLiquibaseSdkException;
 import liquibase.servicelocator.ServiceLocator;
-
-import java.util.*;
 
 public class ChangeSupplierFactory {
 
@@ -37,10 +40,10 @@ public class ChangeSupplierFactory {
         ChangeSupplier supplier = getSupplier(change);
 
         try {
-            Change[] changes = supplier.prepareDatabase(change);
+            IChange[] changes = supplier.prepareDatabase(change);
             if (changes != null) {
-                for (Change prepareChange : changes) {
-                    ExecutorService.getInstance().getExecutor(database).execute(prepareChange);
+                for (IChange prepareChange : changes) {
+                    ExecutorService.getInstance().getExecutor(database).execute((Change) prepareChange);
                 }
             }
         } catch (Exception e) {
@@ -52,10 +55,10 @@ public class ChangeSupplierFactory {
         ChangeSupplier supplier = getSupplier(change);
 
         try {
-            Change[] changes = supplier.revertDatabase(change);
+            IChange[] changes = supplier.revertDatabase(change);
             if (changes != null) {
-                for (Change revertChange : changes) {
-                    ExecutorService.getInstance().getExecutor(database).execute(revertChange);
+                for (IChange revertChange : changes) {
+                    ExecutorService.getInstance().getExecutor(database).execute((Change) revertChange);
                 }
             }
         } catch (Exception e) {
@@ -63,7 +66,7 @@ public class ChangeSupplierFactory {
         }
     }
 
-    protected ChangeSupplier getSupplier(Change change) {
+    protected ChangeSupplier getSupplier(IChange change) {
         String supplierClassName = change.getClass().getName().replaceFirst("(.*)\\.(\\w+)", "$1\\.supplier\\.$2Supplier");
         try {
             Class supplierClass = Class.forName(supplierClassName);

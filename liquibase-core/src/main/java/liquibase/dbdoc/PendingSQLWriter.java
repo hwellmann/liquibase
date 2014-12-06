@@ -1,10 +1,15 @@
 package liquibase.dbdoc;
 
-import liquibase.Liquibase;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
 import liquibase.change.Change;
 import liquibase.change.ChangeFactory;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.DatabaseHistoryException;
@@ -12,11 +17,6 @@ import liquibase.exception.MigrationFailedException;
 import liquibase.executor.Executor;
 import liquibase.executor.ExecutorService;
 import liquibase.executor.LoggingExecutor;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 
 public class PendingSQLWriter extends HTMLWriter {
 
@@ -49,7 +49,7 @@ public class PendingSQLWriter extends HTMLWriter {
             ChangeSet lastRunChangeSet = null;
 
             for (Change change : changesToRun) {
-                ChangeSet thisChangeSet = change.getChangeSet();
+                ExecutableChangeSet thisChangeSet = (ExecutableChangeSet) change.getChangeSet();
                 if (thisChangeSet.equals(lastRunChangeSet)) {
                     continue;
                 }

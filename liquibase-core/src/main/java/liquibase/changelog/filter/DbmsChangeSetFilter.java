@@ -1,6 +1,6 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseList;
 import liquibase.sql.visitor.SqlVisitor;
@@ -18,7 +18,7 @@ public class DbmsChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         if (database == null) {
             return new ChangeSetFilterResult(true, "No database connection, cannot evaluate dbms attribute", this.getClass());
         }

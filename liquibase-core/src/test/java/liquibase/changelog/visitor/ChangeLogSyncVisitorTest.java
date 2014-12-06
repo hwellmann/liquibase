@@ -1,20 +1,20 @@
 package liquibase.changelog.visitor;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.Collections;
+
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLogImpl;
-import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class ChangeLogSyncVisitorTest {
     private ChangeSetImpl changeSet;
@@ -31,7 +31,7 @@ public class ChangeLogSyncVisitorTest {
         Database mockDatabase = mock(Database.class);
         ChangeLogSyncVisitor visitor = new ChangeLogSyncVisitor(mockDatabase);
         visitor.visit(changeSet, databaseChangeLog, mockDatabase, Collections.<ChangeSetFilterResult>emptySet());
-        verify(mockDatabase).markChangeSetExecStatus(changeSet, ChangeSet.ExecType.EXECUTED);
+        verify(mockDatabase).markChangeSetExecStatus(changeSet, ExecutableChangeSet.ExecType.EXECUTED);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class ChangeLogSyncVisitorTest {
         ChangeLogSyncListener mockListener = mock(ChangeLogSyncListener.class);
         ChangeLogSyncVisitor visitor = new ChangeLogSyncVisitor(mockDatabase, mockListener);
         visitor.visit(changeSet, databaseChangeLog, mockDatabase, Collections.<ChangeSetFilterResult>emptySet());
-        verify(mockDatabase).markChangeSetExecStatus(changeSet, ChangeSet.ExecType.EXECUTED);
+        verify(mockDatabase).markChangeSetExecStatus(changeSet, ExecutableChangeSet.ExecType.EXECUTED);
         verify(mockListener).markedRan(changeSet, databaseChangeLog, mockDatabase);
     }
 }

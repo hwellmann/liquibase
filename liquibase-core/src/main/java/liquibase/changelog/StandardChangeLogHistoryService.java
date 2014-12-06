@@ -244,7 +244,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
                     String tag = rs.get("TAG") == null ? null : rs.get("TAG").toString();
                     String execType = rs.get("EXECTYPE") == null ? null : rs.get("EXECTYPE").toString();
                     try {
-                        RanChangeSet ranChangeSet = new RanChangeSet(fileName, id, author, CheckSum.parse(md5sum), dateExecuted, tag, ChangeSet.ExecType.valueOf(execType), description, comments);
+                        RanChangeSet ranChangeSet = new RanChangeSet(fileName, id, author, CheckSum.parse(md5sum), dateExecuted, tag, ExecutableChangeSet.ExecType.valueOf(execType), description, comments);
                         ranChangeSetList.add(ranChangeSet);
                     } catch (IllegalArgumentException e) {
                         LogFactory.getLogger().severe("Unknown EXECTYPE from database: " + execType);
@@ -327,7 +327,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
             int totalRows = ExecutorService.getInstance().getExecutor(database).queryForInt(new SelectFromDatabaseChangeLogStatement(new ColumnConfig().setName("COUNT(*)", true)));
             if (totalRows == 0) {
                 ChangeSet emptyChangeSet = new ChangeSetImpl(String.valueOf(new Date().getTime()), "liquibase", false, false, "liquibase-internal", null, null, getDatabase().getObjectQuotingStrategy(), null);
-                this.setExecType(emptyChangeSet, ChangeSet.ExecType.EXECUTED);
+                this.setExecType(emptyChangeSet, ExecutableChangeSet.ExecType.EXECUTED);
             }
 
 //            Timestamp lastExecutedDate = (Timestamp) this.getExecutor().queryForObject(createChangeToTagSQL(), Timestamp.class);

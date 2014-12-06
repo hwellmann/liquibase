@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.CreateViewChange;
 import liquibase.change.core.DropViewChange;
@@ -9,7 +9,6 @@ import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.View;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropViewChangeSupplier extends AbstractChangeSupplier<DropViewChange>  {
@@ -19,7 +18,7 @@ public class DropViewChangeSupplier extends AbstractChangeSupplier<DropViewChang
     }
 
     @Override
-    public Change[]  prepareDatabase(DropViewChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(DropViewChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -33,7 +32,7 @@ public class DropViewChangeSupplier extends AbstractChangeSupplier<DropViewChang
         createViewChange.setViewName(change.getViewName());
         createViewChange.setSelectQuery("select * from person");
 
-        return new Change[] {createTableChange, createViewChange };
+        return new IChange[] {createTableChange, createViewChange };
     }
 
     @Override

@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.changelog.filter.NotInChangeLogChangeSetFilter;
@@ -24,7 +25,7 @@ import liquibase.exception.LiquibaseException;
  */
 public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor {
 
-    private LinkedHashMap<ChangeSet, ChangeSetStatus> changeSetStatuses = new LinkedHashMap<ChangeSet, ChangeSetStatus>();
+    private LinkedHashMap<ExecutableChangeSet, ChangeSetStatus> changeSetStatuses = new LinkedHashMap<ExecutableChangeSet, ChangeSetStatus>();
     private final List<RanChangeSet> ranChangeSets;
 
     public StatusVisitor(Database database) throws LiquibaseException {
@@ -37,20 +38,20 @@ public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor 
     }
 
     @Override
-    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         ChangeSetStatus status = addStatus(changeSet, databaseChangeLog, database);
         status.setWillRun(true);
         status.setFilterResults(filterResults);
     }
 
     @Override
-    public void skipped(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void skipped(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         ChangeSetStatus status = addStatus(changeSet, databaseChangeLog, database);
         status.setWillRun(false);
         status.setFilterResults(filterResults);
     }
 
-    protected ChangeSetStatus addStatus(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database) throws LiquibaseException {
+    protected ChangeSetStatus addStatus(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database) throws LiquibaseException {
         ChangeSetStatus status = new ChangeSetStatus(changeSet);
 
         RanChangeSet ranChangeSetToRemove = null;

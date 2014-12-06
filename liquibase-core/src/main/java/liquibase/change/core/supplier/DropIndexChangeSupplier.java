@@ -1,16 +1,15 @@
 package liquibase.change.core.supplier;
 
 import liquibase.change.AddColumnConfig;
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateIndexChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropIndexChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Index;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropIndexChangeSupplier extends AbstractChangeSupplier<DropIndexChange>  {
@@ -21,7 +20,7 @@ public class DropIndexChangeSupplier extends AbstractChangeSupplier<DropIndexCha
 
 
     @Override
-    public Change[]  prepareDatabase(DropIndexChange change) throws Exception {
+    public IChange[]  prepareDatabase(DropIndexChange change) throws Exception {
         String usedTableName = change.getTableName();
 
         if (usedTableName == null) {
@@ -41,7 +40,7 @@ public class DropIndexChangeSupplier extends AbstractChangeSupplier<DropIndexCha
         createIndexChange.setTableName(usedTableName);
         createIndexChange.addColumn((AddColumnConfig) new AddColumnConfig().setName("name"));
 
-        return new Change[] {createTableChange, createIndexChange };
+        return new IChange[] {createTableChange, createIndexChange };
 
     }
 

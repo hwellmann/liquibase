@@ -16,11 +16,13 @@ import java.util.regex.Pattern;
 
 import liquibase.CatalogAndSchema;
 import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.DropTableChange;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.StandardChangeLogHistoryService;
 import liquibase.configuration.ConfigurationProperty;
@@ -775,7 +777,8 @@ public abstract class AbstractJdbcDatabase implements Database {
             try {
                 for (ChangeSet changeSet : changeSets) {
                     changeSet.setFailOnError(false);
-                    for (Change change : changeSet.getChanges()) {
+                    for (IChange c : changeSet.getChanges()) {
+                        Change change = (Change) c;
                         if (change instanceof DropTableChange) {
                             ((DropTableChange) change).setCascadeConstraints(true);
                         }
@@ -1090,7 +1093,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      * Returns the run status for the given ChangeSet
      */
     @Override
-    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ChangeSetImpl.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return ChangeLogHistoryServiceFactory.getInstance().getChangeLogService(this).getRunStatus(changeSet);
     }
 

@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropUniqueConstraintChange;
@@ -10,7 +10,6 @@ import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.UniqueConstraint;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropUniqueConstraintChangeSupplier extends AbstractChangeSupplier<DropUniqueConstraintChange>  {
@@ -20,7 +19,7 @@ public class DropUniqueConstraintChangeSupplier extends AbstractChangeSupplier<D
     }
 
     @Override
-    public Change[]  prepareDatabase(DropUniqueConstraintChange change) throws Exception {
+    public IChange[]  prepareDatabase(DropUniqueConstraintChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -43,7 +42,7 @@ public class DropUniqueConstraintChangeSupplier extends AbstractChangeSupplier<D
         addUniqueConstraintChange.setColumnNames(uniqueColumns);
         addUniqueConstraintChange.setConstraintName(change.getConstraintName());
 
-        return new Change[] {createTableChange, addUniqueConstraintChange };
+        return new IChange[] {createTableChange, addUniqueConstraintChange };
     }
 
     @Override

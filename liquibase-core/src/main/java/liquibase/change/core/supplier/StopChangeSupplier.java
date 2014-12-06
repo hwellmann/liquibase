@@ -1,6 +1,6 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.StopChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -12,8 +12,8 @@ public class StopChangeSupplier extends AbstractChangeSupplier<StopChange> {
     }
 
     @Override
-    public Change[] prepareDatabase(StopChange change) throws Exception {
-        return new Change[0];
+    public IChange[] prepareDatabase(StopChange change) throws Exception {
+        return new IChange[0];
     }
 
     @Override

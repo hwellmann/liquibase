@@ -12,6 +12,7 @@ import liquibase.database.core.MySQLDatabase;
 import liquibase.database.core.OracleDatabase;
 import liquibase.database.core.PostgresDatabase;
 import liquibase.database.core.SybaseASADatabase;
+import liquibase.exception.ValidationErrorHandler;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -40,10 +41,11 @@ public class RenameViewGenerator extends AbstractSqlGenerator<RenameViewStatemen
     @Override
     public ValidationErrors validate(RenameViewStatement renameViewStatement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         ValidationErrors validationErrors = new ValidationErrors();
+        ValidationErrorHandler handler = new ValidationErrorHandler(validationErrors);
         validationErrors.checkRequiredField("oldViewName", renameViewStatement.getOldViewName());
         validationErrors.checkRequiredField("newViewName", renameViewStatement.getNewViewName());
 
-        validationErrors.checkDisallowedField("schemaName", renameViewStatement.getSchemaName(), database, OracleDatabase.class);
+        handler.checkDisallowedField("schemaName", renameViewStatement.getSchemaName(), database, OracleDatabase.class);
 
         return validationErrors;
     }

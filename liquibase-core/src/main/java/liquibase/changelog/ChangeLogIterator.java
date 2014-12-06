@@ -28,7 +28,7 @@ public class ChangeLogIterator {
     public ChangeLogIterator(List<RanChangeSet> changeSetList, DatabaseChangeLogImpl changeLog, ChangeSetFilter... changeSetFilters) {
         final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         for (RanChangeSet ranChangeSet : changeSetList) {
-        	ChangeSet changeSet = changeLog.getChangeSet(ranChangeSet);
+        	ExecutableChangeSet changeSet = changeLog.getChangeSet(ranChangeSet);
         	if (changeSet != null) {
                 if (changeLog.ignoreClasspathPrefix()) {
                     changeSet.setFilePath(ranChangeSet.getChangeLog());
@@ -56,7 +56,8 @@ public class ChangeLogIterator {
                 Collections.reverse(changeSetList);
             }
 
-            for (ChangeSet changeSet : changeSetList) {
+            for (ChangeSet c : changeSetList) {
+                ExecutableChangeSet changeSet = (ExecutableChangeSet) c;
                 boolean shouldVisit = true;
                 Set<ChangeSetFilterResult> reasonsAccepted = new HashSet<ChangeSetFilterResult>();
                 Set<ChangeSetFilterResult> reasonsDenied = new HashSet<ChangeSetFilterResult>();

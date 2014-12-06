@@ -3,7 +3,7 @@ package liquibase.changelog.filter;
 import liquibase.ContextExpression;
 import liquibase.Contexts;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import static org.junit.Assert.*;
 import liquibase.database.Database;
 import liquibase.sql.visitor.AbstractSqlVisitor;
@@ -117,7 +117,7 @@ public class ContextChangeSetFilterTest {
     public void visitorContextFilterLowerLower() {
         ContextChangeSetFilter filter = new ContextChangeSetFilter(new Contexts("test1"));
 
-        ChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
         changeSet.addSqlVisitor(new TestSqlVisitor("test1"));
 
         assertTrue(filter.accepts(changeSet).isAccepted());
@@ -129,7 +129,7 @@ public class ContextChangeSetFilterTest {
     public void visitorContextFilterUpperLower() {
         ContextChangeSetFilter filter = new ContextChangeSetFilter(new Contexts("TEST1"));
 
-        ChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
         changeSet.addSqlVisitor(new TestSqlVisitor("test1"));
 
         assertTrue(filter.accepts(changeSet).isAccepted());
@@ -141,7 +141,7 @@ public class ContextChangeSetFilterTest {
     public void visitorContextFilterUpperUpper() {
         ContextChangeSetFilter filter = new ContextChangeSetFilter(new Contexts("TEST1"));
 
-        ChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
         changeSet.addSqlVisitor(new TestSqlVisitor("TEST1"));
 
         assertTrue(filter.accepts(changeSet).isAccepted());
@@ -153,7 +153,7 @@ public class ContextChangeSetFilterTest {
     public void visitorContextFilterLowerUpper() {
         ContextChangeSetFilter filter = new ContextChangeSetFilter(new Contexts("test1"));
 
-        ChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl(null, null, false, false, null, null, null, null);
         changeSet.addSqlVisitor(new TestSqlVisitor("TEST1"));
 
         assertTrue(filter.accepts(changeSet).isAccepted());

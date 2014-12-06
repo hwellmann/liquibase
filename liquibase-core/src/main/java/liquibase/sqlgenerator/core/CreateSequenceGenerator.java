@@ -8,6 +8,7 @@ import liquibase.database.core.FirebirdDatabase;
 import liquibase.database.core.H2Database;
 import liquibase.database.core.HsqlDatabase;
 import liquibase.database.core.OracleDatabase;
+import liquibase.exception.ValidationErrorHandler;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -29,16 +30,17 @@ public class CreateSequenceGenerator extends AbstractSqlGenerator<CreateSequence
     @Override
     public ValidationErrors validate(CreateSequenceStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         ValidationErrors validationErrors = new ValidationErrors();
+        ValidationErrorHandler handler = new ValidationErrorHandler(validationErrors);
 
         validationErrors.checkRequiredField("sequenceName", statement.getSequenceName());
 
-        validationErrors.checkDisallowedField("startValue", statement.getStartValue(), database, FirebirdDatabase.class);
-        validationErrors.checkDisallowedField("incrementBy", statement.getIncrementBy(), database, FirebirdDatabase.class);
+        handler.checkDisallowedField("startValue", statement.getStartValue(), database, FirebirdDatabase.class);
+        handler.checkDisallowedField("incrementBy", statement.getIncrementBy(), database, FirebirdDatabase.class);
 
-        validationErrors.checkDisallowedField("minValue", statement.getMinValue(), database, FirebirdDatabase.class, H2Database.class, HsqlDatabase.class);
-        validationErrors.checkDisallowedField("maxValue", statement.getMaxValue(), database, FirebirdDatabase.class, H2Database.class, HsqlDatabase.class);
+        handler.checkDisallowedField("minValue", statement.getMinValue(), database, FirebirdDatabase.class, H2Database.class, HsqlDatabase.class);
+        handler.checkDisallowedField("maxValue", statement.getMaxValue(), database, FirebirdDatabase.class, H2Database.class, HsqlDatabase.class);
 
-        validationErrors.checkDisallowedField("ordered", statement.getOrdered(), database, DB2Database.class, HsqlDatabase.class);
+        handler.checkDisallowedField("ordered", statement.getOrdered(), database, DB2Database.class, HsqlDatabase.class);
 
 
         return validationErrors;

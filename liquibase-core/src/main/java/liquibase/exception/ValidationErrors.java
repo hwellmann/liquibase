@@ -1,13 +1,12 @@
 package liquibase.exception;
 
-import liquibase.database.Database;
-import liquibase.changelog.ChangeSet;
-import liquibase.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import liquibase.changelog.ChangeSet;
+import liquibase.util.StringUtils;
 
 public class ValidationErrors {
 
@@ -24,23 +23,6 @@ public class ValidationErrors {
             addError(requiredFieldName + " is empty");
         } else if (value instanceof Object[] && ((Object[]) value).length == 0) {
             addError(requiredFieldName + " is empty");
-        }
-    }
-
-    public void checkDisallowedField(String disallowedFieldName, Object value, Database database, Class<? extends Database>... disallowedDatabases) {
-        boolean isDisallowed = false;
-        if (disallowedDatabases == null || disallowedDatabases.length == 0) {
-            isDisallowed = true;
-        } else {
-            for (Class<? extends Database> databaseClass : disallowedDatabases) {
-                if (databaseClass.isAssignableFrom(database.getClass())) {
-                    isDisallowed = true;
-                }
-            }
-        }
-
-        if (isDisallowed && value != null) {
-            addError(disallowedFieldName + " is not allowed on "+(database == null?"unknown":database.getShortName()));
         }
     }
 

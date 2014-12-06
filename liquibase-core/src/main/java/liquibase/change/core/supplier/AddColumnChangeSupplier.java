@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.database.Database;
@@ -21,14 +21,14 @@ public class AddColumnChangeSupplier extends AbstractChangeSupplier<AddColumnCha
     }
 
     @Override
-    public Change[] prepareDatabase(AddColumnChange change) throws Exception {
+    public IChange[] prepareDatabase(AddColumnChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
         createTableChange.setTableName(change.getTableName());
         createTableChange.addColumn(new ColumnConfig().setName("other_col").setType("int"));
 
-        return new Change[] {createTableChange};
+        return new IChange[] {createTableChange};
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Date;
 
 import liquibase.change.CheckSum;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
@@ -55,7 +55,7 @@ public class ShouldRunChangeSetFilterTest  {
     @Test
     public void does_NOT_accept_current_changeset_with_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ExecutableChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 
@@ -65,7 +65,7 @@ public class ShouldRunChangeSetFilterTest  {
     @Test
     public void does_NOT_accept_current_changeset_when_inserted_changeset_has_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 
@@ -75,7 +75,7 @@ public class ShouldRunChangeSetFilterTest  {
     @Test
     public void does_NOT_accept_current_changeset_when_both_have_classpath_prefix() throws DatabaseException {
         given_a_database_with_two_executed_changesets();
-        ChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         ShouldRunChangeSetFilter filter = new ShouldRunChangeSetFilter(database, true);
 

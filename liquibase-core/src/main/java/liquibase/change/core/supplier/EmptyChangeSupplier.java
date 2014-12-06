@@ -1,10 +1,9 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.EmptyChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
-
 import static liquibase.Assert.assertEquals;
 
 public class EmptyChangeSupplier extends AbstractChangeSupplier<EmptyChange>  {
@@ -14,7 +13,7 @@ public class EmptyChangeSupplier extends AbstractChangeSupplier<EmptyChange>  {
     }
 
     @Override
-    public Change[] prepareDatabase(EmptyChange change) throws Exception {
+    public IChange[] prepareDatabase(EmptyChange change) throws Exception {
         return null;
     }
 

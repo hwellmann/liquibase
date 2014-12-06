@@ -1,11 +1,10 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.RenameViewChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.View;
-
 import static liquibase.Assert.assertNotNull;
 
 public class RenameViewChangeSupplier extends AbstractChangeSupplier<RenameViewChange>  {
@@ -15,7 +14,7 @@ public class RenameViewChangeSupplier extends AbstractChangeSupplier<RenameViewC
     }
 
     @Override
-    public Change[] prepareDatabase(RenameViewChange change) throws Exception {
+    public IChange[] prepareDatabase(RenameViewChange change) throws Exception {
         return null;
     }
 

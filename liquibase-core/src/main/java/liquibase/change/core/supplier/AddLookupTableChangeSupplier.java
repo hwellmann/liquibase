@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.AddLookupTableChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.diff.DiffResult;
@@ -10,7 +10,6 @@ import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.ForeignKey;
 import liquibase.structure.core.Table;
-
 import static liquibase.Assert.assertEquals;
 import static liquibase.Assert.assertNotNull;
 
@@ -21,7 +20,7 @@ public class AddLookupTableChangeSupplier extends AbstractChangeSupplier<AddLook
     }
 
     @Override
-    public Change[]  prepareDatabase(AddLookupTableChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(AddLookupTableChange change) throws DatabaseException {
         CreateTableChange createTableChange= new CreateTableChange();
         createTableChange.setCatalogName(change.getExistingTableCatalogName());
         createTableChange.setSchemaName(change.getExistingTableSchemaName());
@@ -30,7 +29,7 @@ public class AddLookupTableChangeSupplier extends AbstractChangeSupplier<AddLook
         createTableChange.addColumn(new ColumnConfig().setName("other_column").setType("int"));
         createTableChange.addColumn(new ColumnConfig().setName(change.getExistingColumnName()).setType(change.getNewColumnDataType()));
 
-        return new Change[] {createTableChange };
+        return new IChange[] {createTableChange };
     }
 
     @Override

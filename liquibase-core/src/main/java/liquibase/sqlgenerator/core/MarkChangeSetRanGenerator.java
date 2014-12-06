@@ -2,10 +2,11 @@ package liquibase.sqlgenerator.core;
 
 import java.util.List;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -43,7 +44,7 @@ public class MarkChangeSetRanGenerator extends AbstractSqlGenerator<MarkChangeSe
 
         SqlStatement runStatement;
         try {
-            if (statement.getExecType().equals(ChangeSet.ExecType.FAILED) || statement.getExecType().equals(ChangeSet.ExecType.SKIPPED)) {
+            if (statement.getExecType().equals(ExecutableChangeSet.ExecType.FAILED) || statement.getExecType().equals(ExecutableChangeSet.ExecType.SKIPPED)) {
                 return new Sql[0]; //don't mark
             } else  if (statement.getExecType().ranBefore) {
                 runStatement = new UpdateStatement(database.getLiquibaseCatalogName(), database.getLiquibaseSchemaName(), database.getDatabaseChangeLogTableName())
@@ -66,9 +67,9 @@ public class MarkChangeSetRanGenerator extends AbstractSqlGenerator<MarkChangeSe
                         .addColumnValue("LIQUIBASE", LiquibaseUtil.getBuildVersion().replaceAll("SNAPSHOT", "SNP"));
 
                 String tag = null;
-                List<Change> changes = changeSet.getChanges();
+                List<IChange> changes = changeSet.getChanges();
                 if (changes != null && changes.size() == 1) {
-                    Change change = changes.get(0);
+                    IChange change = changes.get(0);
                     if (change instanceof TagDatabaseChange) {
                         TagDatabaseChange tagChange = (TagDatabaseChange) change;
                         tag = tagChange.getTag();

@@ -1,11 +1,11 @@
 package liquibase.changelog;
 
-import liquibase.change.CheckSum;
-
 import java.util.Date;
 
+import liquibase.change.CheckSum;
+
 /**
- * Encapsulates information about a previously-ran change set.  Used to build rollback statements. 
+ * Encapsulates information about a previously-ran change set.  Used to build rollback statements.
  */
 public class RanChangeSet {
     private final String changeLog;
@@ -34,7 +34,7 @@ public class RanChangeSet {
             changeSet.getComments());
     }
 
-    public RanChangeSet(String changeLog, String id, String author, CheckSum lastCheckSum, Date dateExecuted, String tag, ChangeSetImpl.ExecType execType, String description, String comments) {
+    public RanChangeSet(String changeLog, String id, String author, CheckSum lastCheckSum, Date dateExecuted, String tag, ExecutableChangeSet.ExecType execType, String description, String comments) {
         this.changeLog = changeLog;
         this.id = id;
         this.author = author;

@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropAllForeignKeyConstraintsChange;
@@ -10,7 +10,6 @@ import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.ForeignKey;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropAllForeignKeyConstraintsChangeSupplier extends AbstractChangeSupplier<DropAllForeignKeyConstraintsChange> {
@@ -20,7 +19,7 @@ public class DropAllForeignKeyConstraintsChangeSupplier extends AbstractChangeSu
     }
 
     @Override
-    public Change[]  prepareDatabase(DropAllForeignKeyConstraintsChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(DropAllForeignKeyConstraintsChange change) throws DatabaseException {
         CreateTableChange createBaseTable = new CreateTableChange();
         createBaseTable.setCatalogName(change.getBaseTableCatalogName());
         createBaseTable.setSchemaName(change.getBaseTableSchemaName());
@@ -40,7 +39,7 @@ public class DropAllForeignKeyConstraintsChangeSupplier extends AbstractChangeSu
         createFKChange.setReferencedColumnNames("id");
         createFKChange.setConstraintName("fk_test");
 
-        return new Change[] {createBaseTable, createFKChange };
+        return new IChange[] {createBaseTable, createFKChange };
 
     }
 

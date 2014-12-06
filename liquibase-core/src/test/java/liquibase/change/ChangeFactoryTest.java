@@ -136,7 +136,7 @@ public class ChangeFactoryTest {
 
     @Test
     public void create_exists() {
-        Change change = ChangeFactory.getInstance().create("createTable");
+        IChange change = ChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);
@@ -146,7 +146,7 @@ public class ChangeFactoryTest {
 
     @Test
     public void create_notExists() {
-        Change change = ChangeFactory.getInstance().create("badChangeName");
+        IChange change = ChangeFactory.getInstance().create("badChangeName");
 
         assertNull(change);
 
@@ -155,7 +155,7 @@ public class ChangeFactoryTest {
     @Test(expected = UnexpectedLiquibaseException.class)
     public void create_badClass() {
         ChangeFactory.getInstance().register(SometimesExceptionThrowingChange.class);
-        Change change = ChangeFactory.getInstance().create("createTable");
+        IChange change = ChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);

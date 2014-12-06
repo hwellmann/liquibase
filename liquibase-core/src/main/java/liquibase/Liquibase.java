@@ -20,10 +20,11 @@ import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeLogIterator;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeLogParametersImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.filter.AfterTagChangeSetFilter;
 import liquibase.changelog.filter.AlreadyRanChangeSetFilter;
@@ -733,7 +734,7 @@ public class Liquibase {
                         new DbmsChangeSetFilter(database),
                         new ChangeSetFilter() {
                             @Override
-                            public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+                            public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
                                 return new ChangeSetFilterResult(listVisitor.getSeenChangeSets().contains(changeSet), null, null);
                             }
                         });
@@ -872,11 +873,11 @@ public class Liquibase {
      * @deprecated use version with LabelExpression
      */
     @Deprecated
-    public List<ChangeSet> listUnrunChangeSets(Contexts contexts) throws LiquibaseException {
+    public List<ExecutableChangeSet> listUnrunChangeSets(Contexts contexts) throws LiquibaseException {
         return listUnrunChangeSets(contexts, new LabelExpression());
     }
 
-    public List<ChangeSet> listUnrunChangeSets(Contexts contexts, LabelExpression labels) throws LiquibaseException {
+    public List<ExecutableChangeSet> listUnrunChangeSets(Contexts contexts, LabelExpression labels) throws LiquibaseException {
         changeLogParameters.setContexts(contexts);
         changeLogParameters.setLabels(labels);
 
@@ -934,7 +935,7 @@ public class Liquibase {
         changeLogParameters.setLabels(labels);
 
         try {
-            List<ChangeSet> unrunChangeSets = listUnrunChangeSets(contexts, labels);
+            List<ExecutableChangeSet> unrunChangeSets = listUnrunChangeSets(contexts, labels);
             if (unrunChangeSets.size() == 0) {
                 out.append(getDatabase().getConnection().getConnectionUserName());
                 out.append("@");
@@ -949,7 +950,7 @@ public class Liquibase {
                 out.append(getDatabase().getConnection().getURL());
                 out.append(StreamUtil.getLineSeparator());
                 if (verbose) {
-                    for (ChangeSet changeSet : unrunChangeSets) {
+                    for (ExecutableChangeSet changeSet : unrunChangeSets) {
                         out.append("     ").append(changeSet.toString(false)).append(StreamUtil.getLineSeparator());
                     }
                 }

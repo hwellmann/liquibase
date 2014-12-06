@@ -48,7 +48,7 @@ public class ChangeSetExecuteTest {
     	return executor;
     }
     
-    private ChangeSet createTestChangeSet(boolean runInTransaction) {
+    private ExecutableChangeSet createTestChangeSet(boolean runInTransaction) {
     	return new ChangeSetImpl("test-id", "test-author", false, false, "/test.xml", null, null, runInTransaction, null);
     }
     
@@ -80,7 +80,7 @@ public class ChangeSetExecuteTest {
     	// databases that support DDL in transactions
     	replay(database);
     	
-    	ChangeSet changeSet = createTestChangeSet(true);
+    	ExecutableChangeSet changeSet = createTestChangeSet(true);
     	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
@@ -98,7 +98,7 @@ public class ChangeSetExecuteTest {
     	database.setAutoCommit(false); // after ChangeSet is run
     	replay(database);
     	
-    	ChangeSet changeSet = createTestChangeSet(false);
+    	ExecutableChangeSet changeSet = createTestChangeSet(false);
     	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
@@ -112,7 +112,7 @@ public class ChangeSetExecuteTest {
     	// database.setAutoCommit(boolean) should not be called
     	replay(database);
     	
-    	ChangeSet changeSet = createTestChangeSet(true);
+    	ExecutableChangeSet changeSet = createTestChangeSet(true);
     	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);
@@ -126,7 +126,7 @@ public class ChangeSetExecuteTest {
     	// database.setAutoCommit(boolean) should not be called
     	replay(database);
     	
-    	ChangeSet changeSet = createTestChangeSet(false);
+    	ExecutableChangeSet changeSet = createTestChangeSet(false);
     	changeSet.execute(new DatabaseChangeLogImpl(), database);
     	
     	verify(database);

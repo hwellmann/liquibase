@@ -5,6 +5,7 @@ import java.util.List;
 
 import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
+import liquibase.exception.ValidationErrorHandler;
 import liquibase.exception.ValidationErrors;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
@@ -20,6 +21,7 @@ public class CreateProcedureGenerator extends AbstractSqlGenerator<CreateProcedu
     @Override
     public ValidationErrors validate(CreateProcedureStatement statement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         ValidationErrors validationErrors = new ValidationErrors();
+        ValidationErrorHandler handler = new ValidationErrorHandler(validationErrors);
         validationErrors.checkRequiredField("procedureText", statement.getProcedureText());
         if (statement.getReplaceIfExists() != null) {
             if (database instanceof MSSQLDatabase) {
@@ -27,7 +29,7 @@ public class CreateProcedureGenerator extends AbstractSqlGenerator<CreateProcedu
                     validationErrors.addError("procedureName is required if replaceIfExists = true");
                 }
             } else {
-                validationErrors.checkDisallowedField("replaceIfExists", statement.getReplaceIfExists(), null);
+                handler.checkDisallowedField("replaceIfExists", statement.getReplaceIfExists(), null);
             }
 
         }

@@ -1,7 +1,7 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.MergeColumnChange;
 import liquibase.diff.DiffResult;
@@ -9,7 +9,6 @@ import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
-
 import static liquibase.Assert.assertNotNull;
 
 public class MergeColumnChangeSupplier extends AbstractChangeSupplier<MergeColumnChange>  {
@@ -19,7 +18,7 @@ public class MergeColumnChangeSupplier extends AbstractChangeSupplier<MergeColum
     }
 
     @Override
-    public Change[]  prepareDatabase(MergeColumnChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(MergeColumnChange change) throws DatabaseException {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
@@ -27,7 +26,7 @@ public class MergeColumnChangeSupplier extends AbstractChangeSupplier<MergeColum
         createTableChange.addColumn(new ColumnConfig().setName(change.getColumn1Name()).setType("varchar(10)"));
         createTableChange.addColumn(new ColumnConfig().setName(change.getColumn2Name()).setType("varchar(10)"));
 
-        return new Change[] {createTableChange };
+        return new IChange[] {createTableChange };
     }
 
     @Override

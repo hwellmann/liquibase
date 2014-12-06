@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.SQLFileChange;
 import liquibase.diff.DiffResult;
@@ -15,13 +15,13 @@ public class SQLFileChangeSupplier extends AbstractChangeSupplier<SQLFileChange>
     }
 
     @Override
-    public Change[] prepareDatabase(SQLFileChange change) throws Exception {
+    public IChange[] prepareDatabase(SQLFileChange change) throws Exception {
         CreateTableChange createTableChange = new CreateTableChange();
         createTableChange.setTableName("person");
         createTableChange.addColumn(new ColumnConfig().setName("id").setType("int").setConstraints(new ConstraintsConfig().setNullable(false).setPrimaryKey(true)));
         createTableChange.addColumn(new ColumnConfig().setName("not_id").setType("int"));
 
-        return new Change[] {createTableChange };
+        return new IChange[] {createTableChange };
     }
 
     @Override

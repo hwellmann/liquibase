@@ -2,7 +2,7 @@ package liquibase.changelog.filter;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.sql.visitor.SqlVisitor;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class LabelChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         List<SqlVisitor> visitorsToRemove = new ArrayList<SqlVisitor>();
         for (SqlVisitor visitor : changeSet.getSqlVisitors()) {
             if (visitor.getLabels() != null && !labelExpression.matches(visitor.getLabels())) {

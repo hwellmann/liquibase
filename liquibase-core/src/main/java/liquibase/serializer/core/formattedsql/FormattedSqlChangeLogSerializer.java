@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.database.Database;
@@ -44,8 +45,8 @@ public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
             author = author.replace("_(generated)","");
 
             builder.append("--changeset ").append(author).append(":").append(changeSet.getId()).append("\n");
-            for (Change change : changeSet.getChanges()) {
-                Sql[] sqls = SqlGeneratorFactory.getInstance().generateSql(change.generateStatements(database), database);
+            for (IChange change : changeSet.getChanges()) {
+                Sql[] sqls = SqlGeneratorFactory.getInstance().generateSql(((Change)change).generateStatements(database), database);
                 if (sqls != null) {
                     for (Sql sql : sqls) {
                         builder.append(sql.toSql()).append(sql.getEndDelimiter()).append("\n");

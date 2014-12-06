@@ -5,6 +5,7 @@ import java.util.Set;
 
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
 
 public class NotInChangeLogChangeSetFilter implements ChangeSetFilter {
 
@@ -15,7 +16,7 @@ public class NotInChangeLogChangeSetFilter implements ChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         if (changeSets.contains(changeSet)) {
             return new ChangeSetFilterResult(false, "Change set is in change log", this.getClass());
         } else {

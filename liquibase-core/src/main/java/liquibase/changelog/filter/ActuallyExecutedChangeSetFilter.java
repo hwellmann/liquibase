@@ -1,9 +1,9 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.RanChangeSet;
-
 import java.util.List;
+
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.RanChangeSet;
 
 public class ActuallyExecutedChangeSetFilter extends RanChangeSetFilter {
 
@@ -12,9 +12,9 @@ public class ActuallyExecutedChangeSetFilter extends RanChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         RanChangeSet ranChangeSet = getRanChangeSet(changeSet);
-        if (ranChangeSet != null && (ranChangeSet.getExecType() == null || ranChangeSet.getExecType().equals(ChangeSet.ExecType.EXECUTED) || ranChangeSet.getExecType().equals(ChangeSet.ExecType.RERAN))) {
+        if (ranChangeSet != null && (ranChangeSet.getExecType() == null || ranChangeSet.getExecType().equals(ExecutableChangeSet.ExecType.EXECUTED) || ranChangeSet.getExecType().equals(ExecutableChangeSet.ExecType.RERAN))) {
             return new ChangeSetFilterResult(true, "Change set was executed previously", this.getClass());
         } else {
             return new ChangeSetFilterResult(false, "Change set was not previously executed", this.getClass());

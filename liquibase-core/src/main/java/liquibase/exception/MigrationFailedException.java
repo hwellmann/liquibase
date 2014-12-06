@@ -1,27 +1,27 @@
 package liquibase.exception;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 
 public class MigrationFailedException extends LiquibaseException {
 
     private static final long serialVersionUID = 1L;
-    private ChangeSet failedChangeSet;
+    private ExecutableChangeSet failedChangeSet;
     
     public MigrationFailedException() {
     }
 
-    public MigrationFailedException(ChangeSet failedChangeSet, String message) {
+    public MigrationFailedException(ExecutableChangeSet failedChangeSet, String message) {
         super(message);
         this.failedChangeSet = failedChangeSet;
     }
 
 
-    public MigrationFailedException(ChangeSet failedChangeSet, String message, Throwable cause) {
+    public MigrationFailedException(ExecutableChangeSet failedChangeSet, String message, Throwable cause) {
         super(message, cause);
         this.failedChangeSet = failedChangeSet;
     }
 
-    public MigrationFailedException(ChangeSet failedChangeSet, Throwable cause) {
+    public MigrationFailedException(ExecutableChangeSet failedChangeSet, Throwable cause) {
         super(cause);
         this.failedChangeSet = failedChangeSet;
     }

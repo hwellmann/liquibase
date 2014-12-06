@@ -22,6 +22,7 @@ import liquibase.database.core.HsqlDatabase;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.OracleDatabase;
 import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrorHandler;
 import liquibase.exception.ValidationErrors;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.CreateProcedureStatement;
@@ -184,7 +185,8 @@ public class CreateProcedureChange extends AbstractChange implements DbmsTargete
                     validate.addError("procedureName is required if replaceIfExists = true");
                 }
             } else {
-                validate.checkDisallowedField("replaceIfExists", this.getReplaceIfExists(), database);
+                ValidationErrorHandler handler = new ValidationErrorHandler(validate);
+                handler.checkDisallowedField("replaceIfExists", this.getReplaceIfExists(), database);
             }
 
         }

@@ -1,6 +1,6 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class AlreadyRanChangeSetFilter extends RanChangeSetFilter {
     }
 
     @Override
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         if (getRanChangeSet(changeSet) != null) {
             return new ChangeSetFilterResult(true, "Change set already ran", this.getClass());
         } else {

@@ -2,6 +2,7 @@ package liquibase.changelog.filter;
 
 import java.util.List;
 
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
@@ -23,7 +24,7 @@ public class ShouldRunChangeSetFilter implements ChangeSetFilter {
     
     @Override
     @SuppressWarnings({"RedundantIfStatement"})
-    public ChangeSetFilterResult accepts(ChangeSet changeSet) {
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet) {
         for (RanChangeSet ranChangeSet : ranChangeSets) {
             if (changeSetsMatch(changeSet, ranChangeSet)) {
                 if (changeSet.shouldAlwaysRun()) {

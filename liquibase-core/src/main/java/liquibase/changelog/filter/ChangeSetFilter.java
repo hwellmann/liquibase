@@ -1,8 +1,8 @@
 package liquibase.changelog.filter;
 
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 
 public interface ChangeSetFilter {
 
-    public ChangeSetFilterResult accepts(ChangeSet changeSet);
+    public ChangeSetFilterResult accepts(ExecutableChangeSet changeSet);
 }

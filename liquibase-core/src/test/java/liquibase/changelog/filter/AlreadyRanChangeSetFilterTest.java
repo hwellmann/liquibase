@@ -2,7 +2,7 @@ package liquibase.changelog.filter;
 
 import liquibase.change.CheckSum;
 import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
@@ -56,7 +56,7 @@ public class AlreadyRanChangeSetFilterTest {
 
     @Test
     public void does_accept_current_changeset_with_classpath_prefix() throws DatabaseException {
-        ChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ExecutableChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(getRanChangeSets(), true);
 
@@ -69,7 +69,7 @@ public class AlreadyRanChangeSetFilterTest {
         ranChanges.add(new RanChangeSet("path/changelog", "1", "testAuthor", CheckSum.parse("12345"), new Date(), null, null, null, null));
         ranChanges.add(new RanChangeSet("classpath:path/changelog", "2", "testAuthor", CheckSum.parse("12345"), new Date(), null, null, null, null));
 
-        ChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        ExecutableChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
 
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(ranChanges, true);
 

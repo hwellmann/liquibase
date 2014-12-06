@@ -6,6 +6,7 @@ import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SybaseASADatabase;
+import liquibase.exception.ValidationErrorHandler;
 import liquibase.exception.ValidationErrors;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.sql.Sql;
@@ -30,12 +31,13 @@ public class AddPrimaryKeyGenerator extends AbstractSqlGenerator<AddPrimaryKeySt
     @Override
     public ValidationErrors validate(AddPrimaryKeyStatement addPrimaryKeyStatement, Database database, SqlGeneratorChain sqlGeneratorChain) {
         ValidationErrors validationErrors = new ValidationErrors();
+        ValidationErrorHandler handler = new ValidationErrorHandler(validationErrors);
         validationErrors.checkRequiredField("columnNames", addPrimaryKeyStatement.getColumnNames());
         validationErrors.checkRequiredField("tableName", addPrimaryKeyStatement.getTableName());
 
         if (!(database instanceof MSSQLDatabase || database instanceof MockDatabase)) {
             if (!addPrimaryKeyStatement.isClustered()) {
-                validationErrors.checkDisallowedField("clustered", addPrimaryKeyStatement.isClustered(), database);
+                handler.checkDisallowedField("clustered", addPrimaryKeyStatement.isClustered(), database);
             }
         }
 

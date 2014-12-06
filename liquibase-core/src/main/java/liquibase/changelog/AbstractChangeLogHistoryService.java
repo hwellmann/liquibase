@@ -30,11 +30,11 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
     }
 
     @Override
-    public ChangeSetImpl.RunStatus getRunStatus(final ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ExecutableChangeSet.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         RanChangeSet foundRan = getRanChangeSet(changeSet);
 
         if (foundRan == null) {
-            return ChangeSet.RunStatus.NOT_RAN;
+            return ExecutableChangeSet.RunStatus.NOT_RAN;
         } else {
             if (foundRan.getLastCheckSum() == null) {
                 try {
@@ -44,15 +44,15 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
                     throw new DatabaseException(e);
                 }
 
-                return ChangeSet.RunStatus.ALREADY_RAN;
+                return ExecutableChangeSet.RunStatus.ALREADY_RAN;
             } else {
                 if (foundRan.getLastCheckSum().equals(changeSet.generateCheckSum())) {
-                    return ChangeSet.RunStatus.ALREADY_RAN;
+                    return ExecutableChangeSet.RunStatus.ALREADY_RAN;
                 } else {
                     if (changeSet.shouldRunOnChange()) {
-                        return ChangeSet.RunStatus.RUN_AGAIN;
+                        return ExecutableChangeSet.RunStatus.RUN_AGAIN;
                     } else {
-                        return ChangeSet.RunStatus.INVALID_MD5SUM;
+                        return ExecutableChangeSet.RunStatus.INVALID_MD5SUM;
 //                        throw new DatabaseHistoryException("MD5 Check for " + changeSet.toString() + " failed");
                     }
                 }
@@ -64,7 +64,7 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
     public void upgradeChecksums(final DatabaseChangeLog databaseChangeLog, final Contexts contexts, LabelExpression labels) throws DatabaseException {
         for (RanChangeSet ranChangeSet : this.getRanChangeSets()) {
             if (ranChangeSet.getLastCheckSum() == null) {
-                ChangeSet changeSet = ((DatabaseChangeLogImpl) databaseChangeLog).getChangeSet(ranChangeSet);
+                ExecutableChangeSet changeSet = ((DatabaseChangeLogImpl) databaseChangeLog).getChangeSet(ranChangeSet);
                 if (changeSet != null && new ContextChangeSetFilter(contexts).accepts(changeSet).isAccepted() && new DbmsChangeSetFilter(getDatabase()).accepts(changeSet).isAccepted()) {
                     LogFactory.getLogger().debug("Updating null or out of date checksum on changeSet " + changeSet + " to correct value");
                     replaceChecksum(changeSet);

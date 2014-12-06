@@ -1,24 +1,36 @@
 package liquibase.change;
 
-import java.lang.reflect.Type;
-import java.util.*;
-
-import liquibase.changelog.ChangeSet;
-import liquibase.database.Database;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
-import liquibase.serializer.LiquibaseSerializable;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.*;
-import liquibase.resource.ResourceAccessor;
-import liquibase.serializer.core.string.StringChangeLogSerializer;
-import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
-
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.database.Database;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.SetupException;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.exception.ValidationErrors;
+import liquibase.exception.Warnings;
+import liquibase.parser.core.ParsedNode;
+import liquibase.parser.core.ParsedNodeException;
+import liquibase.resource.ResourceAccessor;
+import liquibase.serializer.LiquibaseSerializable;
+import liquibase.serializer.core.string.StringChangeLogSerializer;
+import liquibase.sqlgenerator.SqlGeneratorFactory;
+import liquibase.statement.SqlStatement;
+import liquibase.structure.DatabaseObject;
+import liquibase.util.StringUtils;
 
 /**
  * Standard superclass to simplify {@link Change } implementations. You can implement Change directly, this class is purely for convenience but recommended.
@@ -31,7 +43,7 @@ public abstract class AbstractChange implements Change {
 
     private ResourceAccessor resourceAccessor;
 
-    private ChangeSet changeSet;
+    private ExecutableChangeSet changeSet;
 
     public AbstractChange() {
     }
@@ -239,7 +251,7 @@ public abstract class AbstractChange implements Change {
      */
     @Override
     @DatabaseChangeProperty(isChangeProperty = false)
-    public ChangeSet getChangeSet() {
+    public ExecutableChangeSet getChangeSet() {
         return changeSet;
     }
 
@@ -248,7 +260,7 @@ public abstract class AbstractChange implements Change {
      */
     @Override
     public void setChangeSet(ChangeSet changeSet) {
-        this.changeSet = changeSet;
+        this.changeSet = (ExecutableChangeSet) changeSet;
     }
 
     /**

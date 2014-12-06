@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
@@ -29,10 +31,10 @@ import liquibase.util.StringUtils;
 
 public class ValidatingVisitor implements ChangeSetVisitor {
 
-    private List<ChangeSet> invalidMD5Sums = new ArrayList<ChangeSet>();
+    private List<ExecutableChangeSet> invalidMD5Sums = new ArrayList<ExecutableChangeSet>();
     private List<FailedPrecondition> failedPreconditions = new ArrayList<FailedPrecondition>();
     private List<ErrorPrecondition> errorPreconditions = new ArrayList<ErrorPrecondition>();
-    private Set<ChangeSet> duplicateChangeSets = new HashSet<ChangeSet>();
+    private Set<ExecutableChangeSet> duplicateChangeSets = new HashSet<ExecutableChangeSet>();
     private List<SetupException> setupExceptions = new ArrayList<SetupException>();
     private List<Throwable> changeValidationExceptions = new ArrayList<Throwable>();
     private ValidationErrors validationErrors = new ValidationErrors();
@@ -81,11 +83,12 @@ public class ValidatingVisitor implements ChangeSetVisitor {
     }
 
     @Override
-    public void visit(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
+    public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
         RanChangeSet ranChangeSet = ranIndex.get(changeSet.toString(false));
         boolean ran = ranChangeSet != null;
         boolean shouldValidate = !ran || changeSet.shouldRunOnChange() || changeSet.shouldAlwaysRun();
-        for (Change change : changeSet.getChanges()) {
+        for (IChange c : changeSet.getChanges()) {
+            Change change = (Change) c;
             try {
                 change.finishInitialization();
             } catch (SetupException se) {
@@ -130,7 +133,7 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         }
     }
 
-    public List<ChangeSet> getInvalidMD5Sums() {
+    public List<ExecutableChangeSet> getInvalidMD5Sums() {
         return invalidMD5Sums;
     }
 
@@ -143,7 +146,7 @@ public class ValidatingVisitor implements ChangeSetVisitor {
         return errorPreconditions;
     }
 
-    public Set<ChangeSet> getDuplicateChangeSets() {
+    public Set<ExecutableChangeSet> getDuplicateChangeSets() {
         return duplicateChangeSets;
     }
 

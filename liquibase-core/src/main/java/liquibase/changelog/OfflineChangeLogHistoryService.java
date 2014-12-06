@@ -1,5 +1,13 @@
 package liquibase.changelog;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import liquibase.change.CheckSum;
 import liquibase.database.Database;
 import liquibase.database.OfflineConnection;
@@ -16,14 +24,6 @@ import liquibase.util.LiquibaseService;
 import liquibase.util.LiquibaseUtil;
 import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @LiquibaseService(skip = true)
 public class OfflineChangeLogHistoryService extends AbstractChangeLogHistoryService {
@@ -154,7 +154,7 @@ public class OfflineChangeLogHistoryService extends AbstractChangeLogHistoryServ
                         CheckSum.parse(line[COLUMN_MD5SUM]),
                         new ISODateFormat().parse(line[COLUMN_DATEEXECUTED]),
                         line[COLUMN_TAG],
-                        ChangeSet.ExecType.valueOf(line[COLUMN_EXECTYPE]),
+                        ExecutableChangeSet.ExecType.valueOf(line[COLUMN_EXECTYPE]),
                         line[COLUMN_DESCRIPTION],
                         line[COLUMN_COMMENTS]));
             }
@@ -285,7 +285,7 @@ public class OfflineChangeLogHistoryService extends AbstractChangeLogHistoryServ
             getDatabase().commit();
         }
 
-        if (execType.equals(ChangeSet.ExecType.FAILED) || execType.equals(ChangeSet.ExecType.SKIPPED)) {
+        if (execType.equals(ExecutableChangeSet.ExecType.FAILED) || execType.equals(ExecutableChangeSet.ExecType.SKIPPED)) {
             return; //do nothing
         } else  if (execType.ranBefore) {
             replaceChangeSet(changeSet, new ReplaceChangeSetLogic() {

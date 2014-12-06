@@ -1,13 +1,12 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.Change;
+import liquibase.change.IChange;
 import liquibase.change.core.CreateSequenceChange;
 import liquibase.change.core.DropSequenceChange;
 import liquibase.diff.DiffResult;
 import liquibase.exception.DatabaseException;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Sequence;
-
 import static liquibase.Assert.assertNotNull;
 
 public class DropSequenceChangeSupplier extends AbstractChangeSupplier<DropSequenceChange>  {
@@ -17,13 +16,13 @@ public class DropSequenceChangeSupplier extends AbstractChangeSupplier<DropSeque
     }
 
     @Override
-    public Change[]  prepareDatabase(DropSequenceChange change) throws DatabaseException {
+    public IChange[]  prepareDatabase(DropSequenceChange change) throws DatabaseException {
         CreateSequenceChange createSequenceChange = new CreateSequenceChange();
         createSequenceChange.setCatalogName(change.getCatalogName());
         createSequenceChange.setSchemaName(change.getSchemaName());
         createSequenceChange.setSequenceName(change.getSequenceName());
 
-        return new Change[] {createSequenceChange };
+        return new IChange[] {createSequenceChange };
     }
 
     @Override
