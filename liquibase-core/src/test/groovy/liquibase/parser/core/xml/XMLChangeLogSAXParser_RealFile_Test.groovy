@@ -23,7 +23,6 @@ import liquibase.sql.visitor.AppendSqlVisitor
 import liquibase.sql.visitor.ReplaceSqlVisitor
 import liquibase.test.JUnitResourceAccessor
 import spock.lang.FailsWith
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -495,8 +494,6 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
     }
     
-    // FIXME custom precondition
-    @Ignore
     def "tests for particular features and edge conditions part 3 testCasesChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/testCasesChangeLog.xml"

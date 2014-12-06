@@ -11,7 +11,7 @@ import liquibase.resource.ResourceAccessor;
 
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(ExecutablePrecondition.class)
+@MetaInfServices(Precondition.class)
 public class CustomPreconditionWrapper extends AbstractPrecondition {
 
     private String className;
