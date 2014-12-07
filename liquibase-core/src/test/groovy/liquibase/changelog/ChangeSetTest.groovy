@@ -20,7 +20,7 @@ import spock.lang.Unroll
 public class ChangeSetTest extends Specification {
 
     @Shared
-            resourceSupplier = new ResourceSupplier()
+    resourceSupplier = new ResourceSupplier()
 
     def getDescriptions() {
         when:
@@ -410,7 +410,7 @@ public class ChangeSetTest extends Specification {
 
         then:
         changeLog.getChangeSet(path, "nvoxland", "3").changes.size() == 1
-        ((DropTableChange) changeLog.getChangeSet(path, "nvoxland", "3").changes[0]).tableName == "tableX"
+        (changeLog.getChangeSet(path, "nvoxland", "3").changes[0]).tableName == "tableX"
         changeLog.getChangeSet(path, "nvoxland", "3").rollBackChanges.size() == 1
         (changeLog.getChangeSet(path, "nvoxland", "3").rollBackChanges[0]).tableName == "table2"
 
