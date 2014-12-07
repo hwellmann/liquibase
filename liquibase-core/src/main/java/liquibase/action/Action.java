@@ -3,7 +3,6 @@ package liquibase.action;
 import java.util.Set;
 
 import liquibase.change.Change;
-import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.database.Database;
 import liquibase.exception.RollbackImpossibleException;

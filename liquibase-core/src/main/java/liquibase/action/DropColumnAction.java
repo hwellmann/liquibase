@@ -3,24 +3,18 @@ package liquibase.action;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
-import liquibase.change.CheckSum;
+import liquibase.change.ChangeWithColumns;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropColumnChange;
-import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.SQLiteDatabase;
-import liquibase.exception.SetupException;
 import liquibase.exception.ValidationErrors;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
-import liquibase.resource.ResourceAccessor;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.DropColumnStatement;
@@ -37,7 +31,7 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name = "dropColumn", description = "Drop existing column(s)", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class DropColumnAction extends AbstractAction<DropColumnChange>  {
+public class DropColumnAction extends AbstractAction<DropColumnChange>  implements ChangeWithColumns<ColumnConfig> {
     
     
     public DropColumnAction() {
@@ -246,5 +240,24 @@ public class DropColumnAction extends AbstractAction<DropColumnChange>  {
      */
     public String getTableName() {
         return change.getTableName();
+    }
+
+
+    @Override
+    public void addColumn(ColumnConfig column) {
+        change.addColumn(column);
+        
+    }
+
+
+    @Override
+    public List<ColumnConfig> getColumns() {
+        return change.getColumns();
+    }
+
+
+    @Override
+    public void setColumns(List<ColumnConfig> columns) {
+        change.setColumns(columns);
     }
 }
