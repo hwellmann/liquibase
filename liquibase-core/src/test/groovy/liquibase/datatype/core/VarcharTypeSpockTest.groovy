@@ -9,7 +9,7 @@ import liquibase.database.core.PostgresDatabase
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class VarcharTypeTest extends Specification {
+class VarcharTypeSpockTest extends Specification {
     @Unroll
     def "toDatabaseType"() {
         when:
