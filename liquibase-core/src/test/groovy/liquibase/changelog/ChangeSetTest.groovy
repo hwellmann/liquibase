@@ -1,5 +1,8 @@
 package liquibase.changelog
 
+import static org.junit.Assert.assertTrue
+import static spock.util.matcher.HamcrestSupport.that
+import liquibase.action.CreateTableAction
 import liquibase.change.CheckSum
 import liquibase.change.core.*
 import liquibase.parser.core.ParsedNode
@@ -7,13 +10,12 @@ import liquibase.parser.core.ParsedNodeException
 import liquibase.precondition.core.RunningAsPrecondition
 import liquibase.sdk.supplier.resource.ResourceSupplier
 import liquibase.sql.visitor.ReplaceSqlVisitor
+
 import org.hamcrest.Matchers
+
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import static org.junit.Assert.assertTrue
-import static spock.util.matcher.HamcrestSupport.that
 
 public class ChangeSetTest extends Specification {
 
@@ -38,7 +40,7 @@ public class ChangeSetTest extends Specification {
         changeSet.getDescription() == insertDescription + " (x2)"
 
         when:
-        changeSet.addChange(new CreateTableChange());
+        changeSet.addChange(new CreateTableAction());
         then:
         changeSet.getDescription() == insertDescription + " (x2), createTable"
     }
@@ -410,7 +412,7 @@ public class ChangeSetTest extends Specification {
         changeLog.getChangeSet(path, "nvoxland", "3").changes.size() == 1
         ((DropTableChange) changeLog.getChangeSet(path, "nvoxland", "3").changes[0]).tableName == "tableX"
         changeLog.getChangeSet(path, "nvoxland", "3").rollBackChanges.size() == 1
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "3").rollBackChanges[0]).tableName == "table2"
+        (changeLog.getChangeSet(path, "nvoxland", "3").rollBackChanges[0]).tableName == "table2"
 
         where:
         changeSetPath << ["com/example/test.xml", null]

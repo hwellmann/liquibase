@@ -2,10 +2,10 @@ package liquibase.diff.output.changelog.core;
 
 import java.util.Date;
 
-import liquibase.change.ExecutableChange;
+import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.core.CreateTableChange;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
 import liquibase.database.core.MySQLDatabase;
@@ -55,7 +55,7 @@ public class MissingTableChangeGenerator implements MissingObjectChangeGenerator
 //            continue;
 //        }
 
-        CreateTableChange change = createCreateTableChange();
+        CreateTableAction change = createCreateTableAction();
         change.setTableName(missingTable.getName());
         if (control.getIncludeCatalog()) {
             change.setCatalogName(missingTable.getSchema().getCatalogName());
@@ -169,7 +169,7 @@ public class MissingTableChangeGenerator implements MissingObjectChangeGenerator
         }
     }
 
-    protected CreateTableChange createCreateTableChange() {
-        return new CreateTableChange();
+    protected CreateTableAction createCreateTableAction() {
+        return new CreateTableAction();
     }
 }

@@ -1,22 +1,24 @@
 package liquibase.changelog.visitor;
 
-import liquibase.change.ColumnConfig;
-import liquibase.change.core.CreateTableChange;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.changelog.RanChangeSet;
-import liquibase.changelog.DatabaseChangeLogImpl;
-import liquibase.sdk.database.MockDatabase;
-import liquibase.exception.SetupException;
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import liquibase.action.CreateTableAction;
+import liquibase.change.ColumnConfig;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
+import liquibase.exception.SetupException;
 import liquibase.exception.ValidationErrors;
+import liquibase.sdk.database.MockDatabase;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class ValidatingVisitorTest {
 
@@ -32,14 +34,14 @@ public class ValidatingVisitorTest {
 
     @Test
     public void visit_successful() throws Exception {
-        CreateTableChange change1 = new CreateTableChange();
+        CreateTableAction change1 = new CreateTableAction();
         change1.setTableName("table1");
         ColumnConfig column1 = new ColumnConfig();
         change1.addColumn(column1);
         column1.setName("col1");
         column1.setType("int");
 
-        CreateTableChange change2 = new CreateTableChange();
+        CreateTableAction change2 = new CreateTableAction();
         change2.setTableName("table2");
         ColumnConfig column2 = new ColumnConfig();
         change2.addColumn(column2);
@@ -59,7 +61,7 @@ public class ValidatingVisitorTest {
 
     @Test
     public void visit_setupException() throws Exception {
-        changeSet1.addChange(new CreateTableChange() {
+        changeSet1.addChange(new CreateTableAction() {
             @Override
             public void finishInitialization() throws SetupException {
                 throw new SetupException("Test message");
@@ -90,7 +92,7 @@ public class ValidatingVisitorTest {
     @Test
     public void visit_validateError() throws Exception {
 
-        changeSet1.addChange(new CreateTableChange() {
+        changeSet1.addChange(new CreateTableAction() {
             @Override
             public ValidationErrors validate(Database database) {
                 ValidationErrors changeValidationErrors = new ValidationErrors();
@@ -112,7 +114,7 @@ public class ValidatingVisitorTest {
     @Test
     public void visit_torunOnly() throws Exception {
 
-        changeSet1.addChange(new CreateTableChange() {
+        changeSet1.addChange(new CreateTableAction() {
             @Override
             public ValidationErrors validate(Database database) {
                 ValidationErrors changeValidationErrors = new ValidationErrors();

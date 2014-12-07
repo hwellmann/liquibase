@@ -1,13 +1,11 @@
 package liquibase.changelog
 
-import liquibase.change.core.CreateTableChange
 import liquibase.change.core.RawSQLChange
 import liquibase.parser.core.ParsedNode
 import liquibase.precondition.core.OrPrecondition
-import liquibase.precondition.core.PreconditionContainer
 import liquibase.precondition.core.RunningAsPrecondition
-import liquibase.sdk.supplier.resource.ResourceSupplier
 import liquibase.sdk.resource.MockResourceAccessor
+import liquibase.sdk.supplier.resource.ResourceSupplier
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -116,11 +114,11 @@ create view sql_view as select * from sql_table;'''
         changeLogFromChildren.changeSets.size() == 2
         changeLogFromValue.changeSets.size() == 2
 
-        ((CreateTableChange) changeLogFromChildren.changeSets[0].changes[0]).tableName == "my_table"
-        ((CreateTableChange) changeLogFromValue.changeSets[0].changes[0]).tableName == "my_table"
+        (changeLogFromChildren.changeSets[0].changes[0]).tableName == "my_table"
+        (changeLogFromValue.changeSets[0].changes[0]).tableName == "my_table"
 
-        ((CreateTableChange) changeLogFromChildren.changeSets[1].changes[0]).tableName == "my_other_table"
-        ((CreateTableChange) changeLogFromValue.changeSets[1].changes[0]).tableName == "my_other_table"
+        (changeLogFromChildren.changeSets[1].changes[0]).tableName == "my_other_table"
+        (changeLogFromValue.changeSets[1].changes[0]).tableName == "my_other_table"
     }
 
     def "included changelog files have their preconditions and changes included in root changelog"() {
@@ -148,9 +146,9 @@ create view sql_view as select * from sql_table;'''
         ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[2]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
         rootChangeLog.changeSets.size() == 3
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/test1.xml", "nvoxland", "1").changes[0]).tableName == "person"
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/test2.xml", "nvoxland", "1").changes[0]).tableName == "person2"
+        (rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"
+        (rootChangeLog.getChangeSet("com/example/test1.xml", "nvoxland", "1").changes[0]).tableName == "person"
+        (rootChangeLog.getChangeSet("com/example/test2.xml", "nvoxland", "1").changes[0]).tableName == "person2"
     }
 
     def "includeAll files have preconditions and changeSets loaded"() {
@@ -183,9 +181,9 @@ create view sql_view as select * from sql_table;'''
         ((OrPrecondition) (rootChangeLog.preconditions.nestedPreconditions[3]).nestedPreconditions[1]).nestedPreconditions.size() == 2
 
         rootChangeLog.changeSets.size() == 4
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/test1.xml", "nvoxland", "1").changes[0]).tableName == "person"
-        ((CreateTableChange) rootChangeLog.getChangeSet("com/example/test2.xml", "nvoxland", "1").changes[0]).tableName == "person2"
+        (rootChangeLog.getChangeSet("com/example/root.xml", "nvoxland", "1").changes[0]).tableName == "test_table"
+        (rootChangeLog.getChangeSet("com/example/test1.xml", "nvoxland", "1").changes[0]).tableName == "person"
+        (rootChangeLog.getChangeSet("com/example/test2.xml", "nvoxland", "1").changes[0]).tableName == "person2"
         ((RawSQLChange) rootChangeLog.getChangeSet("com/example/test.sql", "includeAll", "raw").changes[0]).sql == testSql
     }
 

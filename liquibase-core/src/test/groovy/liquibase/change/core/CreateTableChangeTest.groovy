@@ -1,12 +1,14 @@
 package liquibase.change.core
 
+import static org.junit.Assert.fail
+import liquibase.action.CreateTableAction
 import liquibase.change.ChangeStatus
 import liquibase.change.ColumnConfig
 import liquibase.change.ConstraintsConfig
 import liquibase.change.StandardChangeTest
-import liquibase.sdk.database.MockDatabase
 import liquibase.parser.core.ParsedNode
 import liquibase.parser.core.ParsedNodeException
+import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
 import liquibase.statement.DatabaseFunction
@@ -19,13 +21,11 @@ import liquibase.structure.core.PrimaryKey
 import liquibase.structure.core.Table
 import spock.lang.Unroll
 
-import static org.junit.Assert.fail
-
 public class CreateTableChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         change.setTableName("TAB_NAME")
 
         then:
@@ -35,7 +35,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
     @Unroll("statements have correct default values after #method(#defaultValue)")
     def "statements have correct default values"() throws Exception {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         def columnConfig = new ColumnConfig()
         columnConfig.setName("id")
         columnConfig.setType("int")
@@ -85,7 +85,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
 
     def createInverse() {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         change.setTableName("TestTable")
 
         then:
@@ -97,7 +97,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
 
     def "tablespace defaults to null"() {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
 
         then:
         CreateTableStatement statement = (CreateTableStatement) change.generateStatements(new MockDatabase())[0]
@@ -106,7 +106,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
 
     def "tablespace can be set"() throws Exception {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         change.setTablespace(tablespace)
 
         then:
@@ -119,7 +119,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
 
     def "foreign key deferrability sets correctly"() {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         ColumnConfig columnConfig = new ColumnConfig()
         columnConfig.setName("id")
         columnConfig.setType("int")
@@ -147,7 +147,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
 
     def "foreign keys default not deferrable"() throws Exception {
         when:
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         ColumnConfig columnConfig = new ColumnConfig()
         columnConfig.setName("id")
         columnConfig.setType("int")
@@ -171,7 +171,7 @@ public class CreateTableChangeTest extends StandardChangeTest {
         def column2 = new Column(Table.class, table.schema.catalogName, table.schema.name, table.name, "column_2").setType(new DataType("boolean")).setRelation(table)
         def column3 = new Column(Table.class, table.schema.catalogName, table.schema.name, table.name, "column_3").setType(new DataType("varchar(10)")).setRelation(table)
 
-        def change = new CreateTableChange()
+        def change = new CreateTableAction()
         change.tableName = table.name
         change.addColumn(new ColumnConfig(column1).setType(column1.type.toString()))
         change.addColumn(new ColumnConfig(column2).setType(column2.type.toString()))

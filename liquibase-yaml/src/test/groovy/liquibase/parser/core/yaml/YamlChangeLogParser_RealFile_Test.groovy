@@ -3,12 +3,12 @@ package liquibase.parser.core.yaml
 import static org.hamcrest.Matchers.containsInAnyOrder
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.Contexts
+import liquibase.action.CreateTableAction
 import liquibase.change.Change
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
 import liquibase.change.core.CreateIndexChange
-import liquibase.change.core.CreateTableChange
 import liquibase.change.core.CreateViewChange
 import liquibase.change.core.DropTableChange
 import liquibase.change.core.EmptyChange
@@ -83,7 +83,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         changeSet.filePath == path
         changeSet.comments == "Some comments go here"
 
-        assert change instanceof CreateTableChange
+        assert change instanceof CreateTableAction
         change.tableName == "person_yaml"
         change.columns.size() == 3
         change.columns[0].name == "id"
@@ -122,7 +122,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSet(path, "nvoxland", "1").shouldRunOnChange()
 
         ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(0).getChanges().get(0)).getName() == "createTable"
-        assert changeLog.getChangeSets().get(0).getChanges().get(0) instanceof CreateTableChange
+        assert changeLog.getChangeSets().get(0).getChanges().get(0) instanceof CreateTableAction
 
         then:
         changeLog.getChangeSet(path, "nvoxland", "2").changes.size() == 2
@@ -147,7 +147,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSet(path, "bob", "3").shouldRunOnChange()
 
         ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "bob", "3").getChanges().get(0)).getName() == "createTable"
-        assert changeLog.getChangeSet(path, "bob", "3").getChanges().get(0) instanceof CreateTableChange
+        assert changeLog.getChangeSet(path, "bob", "3").getChanges().get(0) instanceof CreateTableAction
 
 
         changeLog.getChangeSets().get(3).getChanges().size() == 1
@@ -218,11 +218,11 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         changeLog.getChangeSets()[5].toString(false) == "liquibase/parser/core/yaml/included/raw-2.sql::raw::includeAll"
         changeLog.getChangeSets()[6].toString(false) == "liquibase/parser/core/yaml/included/raw.sql::raw::includeAll"
 
-        ((CreateTableChange) changeLog.getChangeSets().get(0).getChanges().get(0)).getTableName() == "employee_yaml"
-        ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/yaml/simpleChangeLog.yaml", "nvoxland", "1").getChanges().get(0)).getTableName() == "person_yaml"
+        (changeLog.getChangeSets().get(0).getChanges().get(0)).getTableName() == "employee_yaml"
+        (changeLog.getChangeSet("liquibase/parser/core/yaml/simpleChangeLog.yaml", "nvoxland", "1").getChanges().get(0)).getTableName() == "person_yaml"
         (changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(0)).getTableName() == "employee"
-        ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/yaml/included/included.changelog1.yaml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_1"
-        ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/yaml/included/included.changelog2.yaml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_2"
+        (changeLog.getChangeSet("liquibase/parser/core/yaml/included/included.changelog1.yaml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_1"
+        (changeLog.getChangeSet("liquibase/parser/core/yaml/included/included.changelog2.yaml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_2"
 
         where:
         path << ["liquibase/parser/core/yaml/nestedChangeLog.yaml", "liquibase/parser/core/yaml/nestedRelativeChangeLog.yaml"]
@@ -250,9 +250,9 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         changeLog.getChangeSets()[6].toString(false) == "liquibase/parser/core/yaml/included/raw-2.sql::raw::includeAll"
         changeLog.getChangeSets()[7].toString(false) == "liquibase/parser/core/yaml/included/raw.sql::raw::includeAll"
 
-        ((CreateTableChange) changeLog.getChangeSet(doubleNestedFileName, "nvoxland", "1").changes[0]).getTableName() == "partner"
-        ((CreateTableChange) changeLog.getChangeSet(nestedFileName, "nvoxland", "1").changes[0]).getTableName() == "employee_yaml"
-        ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/yaml/simpleChangeLog.yaml", "nvoxland", "1").changes[0]).getTableName() == "person_yaml"
+        (changeLog.getChangeSet(doubleNestedFileName, "nvoxland", "1").changes[0]).getTableName() == "partner"
+        (changeLog.getChangeSet(nestedFileName, "nvoxland", "1").changes[0]).getTableName() == "employee_yaml"
+        (changeLog.getChangeSet("liquibase/parser/core/yaml/simpleChangeLog.yaml", "nvoxland", "1").changes[0]).getTableName() == "person_yaml"
         (changeLog.getChangeSet(nestedFileName, "nvoxland", "2").changes[0]).getTableName() == "employee"
 
         where:
@@ -300,7 +300,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
 
         Change change = changeSet.getChanges().get(0);
         ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
-        assert change instanceof CreateTableChange
+        assert change instanceof CreateTableAction
     }
 
     def "changeLog parameters are correctly expanded"() throws Exception {
@@ -328,9 +328,9 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         changeLog.getChangeSets().get(1).getId() == "2"
         changeLog.getChangeSets().get(1).comments == "Some values from the file: fileProperty1: 'property1 from file', fileProperty2: 'property2 from file'"
 
-        ((CreateTableChange) changeLog.getChangeSets().get(1).getChanges()[0]).getTableName() == "my_table_name_2"
-        ((CreateTableChange) changeLog.getChangeSets().get(1).getChanges()[0]).getColumns()[0].getName() == "my_column_name"
-        ((CreateTableChange) changeLog.getChangeSets().get(1).getChanges()[0]).getColumns()[0].getDefaultValue() == "a string with an \${unused} param against value from mock"
+        (changeLog.getChangeSets().get(1).getChanges()[0]).getTableName() == "my_table_name_2"
+        (changeLog.getChangeSets().get(1).getChanges()[0]).getColumns()[0].getName() == "my_column_name"
+        (changeLog.getChangeSets().get(1).getChanges()[0]).getColumns()[0].getDefaultValue() == "a string with an \${unused} param against value from mock"
 
     }
 
@@ -408,10 +408,10 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "comment in sql").changes[0]).sql == "select * from comment_in_sql"
 
         and: "column and constraints are parsed correctly"
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0] != null
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].name == "id"
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].constraints != null
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].constraints.primaryKeyName == "pk_name"
+        (changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0] != null
+        (changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].name == "id"
+        (changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].constraints != null
+        (changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0].constraints.primaryKeyName == "pk_name"
 
         and: "precondition attributes are parsed correctly"
         changeLog.getChangeSet(path, "nvoxland", "precondition attributes 1").preconditions.onSqlOutput == PreconditionContainer.OnSqlOutputOption.FAIL
@@ -510,11 +510,11 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         ((CustomChangeWrapper) changeLog.getChangeSet(path, "nvoxland", "custom precondition and change").changes[0]).getParamValue("newValue") == ""
 
         and: "column nodes are parsed correctly"
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].name == "id"
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].type == "int"
-        assert ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.isPrimaryKey()
-        assert !((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.isNullable()
-        ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.primaryKeyName == "pk_name"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].name == "id"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].type == "int"
+        assert (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.isPrimaryKey()
+        assert !(changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.isNullable()
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.primaryKeyName == "pk_name"
 
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].name == "new_col"
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].type == "varchar(10)"

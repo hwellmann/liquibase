@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
-import liquibase.change.core.CreateTableChange;
 import liquibase.changelog.ChangeLogValidator;
 import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
@@ -44,7 +44,7 @@ public class ValidatingVisitorPreConditionsTest {
         changeSet1 = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
         changeLog.addChangeSet(changeSet1);
 
-        CreateTableChange change1 = new CreateTableChange();
+        CreateTableAction change1 = new CreateTableAction();
         change1.setTableName("valid_test");
         change1.addColumn(new ColumnConfig().setName("id").setType("int"));
         changeSet1.addChange(change1);

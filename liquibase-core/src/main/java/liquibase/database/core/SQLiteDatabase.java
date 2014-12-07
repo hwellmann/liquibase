@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import liquibase.CatalogAndSchema;
+import liquibase.action.CreateTableAction;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
@@ -182,13 +183,14 @@ public class SQLiteDatabase extends AbstractJdbcDatabase {
 
             statements.addAll(Arrays.asList(new RenameTableStatement(catalogName, schemaName, tableName, temp_table_name)));
             // create temporary table
-            CreateTableChange ct_change_tmp = new CreateTableChange();
+            CreateTableAction createTable = new CreateTableAction();
+            CreateTableChange ct_change_tmp =  createTable.getChange();
             ct_change_tmp.setSchemaName(schemaName);
             ct_change_tmp.setTableName(tableName);
             for (ColumnConfig column : createColumns) {
                 ct_change_tmp.addColumn(column);
             }
-            statements.addAll(Arrays.asList(ct_change_tmp.generateStatements(database)));
+            statements.addAll(Arrays.asList(createTable.generateStatements(database)));
             // copy rows to temporary table
             statements.addAll(Arrays.asList(new CopyRowsStatement(temp_table_name, tableName, copyColumns)));
             // delete original table

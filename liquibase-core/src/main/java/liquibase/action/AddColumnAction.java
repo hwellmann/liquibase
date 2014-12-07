@@ -245,10 +245,4 @@ public class AddColumnAction extends AbstractAction<AddColumnChange> implements 
 
         return "Columns " + StringUtils.join(names, ",") + " added to " + getTableName();
     }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
-    }
-
 }

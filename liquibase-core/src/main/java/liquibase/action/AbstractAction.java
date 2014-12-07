@@ -17,7 +17,6 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.RollbackImpossibleException;
@@ -40,20 +39,19 @@ import liquibase.structure.DatabaseObject;
  */
 public abstract class AbstractAction<T extends Change> implements Action<T>, ExecutableChange {
 
-    private ExecutableChangeSet changeSet;
-    
     protected T change;
 
     public AbstractAction(T change) {
         this.change = change;
     }
-    
-    
+
+
+    @Override
     public T getChange() {
         return change;
     }
-    
-    
+
+
     public void setChange(T change) {
         this.change = change;
     }
@@ -360,7 +358,7 @@ public abstract class AbstractAction<T extends Change> implements Action<T>, Exe
     public ParsedNode serialize() throws ParsedNodeException {
         return change.serialize();
     }
-    
-    
+
+
 
 }

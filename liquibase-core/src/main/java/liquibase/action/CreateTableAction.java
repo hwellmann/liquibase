@@ -1,17 +1,17 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.CreateTableChange;
+import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
@@ -40,27 +40,25 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="createTable", description = "Create Table", priority = ChangeMetaData.PRIORITY_DEFAULT)
 @MetaInfServices(ExecutableChange.class)
-public class CreateTableChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
+public class CreateTableAction extends AbstractAction<CreateTableChange> implements ChangeWithColumns<ColumnConfig> {
 
-    private List<ColumnConfig> columns;
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String tablespace;
-    private String remarks;
-
-    public CreateTableChange() {
-        super();
-        columns = new ArrayList<ColumnConfig>();
+    public CreateTableAction() {
+        this(new CreateTableChange());
     }
+
+    public CreateTableAction(CreateTableChange change) {
+        super(change);
+    }
+
+
 
     @Override
     public ValidationErrors validate(Database database) {
         ValidationErrors validationErrors = new ValidationErrors();
         validationErrors.addAll(super.validate(database));
 
-        if (columns != null) {
-            for (ColumnConfig columnConfig : columns) {
+        if (getColumns() != null) {
+            for (ColumnConfig columnConfig : getColumns()) {
                 if (columnConfig.getType() == null) {
                     validationErrors.addError("column 'type' is required for all columns");
                 }
@@ -129,8 +127,8 @@ public class CreateTableChange extends AbstractChange implements ChangeWithColum
         List<SqlStatement> statements = new ArrayList<SqlStatement>();
         statements.add(statement);
 
-        if (StringUtils.trimToNull(remarks) != null) {
-            SetTableRemarksStatement remarksStatement = new SetTableRemarksStatement(catalogName, schemaName, tableName, remarks);
+        if (StringUtils.trimToNull(getRemarks()) != null) {
+            SetTableRemarksStatement remarksStatement = new SetTableRemarksStatement(getCatalogName(), getSchemaName(), getTableName(), getRemarks());
             if (SqlGeneratorFactory.getInstance().supports(remarksStatement, database)) {
                 statements.add(remarksStatement);
             }
@@ -139,7 +137,7 @@ public class CreateTableChange extends AbstractChange implements ChangeWithColum
         for (ColumnConfig column : getColumns()) {
             String columnRemarks = StringUtils.trimToNull(column.getRemarks());
             if (columnRemarks != null) {
-                SetColumnRemarksStatement remarksStatement = new SetColumnRemarksStatement(catalogName, schemaName, tableName, column.getName(), columnRemarks);
+                SetColumnRemarksStatement remarksStatement = new SetColumnRemarksStatement(getCatalogName(), getSchemaName(), getTableName(), column.getName(), columnRemarks);
                 if (!(database instanceof MySQLDatabase) && SqlGeneratorFactory.getInstance().supports(remarksStatement, database)) {
                     statements.add(remarksStatement);
                 }
@@ -203,75 +201,64 @@ public class CreateTableChange extends AbstractChange implements ChangeWithColum
     }
 
     @Override
-    @DatabaseChangeProperty(requiredForDatabase = "all")
     public List<ColumnConfig> getColumns() {
-        if (columns == null) {
-            return new ArrayList<ColumnConfig>();
-        }
-        return columns;
+        return change.getColumns();
     }
 
     @Override
     public void setColumns(List<ColumnConfig> columns) {
-        this.columns = columns;
+        change.setColumns(columns);
     }
 
-    @DatabaseChangeProperty(since = "3.0")
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty()
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
 
     public String getTablespace() {
-        return tablespace;
+        return change.getTablespace();
     }
 
     public void setTablespace(String tablespace) {
-        this.tablespace = tablespace;
+        change.setTablespace(tablespace);;
     }
 
     @Override
     public void addColumn(ColumnConfig column) {
-        columns.add(column);
+        change.addColumn(column);;
     }
 
     public String getRemarks() {
-        return remarks;
+        return change.getRemarks();
     }
 
     public void setRemarks(String remarks) {
-        this.remarks = remarks;
+        change.setRemarks(remarks);
     }
 
     @Override
     public String getConfirmationMessage() {
-        return "Table " + tableName + " created";
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
+        return "Table " + getTableName() + " created";
     }
 
 }
