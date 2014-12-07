@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.containsInAnyOrder
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.Contexts
 import liquibase.change.Change
-import liquibase.change.ExecutableChangeFactory
 import liquibase.change.CheckSum
+import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.*
 import liquibase.change.custom.CustomChangeWrapper
 import liquibase.change.custom.ExampleCustomSqlChange
@@ -133,10 +133,10 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLChange
 
         ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
-        assert changeLog.getChangeSets().get(1).getChanges()[0] instanceof AddColumnChange
+        assert changeLog.getChangeSets().get(1).getChanges()[0].change instanceof AddColumnChange
 
         ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges().get(1)).getName() == "addColumn"
-        assert changeLog.getChangeSets().get(1).getChanges().get(1) instanceof AddColumnChange
+        assert changeLog.getChangeSets().get(1).getChanges().get(1).change instanceof AddColumnChange
 
         changeLog.getChangeSets().get(2).getAuthor() == "bob"
         changeLog.getChangeSets().get(2).getId() == "3"
@@ -219,7 +219,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
         ((CreateTableChange) changeLog.getChangeSets()[0].getChanges()[0]).getTableName() == "employee"
         ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/xml/simpleChangeLog.xml", "nvoxland", "1").getChanges()[0]).getTableName() == "person"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "2").getChanges()[0]).getTableName() == "employee"
+        (changeLog.getChangeSet(path, "nvoxland", "2").getChanges()[0]).getTableName() == "employee"
         ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/xml/included/included.changelog1.xml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_1"
         ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/xml/included/included.changelog2.xml", "nvoxland", "1").getChanges()[0]).getTableName() == "included_table_2"
 
@@ -252,7 +252,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         ((CreateTableChange) changeLog.getChangeSet(doubleNestedFileName, "nvoxland", "1").changes[0]).getTableName() == "partner"
         ((CreateTableChange) changeLog.getChangeSet(nestedFileName, "nvoxland", "1").changes[0]).getTableName() == "employee"
         ((CreateTableChange) changeLog.getChangeSet("liquibase/parser/core/xml/simpleChangeLog.xml", "nvoxland", "1").changes[0]).getTableName() == "person"
-        ((AddColumnChange) changeLog.getChangeSet(nestedFileName, "nvoxland", "2").changes[0]).getTableName() == "employee"
+        (changeLog.getChangeSet(nestedFileName, "nvoxland", "2").changes[0]).getTableName() == "employee"
 
         where:
         doubleNestedFileName | nestedFileName
@@ -350,14 +350,14 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         DatabaseChangeLog changeLog = new XMLChangeLogSAXParser().parse(path, new ChangeLogParametersImpl(), new JUnitResourceAccessor());
 
         then: "before/after/position attributes are read correctly"
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getName() == "middlename";
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getAfterColumn() == "firstname";
+        (changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getName() == "middlename";
+        (changeLog.getChangeSet(path, "cmouttet", "using after column attribute").changes[0]).columns[0].getAfterColumn() == "firstname";
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using before column attribute").changes[0]).columns[0].getName() == "middlename";
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using before column attribute").changes[0]).columns[0].getBeforeColumn() == "lastname";
+        (changeLog.getChangeSet(path, "cmouttet", "using before column attribute").changes[0]).columns[0].getName() == "middlename";
+        (changeLog.getChangeSet(path, "cmouttet", "using before column attribute").changes[0]).columns[0].getBeforeColumn() == "lastname";
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using position attribute").changes[0]).columns[0].getName() == "middlename";
-        ((AddColumnChange) changeLog.getChangeSet(path, "cmouttet", "using position attribute").changes[0]).columns[0].getPosition() == 1;
+        (changeLog.getChangeSet(path, "cmouttet", "using position attribute").changes[0]).columns[0].getName() == "middlename";
+        (changeLog.getChangeSet(path, "cmouttet", "using position attribute").changes[0]).columns[0].getPosition() == 1;
 
         and: "validCheckSums are parsed"
         that changeLog.getChangeSet(path, "nvoxland", "validCheckSums set").getValidCheckSums(), containsInAnyOrder([CheckSum.parse("a9b7b29ce3a75940858cd022501852e2"), CheckSum.parse("8:b3d6a29ce3a75940858cd093501151d1")].toArray())
@@ -493,7 +493,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[6]).sql == "select * from simple"
 
     }
-    
+
     def "tests for particular features and edge conditions part 3 testCasesChangeLog.xml"() throws Exception {
         when:
         def path = "liquibase/parser/core/xml/testCasesChangeLog.xml"
@@ -526,25 +526,25 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert !((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.isNullable()
         ((CreateTableChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[0]).columns[0].constraints.primaryKeyName == "pk_name"
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].name == "new_col"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].type == "varchar(10)"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].defaultValue == "new value"
-        assert !((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].constraints.isNullable()
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].name == "new_col"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].type == "varchar(10)"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].defaultValue == "new value"
+        assert !(changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[0].constraints.isNullable()
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[1].name == "new_col_int"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[1].defaultValueNumeric == 12
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[1].name == "new_col_int"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[1].defaultValueNumeric == 12
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[2].name == "new_col_bool"
-        assert ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[2].defaultValueBoolean
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[2].name == "new_col_bool"
+        assert (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[2].defaultValueBoolean
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[3].name == "new_col_computed"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[3].defaultValueComputed.toString() == "average_size()"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[3].name == "new_col_computed"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[3].defaultValueComputed.toString() == "average_size()"
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[4].name == "new_col_datetime"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[4].defaultValueDate.toString() == "2014-12-01 13:15:33.0"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[4].name == "new_col_datetime"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[4].defaultValueDate.toString() == "2014-12-01 13:15:33.0"
 
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].name == "new_col_seq"
-        ((AddColumnChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].defaultValueSequenceNext.toString() == "seq_test"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].name == "new_col_seq"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].defaultValueSequenceNext.toString() == "seq_test"
 
         ((CreateIndexChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].name == "id"
         assert ((CreateIndexChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].constraints.isUnique()

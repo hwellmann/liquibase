@@ -1,21 +1,21 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import liquibase.action.DropColumnAction;
-import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
 import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddColumnChange;
+import liquibase.change.core.DropColumnChange;
+import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.FirebirdDatabase;
@@ -47,62 +47,57 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="addColumn", description = "Adds a new column to an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
 @MetaInfServices(ExecutableChange.class)
-public class AddColumnChange extends AbstractChange implements ChangeWithColumns<AddColumnConfig> {
+public class AddColumnAction extends AbstractAction<AddColumnChange> implements ChangeWithColumns<AddColumnConfig> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private List<AddColumnConfig> columns;
-
-    public AddColumnChange() {
-        columns = new ArrayList<AddColumnConfig>();
+    public AddColumnAction() {
+        this(new AddColumnChange());
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="relation.catalog", since = "3.0")
+    public AddColumnAction(AddColumnChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="table", description = "Name of the table to add the column to")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @Override
-    @DatabaseChangeProperty(description = "Column constraint and foreign key information. Setting the \"defaultValue\" attribute will specify a default value for the column. Setting the \"value\" attribute will set all rows existing to the specified value without modifying the column default.", requiredForDatabase = "all")
     public List<AddColumnConfig> getColumns() {
-        return columns;
+        return change.getColumns();
     }
 
     @Override
     public void setColumns(List<AddColumnConfig> columns) {
-        this.columns = columns;
+        change.setColumns(columns);
     }
 
     @Override
     public void addColumn(AddColumnConfig column) {
-        this.columns.add(column);
+        change.addColumn(column);
     }
 
     public void removeColumn(ColumnConfig column) {
-        this.columns.remove(column);
+        change.removeColumn(column);
     }
 
     @Override
@@ -113,7 +108,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
 
         if (getColumns().size() == 0) {
             return new SqlStatement[] {
-                    new AddColumnStatement(catalogName, schemaName, tableName, null, null, null)
+                    new AddColumnStatement(getCatalogName(), getSchemaName(), getTableName(), null, null, null)
             };
         }
 
@@ -181,7 +176,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
       for (ColumnConfig column : getColumns()) {
           String columnRemarks = StringUtils.trimToNull(column.getRemarks());
           if (columnRemarks != null) {
-              SetColumnRemarksStatement remarksStatement = new SetColumnRemarksStatement(catalogName, schemaName, tableName, column.getName(), columnRemarks);
+              SetColumnRemarksStatement remarksStatement = new SetColumnRemarksStatement(getCatalogName(), getSchemaName(), getTableName(), column.getName(), columnRemarks);
               if (SqlGeneratorFactory.getInstance().supports(remarksStatement, database)) {
                   sql.add(remarksStatement);
               }
@@ -200,7 +195,7 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
         change.setSchemaName(getSchemaName());
         change.setTableName(getTableName());
 
-        for (ColumnConfig aColumn : columns) {
+        for (ColumnConfig aColumn : getColumns()) {
             if (aColumn.hasDefaultValue()) {
                 DropDefaultValueChange dropChange = new DropDefaultValueChange();
                 dropChange.setTableName(getTableName());
@@ -243,12 +238,12 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
 
     @Override
     public String getConfirmationMessage() {
-        List<String> names = new ArrayList<String>(columns.size());
-        for (ColumnConfig col : columns) {
+        List<String> names = new ArrayList<String>(getColumns().size());
+        for (ColumnConfig col : getColumns()) {
             names.add(col.getName() + "(" + col.getType() + ")");
         }
 
-        return "Columns " + StringUtils.join(names, ",") + " added to " + tableName;
+        return "Columns " + StringUtils.join(names, ",") + " added to " + getTableName();
     }
 
     @Override

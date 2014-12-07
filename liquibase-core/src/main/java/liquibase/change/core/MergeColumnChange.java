@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.action.AddColumnAction;
 import liquibase.action.DropColumnAction;
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.database.core.DerbyDatabase;
 import liquibase.database.core.SQLiteDatabase;
@@ -126,14 +127,14 @@ public class MergeColumnChange extends AbstractChange {
     public SqlStatement[] generateStatements(Database database) {
         List<SqlStatement> statements = new ArrayList<SqlStatement>();
 
-        AddColumnChange addNewColumnChange = new AddColumnChange();
-        addNewColumnChange.setSchemaName(schemaName);
-        addNewColumnChange.setTableName(getTableName());
+        AddColumnAction addNewColumnAction = new AddColumnAction();
+        addNewColumnAction.setSchemaName(schemaName);
+        addNewColumnAction.setTableName(getTableName());
         AddColumnConfig columnConfig = new AddColumnConfig();
         columnConfig.setName(getFinalColumnName());
         columnConfig.setType(getFinalColumnType());
-        addNewColumnChange.addColumn(columnConfig);
-        statements.addAll(Arrays.asList(addNewColumnChange.generateStatements(database)));
+        addNewColumnAction.addColumn(columnConfig);
+        statements.addAll(Arrays.asList(addNewColumnAction.generateStatements(database)));
 
         String updateStatement = "UPDATE " + database.escapeTableName(getCatalogName(), getSchemaName(), getTableName()) +
                 " SET " + database.escapeObjectName(getFinalColumnName(), Column.class)

@@ -1,9 +1,9 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.AddColumnAction;
 import liquibase.change.AddColumnConfig;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.core.AddColumnChange;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.diff.output.DiffOutputControl;
@@ -58,7 +58,7 @@ public class MissingColumnChangeGenerator implements MissingObjectChangeGenerato
         }
 
 
-        AddColumnChange change = new AddColumnChange();
+        AddColumnAction change = new AddColumnAction();
         change.setTableName(column.getRelation().getName());
         if (control.getIncludeCatalog()) {
             change.setCatalogName(column.getRelation().getSchema().getCatalogName());

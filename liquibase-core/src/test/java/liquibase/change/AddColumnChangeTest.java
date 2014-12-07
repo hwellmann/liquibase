@@ -1,5 +1,6 @@
 package liquibase.change;
 
+import liquibase.action.AddColumnAction;
 import liquibase.change.core.AddColumnChange;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.statement.SqlStatement;
@@ -12,7 +13,8 @@ public class AddColumnChangeTest {
 
     @Test
     public void generateStatements_multipleColumns() {
-        AddColumnChange change = new AddColumnChange();
+        AddColumnAction action = new AddColumnAction();
+        AddColumnChange change = action.getChange();
         AddColumnConfig column1 = new AddColumnConfig();
         column1.setName("column1");
         column1.setType("INT");
@@ -22,7 +24,7 @@ public class AddColumnChangeTest {
         column2.setType("INT");
         change.addColumn(column2);
 
-        SqlStatement[] statements = change.generateStatements(new MockDatabase());
+        SqlStatement[] statements = action.generateStatements(new MockDatabase());
         Assert.assertEquals(1, statements.length);
         Assert.assertTrue(statements[0] instanceof AddColumnStatement);
         AddColumnStatement stmt = (AddColumnStatement)statements[0];
