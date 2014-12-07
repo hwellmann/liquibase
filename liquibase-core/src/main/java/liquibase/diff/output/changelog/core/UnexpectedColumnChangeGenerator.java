@@ -1,5 +1,6 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropColumnAction;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropColumnChange;
 import liquibase.database.Database;
@@ -54,7 +55,8 @@ public class UnexpectedColumnChangeGenerator implements UnexpectedObjectChangeGe
             return null;
         }
 
-        DropColumnChange change = new DropColumnChange();
+        DropColumnAction action = new DropColumnAction();
+        DropColumnChange change = action.getChange();
         change.setTableName(column.getRelation().getName());
         if (control.getIncludeCatalog()) {
             change.setCatalogName(column.getRelation().getSchema().getCatalogName());
@@ -64,7 +66,8 @@ public class UnexpectedColumnChangeGenerator implements UnexpectedObjectChangeGe
         }
         change.setColumnName(column.getName());
 
-        return new ExecutableChange[] { change };
+        // FIXME
+        return new ExecutableChange[] { null /*action*/ };
 
     }
 }

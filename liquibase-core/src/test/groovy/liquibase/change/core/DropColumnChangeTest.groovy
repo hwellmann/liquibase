@@ -1,5 +1,6 @@
 package liquibase.change.core
 
+import liquibase.action.DropColumnAction;
 import liquibase.change.AddColumnConfig
 import liquibase.change.ChangeStatus;
 import liquibase.change.StandardChangeTest;
@@ -13,12 +14,13 @@ public class DropColumnChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        DropColumnChange change = new DropColumnChange();
+        DropColumnAction action = new DropColumnAction();
+        def change = action.change;
         change.setTableName("TABLE_NAME");
         change.setColumnName("COL_HERE");
 
         then:
-        "Column TABLE_NAME.COL_HERE dropped" == change.getConfirmationMessage()
+        "Column TABLE_NAME.COL_HERE dropped" == action.getConfirmationMessage()
     }
 
     def "checkStatus"() {
@@ -42,22 +44,23 @@ public class DropColumnChangeTest extends StandardChangeTest {
         table.getColumns().add(new Column(Table.class, null, null, table.name, "other_col"))
         table.getColumns().add(new Column(Table.class, null, null, table.name, "another_col"))
 
-        def change = new DropColumnChange()
+        def action = new DropColumnAction()
+        def change = action.getChange();
         change.tableName = table.name
         change.columnName = testColumn.name
 
         then: "table is not there yet"
-        assert change.checkStatus(database).status == ChangeStatus.Status.complete
+        assert action.checkStatus(database).status == ChangeStatus.Status.complete
 
         when: "Table exists but not column"
         snapshotFactory.addObjects(table)
         then:
-        assert change.checkStatus(database).status == ChangeStatus.Status.complete
+        assert action.checkStatus(database).status == ChangeStatus.Status.complete
 
         when: "Column is there"
         table.getColumns().add(testColumn)
         snapshotFactory.addObjects(testColumn)
         then:
-        assert change.checkStatus(database).status == ChangeStatus.Status.notApplied
+        assert action.checkStatus(database).status == ChangeStatus.Status.notApplied
    }
 }

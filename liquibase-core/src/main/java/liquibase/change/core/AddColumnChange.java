@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import liquibase.action.DropColumnAction;
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ExecutableChange;
@@ -194,9 +195,10 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
     protected ExecutableChange[] createInverses() {
         List<ExecutableChange> inverses = new ArrayList<ExecutableChange>();
 
-        DropColumnChange inverse = new DropColumnChange();
-        inverse.setSchemaName(getSchemaName());
-        inverse.setTableName(getTableName());
+        DropColumnAction inverse = new DropColumnAction();
+        DropColumnChange change = inverse.getChange();
+        change.setSchemaName(getSchemaName());
+        change.setTableName(getTableName());
 
         for (ColumnConfig aColumn : columns) {
             if (aColumn.hasDefaultValue()) {
@@ -208,9 +210,10 @@ public class AddColumnChange extends AbstractChange implements ChangeWithColumns
                 inverses.add(dropChange);
             }
 
-            inverse.addColumn(aColumn);
+            change.addColumn(aColumn);
         }
-        inverses.add(inverse);
+        // FIXME
+        //inverses.add(inverse);
         return inverses.toArray(new ExecutableChange[inverses.size()]);
     }
 

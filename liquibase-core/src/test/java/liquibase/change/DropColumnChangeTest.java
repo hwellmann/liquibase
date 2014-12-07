@@ -1,5 +1,6 @@
 package liquibase.change;
 
+import liquibase.action.DropColumnAction;
 import liquibase.change.core.DropColumnChange;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.statement.SqlStatement;
@@ -12,7 +13,8 @@ public class DropColumnChangeTest {
 
     @Test
     public void generateStatements_multipleColumns() {
-        DropColumnChange change = new DropColumnChange();
+        DropColumnAction action = new DropColumnAction();
+        DropColumnChange change = action.getChange();
         ColumnConfig column1 = new ColumnConfig();
         column1.setName("column1");
         change.addColumn(column1);
@@ -20,7 +22,7 @@ public class DropColumnChangeTest {
         column2.setName("column2");
         change.addColumn(column2);
 
-        SqlStatement[] statements = change.generateStatements(new MockDatabase());
+        SqlStatement[] statements = action.generateStatements(new MockDatabase());
         Assert.assertEquals(1, statements.length);
         Assert.assertTrue(statements[0] instanceof DropColumnStatement);
         DropColumnStatement stmt = (DropColumnStatement)statements[0];

@@ -12,7 +12,7 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
 
     private final String changeName;
 
-    protected AbstractChangeSupplier(Class<? extends ExecutableChange> changeClass) {
+    protected AbstractChangeSupplier(Class<? extends Change> changeClass) {
         try {
             changeName = changeClass.newInstance().getSerializedObjectName();
         } catch (Exception e) {
@@ -44,12 +44,13 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
             }
 
             for (Map<String, ?> valuePermutation : CollectionUtil.permutations(parameterValues)) {
-                ExecutableChange change = ExecutableChangeFactory.getInstance().create(getChangeName());
+                ExecutableChange xchange = ExecutableChangeFactory.getInstance().create(getChangeName());
+                Change change = xchange.getChange();
                 for (Map.Entry<String, ?> entry : valuePermutation.entrySet()) {
                     ChangeParameterMetaData changeParam = changeMetaData.getParameters().get(entry.getKey());
                     changeParam.setValue(change, entry.getValue());
                 }
-                changes.add(change);
+                changes.add(xchange);
             }
         }
 

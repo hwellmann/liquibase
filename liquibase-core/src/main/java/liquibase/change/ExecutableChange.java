@@ -91,5 +91,7 @@ public interface ExecutableChange extends Change {
      * For example, a change to add a column will check that the column exists plus data type, default values, etc.
      */
     public ChangeStatus checkStatus(Database database);
+    
+    Change getChange();
 
 }

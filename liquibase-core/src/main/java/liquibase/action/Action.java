@@ -14,8 +14,6 @@ import liquibase.structure.DatabaseObject;
 
 public interface Action<T extends Change>  {
 
-    public ChangeMetaData createChangeMetaData();
-
     /**
      * Return true if this Change object supports the passed database. Used by the ChangeLog parsing process.
      */

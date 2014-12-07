@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.action.DropColumnAction;
 import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ExecutableChange;
@@ -186,17 +187,19 @@ public class MergeColumnChange extends AbstractChange {
         } else {
         	// ...if it is not a SQLite database
 
-	        DropColumnChange dropColumn1Change = new DropColumnChange();
+	        DropColumnAction dropColumn1Action = new DropColumnAction();
+	        DropColumnChange dropColumn1Change = dropColumn1Action.getChange();
 	        dropColumn1Change.setSchemaName(schemaName);
 	        dropColumn1Change.setTableName(getTableName());
 	        dropColumn1Change.setColumnName(getColumn1Name());
-	        statements.addAll(Arrays.asList(dropColumn1Change.generateStatements(database)));
+	        statements.addAll(Arrays.asList(dropColumn1Action.generateStatements(database)));
 
-	        DropColumnChange dropColumn2Change = new DropColumnChange();
+	        DropColumnAction dropColumn2Action = new DropColumnAction();
+                DropColumnChange dropColumn2Change = dropColumn2Action.getChange();
 	        dropColumn2Change.setSchemaName(schemaName);
 	        dropColumn2Change.setTableName(getTableName());
 	        dropColumn2Change.setColumnName(getColumn2Name());
-	        statements.addAll(Arrays.asList(dropColumn2Change.generateStatements(database)));
+	        statements.addAll(Arrays.asList(dropColumn2Action.generateStatements(database)));
 
         }
         return statements.toArray(new SqlStatement[statements.size()]);

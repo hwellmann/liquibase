@@ -30,13 +30,13 @@ import liquibase.util.StringUtils;
  * and delegating logic to the {@link liquibase.sqlgenerator.SqlGenerator} objects created to do the actual change work.
  * Place the @DatabaseChangeProperty annotations on the read "get" methods to control property metadata.
  */
-public abstract class AbstractChange implements Change {
+public abstract class BaseChange implements Change {
 
     private ResourceAccessor resourceAccessor;
 
     private ChangeSet changeSet;
 
-    public AbstractChange() {
+    public BaseChange() {
     }
 
     /**

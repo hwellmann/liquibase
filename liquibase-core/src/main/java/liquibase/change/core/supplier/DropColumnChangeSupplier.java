@@ -1,14 +1,15 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.ColumnConfig;
+import static liquibase.Assert.assertNotNull;
+import liquibase.action.DropColumnAction;
 import liquibase.change.Change;
+import liquibase.change.ColumnConfig;
 import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropColumnChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
 import liquibase.structure.core.Column;
 import liquibase.structure.core.Table;
-import static liquibase.Assert.assertNotNull;
 
 public class DropColumnChangeSupplier extends AbstractChangeSupplier<DropColumnChange>  {
 

@@ -665,4 +665,9 @@ public abstract class AbstractChange implements ExecutableChange {
             return value;
         }
     }
+    
+    @Override
+    public Change getChange() {
+        return this;
+    }
 }
