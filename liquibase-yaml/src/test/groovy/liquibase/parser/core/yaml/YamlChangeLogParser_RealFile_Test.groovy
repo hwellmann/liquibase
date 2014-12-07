@@ -10,7 +10,6 @@ import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
 import liquibase.change.core.CreateIndexChange
 import liquibase.change.core.CreateViewChange
-import liquibase.change.core.DropTableChange
 import liquibase.change.core.EmptyChange
 import liquibase.change.core.ExecuteShellCommandChange
 import liquibase.change.core.InsertDataChange
@@ -478,9 +477,9 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[0]).sql == "drop table multiRollback1"
         ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[1]).sql == "drop table multiRollback2"
         ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[2]).sql == "drop table multiRollback3"
-        ((DropTableChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[3]).tableName == "multiRollback4"
-        ((DropTableChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[4]).tableName == "multiRollback5"
-        ((DropTableChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[5]).tableName == "multiRollback6"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[3]).tableName == "multiRollback4"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[4]).tableName == "multiRollback5"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[5]).tableName == "multiRollback6"
 
     }
 

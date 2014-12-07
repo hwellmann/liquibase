@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropTableAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -39,7 +39,7 @@ public class UnexpectedTableChangeGenerator implements UnexpectedObjectChangeGen
     public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Table unexpectedTable = (Table) unexpectedObject;
 
-        DropTableChange change = new DropTableChange();
+        DropTableAction change = new DropTableAction();
         change.setTableName(unexpectedTable.getName());
         if (control.getIncludeCatalog()) {
             change.setCatalogName(unexpectedTable.getSchema().getCatalogName());

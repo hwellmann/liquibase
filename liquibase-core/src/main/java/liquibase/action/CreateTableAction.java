@@ -11,7 +11,6 @@ import liquibase.change.ConstraintsConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.CreateTableChange;
-import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
@@ -153,7 +152,7 @@ public class CreateTableAction extends AbstractAction<CreateTableChange> impleme
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropTableChange inverse = new DropTableChange();
+        DropTableAction inverse = new DropTableAction();
         inverse.setCatalogName(getCatalogName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());

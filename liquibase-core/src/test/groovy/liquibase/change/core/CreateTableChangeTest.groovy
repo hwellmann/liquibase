@@ -2,6 +2,7 @@ package liquibase.change.core
 
 import static org.junit.Assert.fail
 import liquibase.action.CreateTableAction
+import liquibase.action.DropTableAction
 import liquibase.change.ChangeStatus
 import liquibase.change.ColumnConfig
 import liquibase.change.ConstraintsConfig
@@ -91,8 +92,8 @@ public class CreateTableChangeTest extends StandardChangeTest {
         then:
         def inverses = change.createInverses()
         inverses.length == 1
-        assert inverses[0] instanceof DropTableChange
-        ((DropTableChange) inverses[0]).tableName == "TestTable"
+        assert inverses[0] instanceof DropTableAction
+        inverses[0].tableName == "TestTable"
     }
 
     def "tablespace defaults to null"() {

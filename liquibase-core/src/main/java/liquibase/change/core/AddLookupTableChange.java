@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.action.DropTableAction;
 import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.HsqlDatabase;
@@ -161,7 +162,7 @@ public class AddLookupTableChange extends AbstractChange {
         dropFK.setBaseTableName(getExistingTableName());
         dropFK.setConstraintName(getFinalConstraintName());
 
-        DropTableChange dropTable = new DropTableChange();
+        DropTableAction dropTable = new DropTableAction();
         dropTable.setSchemaName(getNewTableSchemaName());
         dropTable.setTableName(getNewTableName());
 

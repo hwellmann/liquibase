@@ -1,7 +1,8 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
-import liquibase.change.StandardChangeTest;
+import liquibase.action.DropTableAction
+import liquibase.change.ChangeStatus
+import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
@@ -10,7 +11,7 @@ import liquibase.structure.core.Table
 public class DropTableChangeTest extends StandardChangeTest {
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new DropTableChange();
+        def change = new DropTableAction();
         change.setSchemaName("SCHEMA_NAME");
         change.setTableName("TAB_NAME");
         change.setCascadeConstraints(true);
@@ -27,7 +28,7 @@ public class DropTableChangeTest extends StandardChangeTest {
 
         def table = new Table(null, null, "test_table")
 
-        def change = new DropTableChange()
+        def change = new DropTableAction()
         change.tableName = table.name
 
         then: "table is not there yet"
