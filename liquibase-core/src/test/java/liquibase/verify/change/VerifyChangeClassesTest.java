@@ -1,5 +1,6 @@
 package liquibase.verify.change;
 
+import liquibase.change.ChangeParameterAnalyzer;
 import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeFactory;
 import liquibase.change.ChangeMetaData;
@@ -15,6 +16,7 @@ import liquibase.statement.SqlStatement;
 import liquibase.test.JUnitResourceAccessor;
 import liquibase.util.StringUtils;
 import liquibase.verify.AbstractVerifyTest;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -57,7 +59,8 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
 
                 for (String paramName : new TreeSet<String>(changeMetaData.getRequiredParameters(database).keySet())) {
                     ChangeParameterMetaData param = changeMetaData.getParameters().get(paramName);
-                    Object paramValue = param.getExampleValue(database);
+                    ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(param);
+                    Object paramValue = analyzer.getExampleValue(database);
                     String serializedValue;
                     serializedValue = formatParameter(paramValue);
                     state.addComment("Change Parameter: " + param.getParameterName() + "=" + serializedValue);
@@ -109,7 +112,8 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 ArrayList<String> requiredParams = new ArrayList<String>(changeMetaData.getRequiredParameters(database).keySet());
                 for (String paramName : requiredParams) {
                     ChangeParameterMetaData param = changeMetaData.getParameters().get(paramName);
-                    Object paramValue = param.getExampleValue(database);
+                    ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(param);
+                    Object paramValue = analyzer.getExampleValue(database);
                     param.setValue(change, paramValue);
                 }
 
@@ -175,7 +179,8 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
 //
                     for (String paramName : new TreeSet<String>(changeMetaData.getRequiredParameters(database).keySet())) {
                         ChangeParameterMetaData param = changeMetaData.getParameters().get(paramName);
-                        Object paramValue = param.getExampleValue(database);
+                        ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(param);
+                        Object paramValue = analyzer.getExampleValue(database);
                         String serializedValue;
                         serializedValue = formatParameter(paramValue);
                         state.addComment("Required Change Parameter: "+ param.getParameterName()+"="+ serializedValue);
@@ -184,10 +189,11 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
 
                     for (String paramName : permutation) {
                         ChangeParameterMetaData param = changeMetaData.getParameters().get(paramName);
-                        if (!param.supports(database)) {
+                        ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(param);
+                        if (!analyzer.supports(database)) {
                             continue;
                         }
-                        Object paramValue = param.getExampleValue(database);
+                        Object paramValue = analyzer.getExampleValue(database);
                         String serializedValue;
                         serializedValue = formatParameter(paramValue);
                         state.addComment("Optional Change Parameter: "+ param.getParameterName()+"="+ serializedValue);

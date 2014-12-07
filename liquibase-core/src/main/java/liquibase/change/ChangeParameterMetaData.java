@@ -1,25 +1,24 @@
 package liquibase.change;
 
-import liquibase.change.core.LoadDataColumnConfig;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.DatabaseList;
-import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.exception.ValidationErrors;
-import liquibase.serializer.LiquibaseSerializable;
-import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.DatabaseFunction;
-import liquibase.statement.SequenceNextValueFunction;
-import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
-
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import liquibase.database.Database;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.serializer.LiquibaseSerializable;
+import liquibase.statement.DatabaseFunction;
+import liquibase.util.StringUtils;
 
 /**
  * Static metadata about a {@link ExecutableChange} parameter.
@@ -44,6 +43,7 @@ public class ChangeParameterMetaData {
     private LiquibaseSerializable.SerializationType serializationType;
 
     public ChangeParameterMetaData(ExecutableChange change, String parameterName, String displayName, String description, Map<String, Object> exampleValues, String since, Type dataType, String[] requiredForDatabase, String[] supportedDatabases, String mustEqualExisting, LiquibaseSerializable.SerializationType serializationType) {
+        this.change = change;
         if (parameterName == null) {
             throw new UnexpectedLiquibaseException("Unexpected null parameterName");
         }
@@ -57,7 +57,6 @@ public class ChangeParameterMetaData {
             throw new UnexpectedLiquibaseException("Unexpected null dataType");
         }
 
-        this.change = change;
         this.parameterName = parameterName;
         this.displayName = displayName;
         this.description = description;
@@ -75,103 +74,10 @@ public class ChangeParameterMetaData {
         this.serializationType = serializationType;
         this.since = since;
 
-        this.supportedDatabases = Collections.unmodifiableSet(analyzeSupportedDatabases(supportedDatabases));
-        this.requiredForDatabase = Collections.unmodifiableSet(analyzeRequiredDatabases(requiredForDatabase));
-    }
-
-    protected Set<String> analyzeSupportedDatabases(String[] supportedDatabases) {
-        if (supportedDatabases == null) {
-            supportedDatabases = new String[]{ChangeParameterMetaData.COMPUTE};
-        }
-
-        Set<String> computedDatabases = new HashSet<String>();
-
-        if (supportedDatabases.length == 1 && StringUtils.join(supportedDatabases, ",").equals(ChangeParameterMetaData.COMPUTE)) {
-            int validDatabases = 0;
-            for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
-                if (database.getShortName() == null || database.getShortName().equals("unsupported")) {
-                    continue;
-                }
-                if (!change.supports(database)) {
-                    continue;
-                }
-                try {
-                    if (!change.generateStatementsVolatile(database)) {
-                        ExecutableChange testChange = change.getClass().newInstance();
-                        ValidationErrors originalErrors = getStatementErrors(testChange, database);
-                        this.setValue(testChange, this.getExampleValue(database));
-                        ValidationErrors finalErrors = getStatementErrors(testChange, database);
-                        if (finalErrors.getUnsupportedErrorMessages().size() == 0 || finalErrors.getUnsupportedErrorMessages().size() == originalErrors.getUnsupportedErrorMessages().size()) {
-                            computedDatabases.add(database.getShortName());
-                        }
-                        validDatabases++;
-                    }
-                } catch (Exception ignore) {
-                }
-            }
-
-            if (validDatabases == 0) {
-                return new HashSet<String>(Arrays.asList("all"));
-            } else if (computedDatabases.size() == validDatabases) {
-                computedDatabases = new HashSet<String>(Arrays.asList("all"));
-            }
-
-            computedDatabases.remove("none");
-
-            return computedDatabases;
-        } else {
-            return new HashSet<String>(Arrays.asList(supportedDatabases));
-        }
-    }
-
-
-    protected Set<String> analyzeRequiredDatabases(String[] requiredDatabases) {
-        if (requiredDatabases == null) {
-            requiredDatabases = new String[]{ChangeParameterMetaData.COMPUTE};
-        }
-
-        Set<String> computedDatabases = new HashSet<String>();
-
-        if (requiredDatabases.length == 1 && StringUtils.join(requiredDatabases, ",").equals(ChangeParameterMetaData.COMPUTE)) {
-            int validDatabases = 0;
-            for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
-                try {
-                    if (!change.generateStatementsVolatile(database)) {
-                        ExecutableChange testChange = change.getClass().newInstance();
-                        ValidationErrors originalErrors = getStatementErrors(testChange, database);
-                        this.setValue(testChange, this.getExampleValue(database));
-                        ValidationErrors finalErrors = getStatementErrors(testChange, database);
-                        if (originalErrors.getRequiredErrorMessages().size() > 0 && finalErrors.getRequiredErrorMessages().size() < originalErrors.getRequiredErrorMessages().size()) {
-                            computedDatabases.add(database.getShortName());
-                        }
-                        validDatabases++;
-                    }
-                } catch (Exception ignore) {
-                }
-            }
-
-            if (validDatabases == 0) {
-                return new HashSet<String>();
-            } else if (computedDatabases.size() == validDatabases) {
-                computedDatabases = new HashSet<String>(Arrays.asList("all"));
-            }
-
-            computedDatabases.remove("none");
-
-        } else {
-            computedDatabases = new HashSet<String>(Arrays.asList(requiredDatabases));
-        }
-        computedDatabases.remove("none");
-        return computedDatabases;
-    }
-
-    private ValidationErrors getStatementErrors(ExecutableChange testChange, Database database) {
-        ValidationErrors errors = new ValidationErrors();
-        SqlStatement[] statements = testChange.generateStatements(database);
-        for (SqlStatement statement : statements) {
-            errors.addAll(SqlGeneratorFactory.getInstance().validate(statement, database));
-        }
-        return errors;
+        List<String> supportedDatabasesList = (supportedDatabases == null) ? Collections.<String>emptyList() : Arrays.asList(supportedDatabases); 
+        this.supportedDatabases = Collections.unmodifiableSet(new HashSet<String>(supportedDatabasesList));
+        List<String> requiredForDatabaseList = (requiredForDatabase == null) ? Collections.<String>emptyList() : Arrays.asList(requiredForDatabase); 
+        this.requiredForDatabase = Collections.unmodifiableSet(new HashSet<String>(requiredForDatabaseList));
     }
 
     /**
@@ -222,17 +128,6 @@ public class ChangeParameterMetaData {
         return supportedDatabases;
     }
 
-    /**
-     * A convenience method for testing the value returned by {@link #getRequiredForDatabase()} against a given database.
-     * Returns true if the {@link Database#getShortName()} method is contained in the required databases or the required database list contains the string "all"
-     */
-    public boolean isRequiredFor(Database database) {
-        return requiredForDatabase.contains("all") || requiredForDatabase.contains(database.getShortName());
-    }
-
-    public boolean supports(Database database) {
-        return supportedDatabases.contains("all") || supportedDatabases.contains(database.getShortName());
-    }
 
 
     /**
@@ -317,85 +212,6 @@ public class ChangeParameterMetaData {
         return serializationType;
     }
 
-    public Object getExampleValue(Database database) {
-        if (exampleValues != null) {
-            Object exampleValue = null;
-
-            for (Map.Entry<String, Object> entry: exampleValues.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("all")) {
-                    exampleValue = entry.getValue();
-                } else if (DatabaseList.definitionMatches(entry.getKey(), database, false)) {
-                    return entry.getValue();
-                }
-            }
-
-            if (exampleValue != null) {
-                return exampleValue;
-            }
-        }
-
-        Map standardExamples = new HashMap();
-        standardExamples.put("tableName", "person");
-        standardExamples.put("schemaName", "public");
-        standardExamples.put("tableSchemaName", "public");
-        standardExamples.put("catalogName", "cat");
-        standardExamples.put("tableCatalogName", "cat");
-        standardExamples.put("columnName", "id");
-        standardExamples.put("columnNames", "id, name");
-        standardExamples.put("indexName", "idx_address");
-        standardExamples.put("columnDataType", "int");
-        standardExamples.put("dataType", "int");
-        standardExamples.put("sequenceName", "seq_id");
-        standardExamples.put("viewName", "v_person");
-        standardExamples.put("constraintName", "const_name");
-        standardExamples.put("primaryKey", "pk_id");
-
-
-
-        if (standardExamples.containsKey(parameterName)) {
-            return standardExamples.get(parameterName);
-        }
-
-        for (String prefix : new String[] {"base", "referenced", "new", "old"}) {
-            if (parameterName.startsWith(prefix)) {
-                String mainName = StringUtils.lowerCaseFirst(parameterName.replaceFirst("^"+prefix, ""));
-                if (standardExamples.containsKey(mainName)) {
-                    return standardExamples.get(mainName);
-                }
-            }
-        }
-
-        if (dataType.equals("string")) {
-            return "A String";
-        } else if (dataType.equals("integer")) {
-            return 3;
-        } else if (dataType.equals("boolean")) {
-            return true;
-        } else if (dataType.equals("bigInteger")) {
-            return new BigInteger("371717");
-        } else if (dataType.equals("list")) {
-            return null; //"TODO";
-        } else if (dataType.equals("sequenceNextValueFunction")) {
-            return new SequenceNextValueFunction("seq_name");
-        } else if (dataType.equals("databaseFunction")) {
-            return new DatabaseFunction("now");
-        } else if (dataType.equals("list of columnConfig")) {
-            ArrayList<ColumnConfig> list = new ArrayList<ColumnConfig>();
-            list.add(new ColumnConfig().setName("id").setType("int"));
-            return list;
-        } else if (dataType.equals("list of addColumnConfig")) {
-            ArrayList<ColumnConfig> list = new ArrayList<ColumnConfig>();
-            list.add(new AddColumnConfig().setName("id").setType("int"));
-            return list;
-        } else if (dataType.equals("list of loadDataColumnConfig")) {
-            ArrayList<ColumnConfig> list = new ArrayList<ColumnConfig>();
-            list.add(new LoadDataColumnConfig().setName("id").setType("int"));
-            return list;
-        } else {
-            throw new UnexpectedLiquibaseException("Unknown dataType " + dataType + " for " + getParameterName());
-        }
-    }
-
     public String getDescription() {
         if (description != null) {
             return description;
@@ -410,4 +226,22 @@ public class ChangeParameterMetaData {
         return StringUtils.trimToEmpty(standardDescriptions.get(parameterName));
 
     }
+
+    
+    /**
+     * @return the change
+     */
+    public ExecutableChange getChange() {
+        return change;
+    }
+
+    
+    /**
+     * @return the exampleValues
+     */
+    public Map<String, Object> getExampleValues() {
+        return exampleValues;
+    }
+    
+    
 }

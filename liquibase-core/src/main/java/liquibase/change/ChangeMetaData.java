@@ -106,7 +106,8 @@ public class ChangeMetaData implements PrioritizedService {
         Map<String, ChangeParameterMetaData> returnMap = new HashMap<String, ChangeParameterMetaData>();
 
         for (ChangeParameterMetaData metaData : parameters.values()) {
-            if (metaData.isRequiredFor(database)) {
+            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+            if (analyzer.isRequiredFor(database)) {
                 returnMap.put(metaData.getParameterName(), metaData);
             }
         }
@@ -120,7 +121,8 @@ public class ChangeMetaData implements PrioritizedService {
         Map<String, ChangeParameterMetaData> returnMap = new HashMap<String, ChangeParameterMetaData>();
 
         for (ChangeParameterMetaData metaData : parameters.values()) {
-            if (!metaData.isRequiredFor(database)) {
+            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+            if (!analyzer.isRequiredFor(database)) {
                 returnMap.put(metaData.getParameterName(), metaData);
             }
         }

@@ -64,23 +64,25 @@ public class AbstractChangeTest extends Specification {
         ChangeParameterMetaData paramNoMetaData = parameters.get("paramNoMetadata");
         ChangeParameterMetaData paramNotIncludedMetaData = parameters.get("paramNotIncluded");
         ChangeParameterMetaData paramNoWriteMethodMetaData = parameters.get("paramNoWriteMethod");
-
+        ChangeParameterAnalyzer paramOneAnalyzer = new ChangeParameterAnalyzer(paramOneMetaData);
+        ChangeParameterAnalyzer paramTwoAnalyzer = new ChangeParameterAnalyzer(paramTwoMetaData);
+        
         dbmsMetaData == null
         paramOneMetaData != null
         paramOneMetaData.getParameterName() == "paramOne"
         paramOneMetaData.getDisplayName() == "Param One"
         paramOneMetaData.getDataType() == "string"
         paramOneMetaData.getMustEqualExisting() == ""
-        paramOneMetaData.getRequiredForDatabase().size() == 0
+        paramOneAnalyzer.getRequiredForDatabase().size() == 0
 
         paramTwoMetaData != null
         paramTwoMetaData.getParameterName() == "paramTwo"
         paramTwoMetaData.getDisplayName() == "Param Two"
         paramTwoMetaData.getDataType() == "integer"
         paramTwoMetaData.getMustEqualExisting() == "table"
-        paramTwoMetaData.getRequiredForDatabase().size() == 2
-        assertTrue(paramTwoMetaData.getRequiredForDatabase().contains("mysql"));
-        assertTrue(paramTwoMetaData.getRequiredForDatabase().contains("mssql"));
+        paramTwoAnalyzer.getRequiredForDatabase().size() == 2
+        assertTrue(paramTwoAnalyzer.getRequiredForDatabase().contains("mysql"));
+        assertTrue(paramTwoAnalyzer.getRequiredForDatabase().contains("mssql"));
 
         paramNoMetaData != null
         paramNotIncludedMetaData == null
