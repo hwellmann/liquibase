@@ -362,7 +362,7 @@ public abstract class AbstractChange implements ExecutableChange {
         ValidationErrors changeValidationErrors = new ValidationErrors();
 
         for (ChangeParameterMetaData param : ChangeFactory.getInstance().getChangeMetaData(this).getParameters().values()) {
-            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(param);
+            ChangeParameterService analyzer = new ChangeParameterService(param);
             if (analyzer.isRequiredFor(database) && param.getCurrentValue(this) == null) {
                 changeValidationErrors.addError(param.getParameterName() + " is required for " + ChangeFactory.getInstance().getChangeMetaData(this).getName() + " on " + database.getShortName());
             }

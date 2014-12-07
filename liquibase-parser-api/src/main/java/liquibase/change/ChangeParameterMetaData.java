@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.serializer.LiquibaseSerializable;
 import liquibase.statement.DatabaseFunction;
@@ -28,7 +27,7 @@ public class ChangeParameterMetaData {
 
     public static final String COMPUTE = "COMPUTE";
 
-    private ExecutableChange change;
+    private Change change;
     private String parameterName;
     private String description;
     private Map<String, Object> exampleValues;
@@ -42,7 +41,7 @@ public class ChangeParameterMetaData {
     private String mustEqualExisting;
     private LiquibaseSerializable.SerializationType serializationType;
 
-    public ChangeParameterMetaData(ExecutableChange change, String parameterName, String displayName, String description, Map<String, Object> exampleValues, String since, Type dataType, String[] requiredForDatabase, String[] supportedDatabases, String mustEqualExisting, LiquibaseSerializable.SerializationType serializationType) {
+    public ChangeParameterMetaData(Change change, String parameterName, String displayName, String description, Map<String, Object> exampleValues, String since, Type dataType, String[] requiredForDatabase, String[] supportedDatabases, String mustEqualExisting, LiquibaseSerializable.SerializationType serializationType) {
         this.change = change;
         if (parameterName == null) {
             throw new UnexpectedLiquibaseException("Unexpected null parameterName");
@@ -231,7 +230,7 @@ public class ChangeParameterMetaData {
     /**
      * @return the change
      */
-    public ExecutableChange getChange() {
+    public Change getChange() {
         return change;
     }
 

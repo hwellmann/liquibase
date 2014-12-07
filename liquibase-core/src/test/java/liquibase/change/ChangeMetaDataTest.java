@@ -73,8 +73,9 @@ public class ChangeMetaDataTest {
     @Test
     public void getRequiredParameters_empty() {
         ChangeMetaData changeMetaData = new ChangeMetaData("x", "y", 1, null, null, null);
+        ChangeService changeService = new ChangeService(changeMetaData);
 
-        assertEquals(0, changeMetaData.getRequiredParameters(new H2Database()).size());
+        assertEquals(0, changeService.getRequiredParameters(new H2Database()).size());
     }
 
     @Test
@@ -85,10 +86,11 @@ public class ChangeMetaDataTest {
         parameters.add(new ChangeParameterMetaData(new ExampleAbstractChange(), "h2Required", "x", null, null, null, Integer.class, new String[] {"h2"}, null, null, null));
         parameters.add(new ChangeParameterMetaData(new ExampleAbstractChange(), "oracleRequired", "x", null, null, null, Integer.class, new String[] {"oracle"}, null, null, null));
         ChangeMetaData changeMetaData = new ChangeMetaData("x", "y", 1, null, null, parameters);
+        ChangeService changeService = new ChangeService(changeMetaData);
 
-        assertSetsEqual(new String[]{"allRequired", "h2Required"}, changeMetaData.getRequiredParameters(new H2Database()).keySet());
-        assertSetsEqual(new String[]{"allRequired", "oracleRequired"}, changeMetaData.getRequiredParameters(new OracleDatabase()).keySet());
-        assertSetsEqual(new String[]{"allRequired"}, changeMetaData.getRequiredParameters(new MySQLDatabase()).keySet());
+        assertSetsEqual(new String[]{"allRequired", "h2Required"}, changeService.getRequiredParameters(new H2Database()).keySet());
+        assertSetsEqual(new String[]{"allRequired", "oracleRequired"}, changeService.getRequiredParameters(new OracleDatabase()).keySet());
+        assertSetsEqual(new String[]{"allRequired"}, changeService.getRequiredParameters(new MySQLDatabase()).keySet());
     }
 
     @Test
@@ -99,10 +101,11 @@ public class ChangeMetaDataTest {
         parameters.add(new ChangeParameterMetaData(new ExampleAbstractChange(), "h2Required", "x", null, null, null, Integer.class, new String[] {"h2"}, null, null, null));
         parameters.add(new ChangeParameterMetaData(new ExampleAbstractChange(), "oracleRequired", "x", null, null, null, Integer.class, new String[] {"oracle"}, null, null, null));
         ChangeMetaData changeMetaData = new ChangeMetaData("x", "y", 1, null, null, parameters);
+        ChangeService changeService = new ChangeService(changeMetaData);
 
-        assertSetsEqual(new String[]{"noneRequired", "oracleRequired"}, changeMetaData.getOptionalParameters(new H2Database()).keySet());
-        assertSetsEqual(new String[]{"noneRequired", "h2Required"}, changeMetaData.getOptionalParameters(new OracleDatabase()).keySet());
-        assertSetsEqual(new String[]{"noneRequired", "h2Required", "oracleRequired"}, changeMetaData.getOptionalParameters(new MySQLDatabase()).keySet());
+        assertSetsEqual(new String[]{"noneRequired", "oracleRequired"}, changeService.getOptionalParameters(new H2Database()).keySet());
+        assertSetsEqual(new String[]{"noneRequired", "h2Required"}, changeService.getOptionalParameters(new OracleDatabase()).keySet());
+        assertSetsEqual(new String[]{"noneRequired", "h2Required", "oracleRequired"}, changeService.getOptionalParameters(new MySQLDatabase()).keySet());
     }
 
     @Test

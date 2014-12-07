@@ -22,7 +22,7 @@ import liquibase.statement.SqlStatement;
 import liquibase.util.StringUtils;
 
 
-public class ChangeParameterAnalyzer {
+public class ChangeParameterService {
     
     private ExecutableChange change;
     private Map<String, Object> exampleValues;
@@ -33,11 +33,11 @@ public class ChangeParameterAnalyzer {
     private Set<String> requiredForDatabase;
     
     
-    public ChangeParameterAnalyzer(ChangeParameterMetaData metaData) {
+    public ChangeParameterService(ChangeParameterMetaData metaData) {
         this.metaData = metaData;
         this.parameterName = metaData.getParameterName();
         this.dataType = metaData.getDataType();
-        this.change = metaData.getChange();
+        this.change = (ExecutableChange) metaData.getChange();
         this.exampleValues = metaData.getExampleValues();
         analyze();
     }

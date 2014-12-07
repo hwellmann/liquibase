@@ -37,7 +37,7 @@ public class ChangeParameterMetaDataTest {
         assertEquals("column", metaData.getMustEqualExisting());
         assertEquals(LiquibaseSerializable.SerializationType.NESTED_OBJECT, metaData.getSerializationType());
         assertEquals("desc", metaData.getDescription());
-        ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+        ChangeParameterService analyzer = new ChangeParameterService(metaData);
         assertEquals("examp", analyzer.getExampleValue(new MockDatabase()));
         assertEquals("2.1", metaData.getSince());
 
@@ -87,7 +87,7 @@ public class ChangeParameterMetaDataTest {
     @Test
     public void getRequiredForDatabase_nonePassedReturnsEmptySet() {
         ChangeParameterMetaData metaData = new ChangeParameterMetaData(new ExampleAbstractChange(), "x", "y", null, null,null, Integer.class, new String[] {"none"}, null, null,LiquibaseSerializable.SerializationType.NAMED_FIELD);
-        ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+        ChangeParameterService analyzer = new ChangeParameterService(metaData);
         assertEquals(0, analyzer.getRequiredForDatabase().size());
     }
 
@@ -117,7 +117,7 @@ public class ChangeParameterMetaDataTest {
         ChangeParameterMetaData metaData = new ChangeParameterMetaData(new ExampleAbstractChange(),
             "x", "y", null, null, null, Integer.class, dbNames, null, null,
             LiquibaseSerializable.SerializationType.NAMED_FIELD);
-        ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+        ChangeParameterService analyzer = new ChangeParameterService(metaData);
         return analyzer.isRequiredFor(database);
     }
 

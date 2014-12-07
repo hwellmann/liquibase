@@ -2,7 +2,7 @@ package liquibase.sdk.supplier.resource;
 
 import liquibase.change.ChangeFactory;
 import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeParameterAnalyzer;
+import liquibase.change.ChangeParameterService;
 import liquibase.change.ChangeParameterMetaData;
 import liquibase.change.core.CreateProcedureChange;
 import liquibase.database.core.HsqlDatabase;
@@ -37,7 +37,7 @@ public class ResourceSupplier {
             } else if (path.toLowerCase().endsWith("my-logic.sql")) {
                 ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(new CreateProcedureChange());
                 ChangeParameterMetaData metaData = changeMetaData.getParameters().get("procedureBody");
-                ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
+                ChangeParameterService analyzer = new ChangeParameterService(metaData);
                 stream = new ByteArrayInputStream(((String)analyzer.getExampleValue(new HsqlDatabase())).getBytes());
             } else if (path.toLowerCase().endsWith("sql")) {
                 stream =new ByteArrayInputStream(fileSql.getBytes());

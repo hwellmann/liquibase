@@ -65,7 +65,7 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
             }
 
         } else {
-            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(changeParam);
+            ChangeParameterService analyzer = new ChangeParameterService(changeParam);
             Object exampleValue = analyzer.getExampleValue(database);
             values.add(exampleValue);
         }

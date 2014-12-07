@@ -1,11 +1,14 @@
 package liquibase.change;
 
-import liquibase.database.Database;
-import liquibase.database.core.H2Database;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import liquibase.structure.DatabaseObject;
 import liquibase.util.PrioritizedService;
-
-import java.util.*;
 
 /**
  * Static metadata about a {@code link Change}.
@@ -97,36 +100,6 @@ public class ChangeMetaData implements PrioritizedService {
             }
         }
         return Collections.unmodifiableMap(returnMap);
-    }
-
-    /**
-     *  Returns the required parameters for this change for the given database. Will never return a null map, only an empty or populated map.
-     */
-    public Map<String, ChangeParameterMetaData> getRequiredParameters(Database database) {
-        Map<String, ChangeParameterMetaData> returnMap = new HashMap<String, ChangeParameterMetaData>();
-
-        for (ChangeParameterMetaData metaData : parameters.values()) {
-            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
-            if (analyzer.isRequiredFor(database)) {
-                returnMap.put(metaData.getParameterName(), metaData);
-            }
-        }
-        return returnMap;
-    }
-
-    /**
-     *  Returns the optional parameters for this change for the given database. Will never return a null map, only an empty or populated map.
-     */
-    public Map<String, ChangeParameterMetaData> getOptionalParameters(Database database) {
-        Map<String, ChangeParameterMetaData> returnMap = new HashMap<String, ChangeParameterMetaData>();
-
-        for (ChangeParameterMetaData metaData : parameters.values()) {
-            ChangeParameterAnalyzer analyzer = new ChangeParameterAnalyzer(metaData);
-            if (!analyzer.isRequiredFor(database)) {
-                returnMap.put(metaData.getParameterName(), metaData);
-            }
-        }
-        return returnMap;
     }
 
     /**

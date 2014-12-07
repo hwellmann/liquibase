@@ -64,8 +64,8 @@ public class AbstractChangeTest extends Specification {
         ChangeParameterMetaData paramNoMetaData = parameters.get("paramNoMetadata");
         ChangeParameterMetaData paramNotIncludedMetaData = parameters.get("paramNotIncluded");
         ChangeParameterMetaData paramNoWriteMethodMetaData = parameters.get("paramNoWriteMethod");
-        ChangeParameterAnalyzer paramOneAnalyzer = new ChangeParameterAnalyzer(paramOneMetaData);
-        ChangeParameterAnalyzer paramTwoAnalyzer = new ChangeParameterAnalyzer(paramTwoMetaData);
+        ChangeParameterService paramOneAnalyzer = new ChangeParameterService(paramOneMetaData);
+        ChangeParameterService paramTwoAnalyzer = new ChangeParameterService(paramTwoMetaData);
         
         dbmsMetaData == null
         paramOneMetaData != null
