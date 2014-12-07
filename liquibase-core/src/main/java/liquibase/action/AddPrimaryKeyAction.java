@@ -1,11 +1,11 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddPrimaryKeyChange;
+import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -22,76 +22,71 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="addPrimaryKey", description = "Adds creates a primary key out of an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class AddPrimaryKeyChange extends AbstractChange {
+public class AddPrimaryKeyAction extends AbstractAction<AddPrimaryKeyChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String tablespace;
-    private String columnNames;
-    private String constraintName;
-    private Boolean clustered;
+    public AddPrimaryKeyAction() {
+        this(new AddPrimaryKeyChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table to create the primary key on")
+    public AddPrimaryKeyAction(AddPrimaryKeyChange change) {
+        super(change);
+    }
+
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column", description = "Name of the column(s) to create the primary key on. Comma separated if multiple")
     public String getColumnNames() {
-        return columnNames;
+        return change.getColumnNames();
     }
 
     public void setColumnNames(String columnNames) {
-        this.columnNames = columnNames;
+        change.setColumnNames(columnNames);
     }
 
-    @DatabaseChangeProperty(description = "Name of primary key constraint", exampleValue = "pk_person")
     public String getConstraintName() {
-        return constraintName;
+        return change.getConstraintName();
     }
 
     public void setConstraintName(String constraintName) {
-        this.constraintName = constraintName;
+        change.setConstraintName(constraintName);
     }
 
 
     public String getTablespace() {
-        return tablespace;
+        return change.getTablespace();
     }
 
     public void setTablespace(String tablespace) {
-        this.tablespace = tablespace;
+        change.setTablespace(tablespace);
     }
 
     public Boolean getClustered() {
-        return clustered;
+        return change.getClustered();
     }
 
     public void setClustered(Boolean clustered) {
-        this.clustered = clustered;
+        change.setClustered(clustered);
     }
 
     @Override
@@ -192,10 +187,5 @@ public class AddPrimaryKeyChange extends AbstractChange {
     @Override
     public String getConfirmationMessage() {
         return "Primary key added to " + getTableName() + " (" + getColumnNames() + ")";
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

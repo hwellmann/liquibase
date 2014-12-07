@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.AddPrimaryKeyAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.diff.output.DiffOutputControl;
@@ -48,27 +48,27 @@ public class MissingPrimaryKeyChangeGenerator implements MissingObjectChangeGene
     public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         PrimaryKey pk = (PrimaryKey) missingObject;
 
-        AddPrimaryKeyChange change = new AddPrimaryKeyChange();
-        change.setTableName(pk.getTable().getName());
+        AddPrimaryKeyAction action = new AddPrimaryKeyAction();
+        action.setTableName(pk.getTable().getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(pk.getTable().getSchema().getCatalogName());
+            action.setCatalogName(pk.getTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(pk.getTable().getSchema().getName());
+            action.setSchemaName(pk.getTable().getSchema().getName());
         }
-        change.setConstraintName(pk.getName());
-        change.setColumnNames(pk.getColumnNames());
+        action.setConstraintName(pk.getName());
+        action.setColumnNames(pk.getColumnNames());
         if (control.getIncludeTablespace()) {
-            change.setTablespace(pk.getTablespace());
+            action.setTablespace(pk.getTablespace());
         }
 
         if (referenceDatabase instanceof MSSQLDatabase && pk.getBackingIndex() != null && pk.getBackingIndex().getClustered() != null && !pk.getBackingIndex().getClustered()) {
-            change.setClustered(false);
+            action.setClustered(false);
         }
 
         control.setAlreadyHandledMissing(pk.getBackingIndex());
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 
     }
 }

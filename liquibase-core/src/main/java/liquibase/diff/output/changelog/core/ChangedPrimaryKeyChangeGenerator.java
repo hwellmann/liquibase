@@ -2,8 +2,8 @@ package liquibase.diff.output.changelog.core;
 
 import java.util.List;
 
+import liquibase.action.AddPrimaryKeyAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddPrimaryKeyChange;
 import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
@@ -47,19 +47,19 @@ public class ChangedPrimaryKeyChangeGenerator  implements ChangedObjectChangeGen
         DropPrimaryKeyChange dropPkChange = new DropPrimaryKeyChange();
         dropPkChange.setTableName(pk.getTable().getName());
 
-        AddPrimaryKeyChange addPkChange = new AddPrimaryKeyChange();
-        addPkChange.setTableName(pk.getTable().getName());
-        addPkChange.setColumnNames(pk.getColumnNames());
-        addPkChange.setConstraintName(pk.getName());
+        AddPrimaryKeyAction addPkAction = new AddPrimaryKeyAction();
+        addPkAction.setTableName(pk.getTable().getName());
+        addPkAction.setColumnNames(pk.getColumnNames());
+        addPkAction.setConstraintName(pk.getName());
 
 
         if (control.getIncludeCatalog()) {
             dropPkChange.setCatalogName(pk.getSchema().getCatalogName());
-            addPkChange.setCatalogName(pk.getSchema().getCatalogName());
+            addPkAction.setCatalogName(pk.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
             dropPkChange.setSchemaName(pk.getSchema().getName());
-            addPkChange.setSchemaName(pk.getSchema().getName());
+            addPkAction.setSchemaName(pk.getSchema().getName());
         }
 
         List<Column> referenceColumns = (List<Column>) differences.getDifference("columns").getReferenceValue();
@@ -77,6 +77,6 @@ public class ChangedPrimaryKeyChangeGenerator  implements ChangedObjectChangeGen
             control.setAlreadyHandledChanged(new UniqueConstraint().setTable(pk.getTable()).setColumns(comparedColumns));
         }
 
-        return new ExecutableChange[] { dropPkChange, addPkChange };
+        return new ExecutableChange[] { dropPkChange, addPkAction };
     }
 }

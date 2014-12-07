@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.action.AddPrimaryKeyAction;
 import liquibase.action.DropTableAction;
 import liquibase.change.AbstractChange;
 import liquibase.change.ChangeMetaData;
@@ -214,11 +215,11 @@ public class AddLookupTableChange extends AbstractChange {
             statements.add(new ReorganizeTableStatement(newTableCatalogName, newTableSchemaName, getNewTableName()));
         }
 
-        AddPrimaryKeyChange addPKChange = new AddPrimaryKeyChange();
-        addPKChange.setSchemaName(newTableSchemaName);
-        addPKChange.setTableName(getNewTableName());
-        addPKChange.setColumnNames(getNewColumnName());
-        statements.addAll(Arrays.asList(addPKChange.generateStatements(database)));
+        AddPrimaryKeyAction addPKAction = new AddPrimaryKeyAction();
+        addPKAction.setSchemaName(newTableSchemaName);
+        addPKAction.setTableName(getNewTableName());
+        addPKAction.setColumnNames(getNewColumnName());
+        statements.addAll(Arrays.asList(addPKAction.generateStatements(database)));
 
         if (database instanceof DB2Database) {
             statements.add(new ReorganizeTableStatement(newTableCatalogName,newTableSchemaName, getNewTableName()));
