@@ -1,7 +1,10 @@
-package liquibase.change;
+package liquibase.action;
 
 import java.util.Set;
 
+import liquibase.change.Change;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeStatus;
 import liquibase.database.Database;
 import liquibase.exception.RollbackImpossibleException;
 import liquibase.exception.ValidationErrors;
@@ -9,15 +12,9 @@ import liquibase.exception.Warnings;
 import liquibase.statement.SqlStatement;
 import liquibase.structure.DatabaseObject;
 
-/**
- * Interface all changes (refactorings) implement.
- *
- * Instances of these objects are normally created via the {@link ExecutableChangeFactory } by {@link liquibase.parser.ChangeLogParser} implementations.
- *
- * @see ExecutableChangeFactory
- * @see Database
- */
-public interface ExecutableChange extends Change {
+public interface Action<T extends Change>  {
+
+    public ChangeMetaData createChangeMetaData();
 
     /**
      * Return true if this Change object supports the passed database. Used by the ChangeLog parsing process.

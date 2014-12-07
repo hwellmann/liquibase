@@ -18,39 +18,39 @@ public class ChangeFactoryTest {
 
     @Before
     public void setup() {
-        ChangeFactory.reset();
+        ExecutableChangeFactory.reset();
         SometimesExceptionThrowingChange.timesCalled = 0;
     }
 
     @After
     public void resetRegistry() {
-        ChangeFactory.reset();
+        ExecutableChangeFactory.reset();
     }
 
     @Test
     public void constructor() {
-        ChangeFactory instance = ChangeFactory.getInstance();
+        ExecutableChangeFactory instance = ExecutableChangeFactory.getInstance();
         assertTrue(instance.getRegistry().containsKey("createTable"));
         assertTrue(instance.getRegistry().containsKey("dropTable"));
     }
 
     @Test
     public void getInstance() {
-        assertNotNull(ChangeFactory.getInstance());
+        assertNotNull(ExecutableChangeFactory.getInstance());
 
-        assertTrue(ChangeFactory.getInstance() == ChangeFactory.getInstance());
+        assertTrue(ExecutableChangeFactory.getInstance() == ExecutableChangeFactory.getInstance());
     }
 
     @Test
     public void reset() {
-        ChangeFactory instance1 = ChangeFactory.getInstance();
-        ChangeFactory.reset();
-        assertFalse(instance1 == ChangeFactory.getInstance());
+        ExecutableChangeFactory instance1 = ExecutableChangeFactory.getInstance();
+        ExecutableChangeFactory.reset();
+        assertFalse(instance1 == ExecutableChangeFactory.getInstance());
     }
 
     @Test
     public void clear() {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
         assertTrue(changeFactory.getRegistry().size() > 5);
         changeFactory.clear();
         assertEquals(0, changeFactory.getRegistry().size());
@@ -58,7 +58,7 @@ public class ChangeFactoryTest {
 
     @Test
     public void register() {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
         changeFactory.clear();
 
         assertEquals(0, changeFactory.getRegistry().size());
@@ -77,14 +77,14 @@ public class ChangeFactoryTest {
 
     @Test(expected = UnexpectedLiquibaseException.class)
     public void register_badClassRightAway() {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
 
         changeFactory.register(ExceptionThrowingChange.class);
     }
 
     @Test(expected = UnexpectedLiquibaseException.class)
     public void register_badClassLaterInComparator() {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
 
         changeFactory.register(SometimesExceptionThrowingChange.class);
         changeFactory.register(Priority5Change.class);
@@ -93,7 +93,7 @@ public class ChangeFactoryTest {
 
     @Test
     public void unregister_instance() {
-        ChangeFactory factory = ChangeFactory.getInstance();
+        ExecutableChangeFactory factory = ExecutableChangeFactory.getInstance();
 
         factory.clear();
 
@@ -107,13 +107,13 @@ public class ChangeFactoryTest {
 
         assertEquals(3, factory.getRegistry().size());
 
-        factory.unregister(ChangeFactory.getInstance().getChangeMetaData(change).getName());
+        factory.unregister(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
         assertEquals(2, factory.getRegistry().size());
     }
 
     @Test
     public void unregister_doesNotExist() {
-        ChangeFactory factory = ChangeFactory.getInstance();
+        ExecutableChangeFactory factory = ExecutableChangeFactory.getInstance();
 
         factory.clear();
 
@@ -131,22 +131,22 @@ public class ChangeFactoryTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void getRegistry() {
-        ChangeFactory.getInstance().getRegistry().put("x", new TreeSet<Class<? extends ExecutableChange>>());
+        ExecutableChangeFactory.getInstance().getRegistry().put("x", new TreeSet<Class<? extends ExecutableChange>>());
     }
 
     @Test
     public void create_exists() {
-        Change change = ChangeFactory.getInstance().create("createTable");
+        Change change = ExecutableChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);
 
-        assertNotSame(change, ChangeFactory.getInstance().create("createTable"));
+        assertNotSame(change, ExecutableChangeFactory.getInstance().create("createTable"));
     }
 
     @Test
     public void create_notExists() {
-        Change change = ChangeFactory.getInstance().create("badChangeName");
+        Change change = ExecutableChangeFactory.getInstance().create("badChangeName");
 
         assertNull(change);
 
@@ -154,8 +154,8 @@ public class ChangeFactoryTest {
 
     @Test(expected = UnexpectedLiquibaseException.class)
     public void create_badClass() {
-        ChangeFactory.getInstance().register(SometimesExceptionThrowingChange.class);
-        Change change = ChangeFactory.getInstance().create("createTable");
+        ExecutableChangeFactory.getInstance().register(SometimesExceptionThrowingChange.class);
+        Change change = ExecutableChangeFactory.getInstance().create("createTable");
 
         assertNotNull(change);
         assertTrue(change instanceof CreateTableChange);

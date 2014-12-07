@@ -13,7 +13,7 @@ import java.util.Set;
 import liquibase.ContextExpression;
 import liquibase.Labels;
 import liquibase.change.Change;
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
 import liquibase.change.ExecutableChange;
@@ -401,7 +401,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
     }
 
     protected ExecutableChange toChange(ParsedNode value, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        ExecutableChange change = ChangeFactory.getInstance().create(value.getName());
+        ExecutableChange change = ExecutableChangeFactory.getInstance().create(value.getName());
         if (change == null) {
             return null;
         } else {
@@ -882,10 +882,10 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             } else if (changeCount > 1) {
                 returnString.append(" (x").append(changeCount).append(")");
                 returnString.append(", ");
-                returnString.append(ChangeFactory.getInstance().getChangeMetaData(change).getName());
+                returnString.append(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
                 changeCount = 1;
             } else {
-                returnString.append(", ").append(ChangeFactory.getInstance().getChangeMetaData(change).getName());
+                returnString.append(", ").append(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
                 changeCount = 1;
             }
             lastChangeClass = change.getClass();

@@ -31,7 +31,7 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
 
     @Override
     public Collection<ExecutableChange> getAllParameterPermutations(Database database) throws Exception {
-        ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(getChangeName());
+        ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(getChangeName());
         Set<Set<String>> parameterSets = CollectionUtil.powerSet(changeMetaData.getParameters().keySet());
 
         List<ExecutableChange> changes = new ArrayList<ExecutableChange>();
@@ -44,7 +44,7 @@ public abstract class AbstractChangeSupplier<T extends Change> implements Change
             }
 
             for (Map<String, ?> valuePermutation : CollectionUtil.permutations(parameterValues)) {
-                ExecutableChange change = ChangeFactory.getInstance().create(getChangeName());
+                ExecutableChange change = ExecutableChangeFactory.getInstance().create(getChangeName());
                 for (Map.Entry<String, ?> entry : valuePermutation.entrySet()) {
                     ChangeParameterMetaData changeParam = changeMetaData.getParameters().get(entry.getKey());
                     changeParam.setValue(change, entry.getValue());

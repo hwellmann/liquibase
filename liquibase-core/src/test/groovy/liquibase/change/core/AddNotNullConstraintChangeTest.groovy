@@ -1,6 +1,6 @@
 package liquibase.change.core;
 
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.StandardChangeTest;
 import liquibase.database.Database;
 import liquibase.database.core.FirebirdDatabase;

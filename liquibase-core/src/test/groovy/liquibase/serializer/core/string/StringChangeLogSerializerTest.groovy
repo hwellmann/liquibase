@@ -270,7 +270,7 @@ public class StringChangeLogSerializerTest extends Specification {
         assert string.indexOf("@") < 0: "@ in string.  Probably poorly serialzed object reference." + string;
 
         where:
-        change << ChangeFactory.getInstance().getRegistry().values().collect {
+        change << ExecutableChangeFactory.getInstance().getRegistry().values().collect {
             it.iterator().next().getConstructor().newInstance()
         }
     }

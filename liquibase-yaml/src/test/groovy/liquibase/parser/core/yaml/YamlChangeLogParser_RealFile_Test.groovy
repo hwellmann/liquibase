@@ -2,7 +2,7 @@ package liquibase.parser.core.yaml
 
 import liquibase.Contexts
 import liquibase.change.Change
-import liquibase.change.ChangeFactory
+import liquibase.change.ExecutableChangeFactory
 import liquibase.change.CheckSum
 import liquibase.change.core.AddColumnChange
 import liquibase.change.core.CreateIndexChange
@@ -122,7 +122,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSet(path, "nvoxland", "1").shouldAlwaysRun()
         assert !changeLog.getChangeSet(path, "nvoxland", "1").shouldRunOnChange()
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(0).getChanges().get(0)).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(0).getChanges().get(0)).getName() == "createTable"
         assert changeLog.getChangeSets().get(0).getChanges().get(0) instanceof CreateTableChange
 
         then:
@@ -135,10 +135,10 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         assert changeLog.getChangeSet(path, "nvoxland", "2").getRollBackChanges()[0] instanceof RawSQLChange
         assert changeLog.getChangeSet(path, "nvoxland", "2").getRollBackChanges()[1] instanceof RawSQLChange
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(0)).getName() == "addColumn"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(0)).getName() == "addColumn"
         assert changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(0) instanceof AddColumnChange
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(1)).getName() == "addColumn"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "nvoxland", "2").getChanges().get(1)).getName() == "addColumn"
         assert changeLog.getChangeSets().get(1).getChanges().get(1) instanceof AddColumnChange
 
         changeLog.getChangeSet(path, "bob", "3").getChanges().size() == 1
@@ -147,7 +147,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSet(path, "bob", "3").shouldAlwaysRun()
         assert !changeLog.getChangeSet(path, "bob", "3").shouldRunOnChange()
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "bob", "3").getChanges().get(0)).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSet(path, "bob", "3").getChanges().get(0)).getName() == "createTable"
         assert changeLog.getChangeSet(path, "bob", "3").getChanges().get(0) instanceof CreateTableChange
 
 
@@ -300,7 +300,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         changeSet.getComments() == "Some comments go here"
 
         Change change = changeSet.getChanges().get(0);
-        ChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
         assert change instanceof CreateTableChange
     }
 

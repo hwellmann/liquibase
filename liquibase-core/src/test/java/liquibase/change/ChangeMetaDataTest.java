@@ -111,15 +111,15 @@ public class ChangeMetaDataTest {
     @Test
     public void appliesTo() {
         ChangeMetaData metaData = new ChangeMetaData("x", "y", 5, new String[] {"table", "column"}, null, null);
-        assertTrue(metaData.appliesTo(new Table()));
-        assertTrue(metaData.appliesTo(new Column()));
-        assertFalse(metaData.appliesTo(new View()));
+        assertTrue(metaData.appliesTo(new Table().getObjectTypeName()));
+        assertTrue(metaData.appliesTo(new Column().getObjectTypeName()));
+        assertFalse(metaData.appliesTo(new View().getObjectTypeName()));
     }
 
     @Test
     public void appliesTo_nullAppliesTo() {
         ChangeMetaData metaData = new ChangeMetaData("x", "y", 5, new String[0], null, null);
-        assertFalse(metaData.appliesTo(new Table()));
-        assertFalse(metaData.appliesTo(new Column()));
+        assertFalse(metaData.appliesTo(new Table().getObjectTypeName()));
+        assertFalse(metaData.appliesTo(new Column().getObjectTypeName()));
     }
 }

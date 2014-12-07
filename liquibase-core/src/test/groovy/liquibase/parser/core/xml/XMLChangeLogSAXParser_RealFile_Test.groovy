@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.Contexts
 import liquibase.change.Change
-import liquibase.change.ChangeFactory
+import liquibase.change.ExecutableChangeFactory
 import liquibase.change.CheckSum
 import liquibase.change.core.*
 import liquibase.change.custom.CustomChangeWrapper
@@ -76,7 +76,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         changeSet.getFilePath() == path
         changeSet.getComments() == "Some comments go here"
 
-        ChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
         assert change instanceof CreateTableChange
         change.tableName == "person"
         change.columns.size() == 3
@@ -117,7 +117,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSets()[0].shouldAlwaysRun()
         assert !changeLog.getChangeSets()[0].shouldRunOnChange()
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets()[0].getChanges()[0]).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets()[0].getChanges()[0]).getName() == "createTable"
         assert changeLog.getChangeSets()[0].getChanges()[0] instanceof CreateTableChange
 
         then:
@@ -132,10 +132,10 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert changeLog.getChangeSets().get(1).getRollBackChanges()[0] instanceof RawSQLChange
         assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLChange
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
         assert changeLog.getChangeSets().get(1).getChanges()[0] instanceof AddColumnChange
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges().get(1)).getName() == "addColumn"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges().get(1)).getName() == "addColumn"
         assert changeLog.getChangeSets().get(1).getChanges().get(1) instanceof AddColumnChange
 
         changeLog.getChangeSets().get(2).getAuthor() == "bob"
@@ -146,7 +146,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSets().get(2).shouldAlwaysRun()
         assert !changeLog.getChangeSets().get(2).shouldRunOnChange()
 
-        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(2).getChanges()[0]).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(2).getChanges()[0]).getName() == "createTable"
         assert changeLog.getChangeSets().get(2).getChanges()[0] instanceof CreateTableChange
 
 
@@ -309,7 +309,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         changeSet.getComments() == "Some comments go here"
 
         Change change = changeSet.getChanges()[0];
-        ChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
+        ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
         assert change instanceof CreateTableChange
     }
 

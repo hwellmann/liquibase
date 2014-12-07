@@ -13,6 +13,8 @@ public interface Change extends LiquibaseSerializable {
      */
     void finishInitialization() throws SetupException;
 
+    public ChangeMetaData createChangeMetaData();
+
     /**
      * Returns the changeSet this Change is part of. Will return null if this instance was not constructed as part of a changelog file.
      */

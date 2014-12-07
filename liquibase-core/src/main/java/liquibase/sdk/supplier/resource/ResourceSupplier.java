@@ -1,6 +1,6 @@
 package liquibase.sdk.supplier.resource;
 
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeParameterService;
 import liquibase.change.ChangeParameterMetaData;
@@ -35,7 +35,7 @@ public class ResourceSupplier {
             if (path.toLowerCase().endsWith("csv")) {
                 stream = new ByteArrayInputStream(usersCsv.getBytes());
             } else if (path.toLowerCase().endsWith("my-logic.sql")) {
-                ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(new CreateProcedureChange());
+                ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(new CreateProcedureChange());
                 ChangeParameterMetaData metaData = changeMetaData.getParameters().get("procedureBody");
                 ChangeParameterService analyzer = new ChangeParameterService(metaData);
                 stream = new ByteArrayInputStream(((String)analyzer.getExampleValue(new HsqlDatabase())).getBytes());

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import liquibase.change.ExecutableChange;
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
@@ -59,7 +59,7 @@ public class PendingSQLWriter extends HTMLWriter {
                 try {
                     thisChangeSet.execute(databaseChangeLog, null, this.database);
                 } catch (MigrationFailedException e) {
-                    fileWriter.append("EXECUTION ERROR: ").append(ChangeFactory.getInstance().getChangeMetaData(change).getDescription()).append(": ").append(e.getMessage()).append("\n\n");
+                    fileWriter.append("EXECUTION ERROR: ").append(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getDescription()).append(": ").append(e.getMessage()).append("\n\n");
                 }
             }
             fileWriter.append("</pre></code>");

@@ -5,7 +5,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,22 +13,14 @@ import java.util.Map;
 import java.util.Set;
 
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSet;
-import liquibase.database.Database;
-import liquibase.exception.LiquibaseException;
-import liquibase.exception.RollbackImpossibleException;
 import liquibase.exception.SetupException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.exception.ValidationErrors;
-import liquibase.exception.Warnings;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
+import liquibase.serializer.ChangeLogSerializer;
+import liquibase.serializer.ChangeLogSerializerFactory;
 import liquibase.serializer.LiquibaseSerializable;
-import liquibase.serializer.core.string.StringChangeLogSerializer;
-import liquibase.sqlgenerator.SqlGeneratorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.structure.DatabaseObject;
 import liquibase.util.StringUtils;
 
 /**
@@ -39,11 +30,11 @@ import liquibase.util.StringUtils;
  * and delegating logic to the {@link liquibase.sqlgenerator.SqlGenerator} objects created to do the actual change work.
  * Place the @DatabaseChangeProperty annotations on the read "get" methods to control property metadata.
  */
-public abstract class AbstractChange implements ExecutableChange {
+public abstract class AbstractChange implements Change {
 
     private ResourceAccessor resourceAccessor;
 
-    private ExecutableChangeSet changeSet;
+    private ChangeSet changeSet;
 
     public AbstractChange() {
     }
@@ -251,7 +242,7 @@ public abstract class AbstractChange implements ExecutableChange {
      */
     @Override
     @DatabaseChangeProperty(isChangeProperty = false)
-    public ExecutableChangeSet getChangeSet() {
+    public ChangeSet getChangeSet() {
         return changeSet;
     }
 
@@ -260,161 +251,7 @@ public abstract class AbstractChange implements ExecutableChange {
      */
     @Override
     public void setChangeSet(ChangeSet changeSet) {
-        this.changeSet = (ExecutableChangeSet) changeSet;
-    }
-
-    /**
-     * Implementation delegates logic to the {@link liquibase.sqlgenerator.SqlGenerator#generateStatementsIsVolatile(Database) } method on the {@link SqlStatement} objects returned by {@link #generateStatements }.
-     * If zero or null SqlStatements are returned by generateStatements then this method returns false.
-     */
-    @Override
-    public boolean generateStatementsVolatile(Database database) {
-        SqlStatement[] statements = generateStatements(database);
-        if (statements == null) {
-            return false;
-        }
-        for (SqlStatement statement : statements) {
-            if (SqlGeneratorFactory.getInstance().generateStatementsVolatile(statement, database)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Implementation delegates logic to the {@link liquibase.sqlgenerator.SqlGenerator#generateRollbackStatementsIsVolatile(Database) } method on the {@link SqlStatement} objects returned by {@link #generateStatements }
-     * If no or null SqlStatements are returned by generateRollbackStatements then this method returns false.
-     */
-    @Override
-    public boolean generateRollbackStatementsVolatile(Database database) {
-        if (generateStatementsVolatile(database)) {
-            return true;
-        }
-        SqlStatement[] statements = generateStatements(database);
-        if (statements == null) {
-            return false;
-        }
-        for (SqlStatement statement : statements) {
-            if (SqlGeneratorFactory.getInstance().generateRollbackStatementsVolatile(statement, database)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Implementation delegates logic to the {@link liquibase.sqlgenerator.SqlGenerator#supports(liquibase.statement.SqlStatement, liquibase.database.Database)} method on the {@link SqlStatement} objects returned by {@link #generateStatements }.
-     * If no or null SqlStatements are returned by generateStatements then this method returns true.
-     * If {@link #generateStatementsVolatile(liquibase.database.Database)} returns true, we cannot call generateStatements and so assume true.
-     */
-    @Override
-    public boolean supports(Database database) {
-        if (generateStatementsVolatile(database)) {
-            return true;
-        }
-        SqlStatement[] statements = generateStatements(database);
-        if (statements == null) {
-            return true;
-        }
-        for (SqlStatement statement : statements) {
-            if (!SqlGeneratorFactory.getInstance().supports(statement, database)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Implementation delegates logic to the {@link liquibase.sqlgenerator.SqlGenerator#warn(liquibase.statement.SqlStatement, liquibase.database.Database, liquibase.sqlgenerator.SqlGeneratorChain)} method on the {@link SqlStatement} objects returned by {@link #generateStatements }.
-     * If a generated statement is not supported for the given database, no warning will be added since that is a validation error.
-     * If no or null SqlStatements are returned by generateStatements then this method returns no warnings.
-     */
-    @Override
-    public Warnings warn(Database database) {
-        Warnings warnings = new Warnings();
-        if (generateStatementsVolatile(database)) {
-            return warnings;
-        }
-
-        SqlStatement[] statements = generateStatements(database);
-        if (statements == null) {
-            return warnings;
-        }
-        for (SqlStatement statement : statements) {
-            if (SqlGeneratorFactory.getInstance().supports(statement, database)) {
-                warnings.addAll(SqlGeneratorFactory.getInstance().warn(statement, database));
-            } else if (statement.skipOnUnsupported()) {
-                warnings.addWarning(statement.getClass().getName() + " is not supported on " + database.getShortName() + ", but " + ExecutableChangeFactory.getInstance().getChangeMetaData(this).getName() + " will still execute");
-            }
-        }
-
-        return warnings;
-    }
-
-    /**
-     * Implementation checks the ChangeParameterMetaData for declared required fields
-     * and also delegates logic to the {@link liquibase.sqlgenerator.SqlGenerator#validate(liquibase.statement.SqlStatement, liquibase.database.Database, liquibase.sqlgenerator.SqlGeneratorChain)}  method on the {@link SqlStatement} objects returned by {@link #generateStatements }.
-     * If no or null SqlStatements are returned by generateStatements then this method returns no errors.
-     * If there are no parameters than this method returns no errors
-     */
-    @Override
-    public ValidationErrors validate(Database database) {
-        ValidationErrors changeValidationErrors = new ValidationErrors();
-
-        for (ChangeParameterMetaData param : ExecutableChangeFactory.getInstance().getChangeMetaData(this).getParameters().values()) {
-            ChangeParameterService analyzer = new ChangeParameterService(param);
-            if (analyzer.isRequiredFor(database) && param.getCurrentValue(this) == null) {
-                changeValidationErrors.addError(param.getParameterName() + " is required for " + ExecutableChangeFactory.getInstance().getChangeMetaData(this).getName() + " on " + database.getShortName());
-            }
-        }
-        if (changeValidationErrors.hasErrors()) {
-            return changeValidationErrors;
-        }
-
-        String unsupportedWarning = ExecutableChangeFactory.getInstance().getChangeMetaData(this).getName() + " is not supported on " + database.getShortName();
-        if (!this.supports(database)) {
-            changeValidationErrors.addError(unsupportedWarning);
-        } else if (!generateStatementsVolatile(database)) {
-            boolean sawUnsupportedError = false;
-            SqlStatement[] statements;
-            statements = generateStatements(database);
-            if (statements != null) {
-                for (SqlStatement statement : statements) {
-                    boolean supported = SqlGeneratorFactory.getInstance().supports(statement, database);
-                    if (!supported && !sawUnsupportedError) {
-                        if (!statement.skipOnUnsupported()) {
-                            changeValidationErrors.addError(unsupportedWarning);
-                            sawUnsupportedError = true;
-                        }
-                    } else {
-                        changeValidationErrors.addAll(SqlGeneratorFactory.getInstance().validate(statement, database));
-                    }
-                }
-            }
-        }
-
-        return changeValidationErrors;
-    }
-
-    @Override
-    public ChangeStatus checkStatus(Database database) {
-        return new ChangeStatus().unknown("Not implemented");
-    }
-
-    /**
-     * Implementation relies on value returned from {@link #createInverses()}.
-     */
-    @Override
-    public SqlStatement[] generateRollbackStatements(Database database) throws RollbackImpossibleException {
-        return generateRollbackStatementsFromInverse(database);
-    }
-
-    /**
-     * Implementation returns true if {@link #createInverses()} returns a non-null value.
-     */
-    @Override
-    public boolean supportsRollback(Database database) {
-        return createInverses() != null;
+        this.changeSet = (ChangeSet) changeSet;
     }
 
     /**
@@ -422,47 +259,8 @@ public abstract class AbstractChange implements ExecutableChange {
      */
     @Override
     public CheckSum generateCheckSum() {
-        return CheckSum.compute(new StringChangeLogSerializer().serialize(this, false));
-    }
-
-    /*
-     * Generates rollback statements from the inverse changes returned by createInverses().
-     * Throws RollbackImpossibleException if the changes created by createInverses() is not supported for the passed database.
-     *
-     */
-    private SqlStatement[] generateRollbackStatementsFromInverse(Database database) throws RollbackImpossibleException {
-        ExecutableChange[] inverses = createInverses();
-        if (inverses == null) {
-            throw new RollbackImpossibleException("No inverse to " + getClass().getName() + " created");
-        }
-
-        List<SqlStatement> statements = new ArrayList<SqlStatement>();
-
-        try {
-            for (ExecutableChange inverse : inverses) {
-                if (!inverse.supports(database)) {
-                    throw new RollbackImpossibleException(ExecutableChangeFactory.getInstance().getChangeMetaData(inverse).getName() + " is not supported on " + database.getShortName());
-                }
-                statements.addAll(Arrays.asList(inverse.generateStatements(database)));
-            }
-        } catch (LiquibaseException e) {
-            throw new RollbackImpossibleException(e);
-        }
-
-        return statements.toArray(new SqlStatement[statements.size()]);
-    }
-
-    /**
-     * Create inverse changes that can roll back this change. This method is intended
-     * to be overriden by Change implementations that have a logical inverse operation. Default implementation returns null.
-     * <p/>
-     * If {@link #generateRollbackStatements(liquibase.database.Database)} is overridden, this method may not be called.
-     *
-     * @return Return null if there is no corresponding inverse and therefore automatic rollback is not possible. Return an empty array to have a no-op rollback.
-     * @also #generateRollbackStatements #supportsRollback
-     */
-    protected ExecutableChange[] createInverses() {
-        return null;
+        ChangeLogSerializer serializer = ChangeLogSerializerFactory.getInstance().getSerializer("txt");
+        return CheckSum.compute(serializer.serialize(this, false));
     }
 
     /**
@@ -482,47 +280,26 @@ public abstract class AbstractChange implements ExecutableChange {
     }
 
     /**
-     * Implementation delegates logic to the {@link liquibase.sqlgenerator.SqlGeneratorFactory#getAffectedDatabaseObjects(liquibase.statement.SqlStatement, liquibase.database.Database)}  method on the {@link SqlStatement} objects returned by {@link #generateStatements }
-     * Returns empty set if change is not supported for the passed database
-     */
-    @Override
-    public Set<DatabaseObject> getAffectedDatabaseObjects(Database database) {
-        if (this.generateStatementsVolatile(database)) {
-            return new HashSet<DatabaseObject>();
-        }
-        Set<DatabaseObject> affectedObjects = new HashSet<DatabaseObject>();
-        SqlStatement[] statements = generateStatements(database);
-
-        if (statements != null) {
-            for (SqlStatement statement : statements) {
-                affectedObjects.addAll(SqlGeneratorFactory.getInstance().getAffectedDatabaseObjects(statement, database));
-            }
-        }
-
-        return affectedObjects;
-    }
-
-    /**
      * Returns the fields on this change that are serializable.
      */
     @Override
     public Set<String> getSerializableFields() {
-        return ExecutableChangeFactory.getInstance().getChangeMetaData(this).getParameters().keySet();
+        return ChangeFactory.getInstance().getChangeMetaData(this).getParameters().keySet();
     }
 
     @Override
     public Object getSerializableFieldValue(String field) {
-        return ExecutableChangeFactory.getInstance().getChangeMetaData(this).getParameters().get(field).getCurrentValue(this);
+        return ChangeFactory.getInstance().getChangeMetaData(this).getParameters().get(field).getCurrentValue(this);
     }
 
     @Override
     public String getSerializedObjectName() {
-        return ExecutableChangeFactory.getInstance().getChangeMetaData(this).getName();
+        return ChangeFactory.getInstance().getChangeMetaData(this).getName();
     }
 
     @Override
     public SerializationType getSerializableFieldType(String field) {
-        return ExecutableChangeFactory.getInstance().getChangeMetaData(this).getParameters().get(field).getSerializationType();
+        return ChangeFactory.getInstance().getChangeMetaData(this).getParameters().get(field).getSerializationType();
     }
 
     @Override
@@ -537,12 +314,12 @@ public abstract class AbstractChange implements ExecutableChange {
 
     @Override
     public String toString() {
-        return ExecutableChangeFactory.getInstance().getChangeMetaData(this).getName();
+        return ChangeFactory.getInstance().getChangeMetaData(this).getName();
     }
 
     @Override
     public void load(ParsedNode parsedNode, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        ChangeMetaData metaData = ExecutableChangeFactory.getInstance().getChangeMetaData(this);
+        ChangeMetaData metaData = ChangeFactory.getInstance().getChangeMetaData(this);
         this.setResourceAccessor(resourceAccessor);
         try {
             for (ChangeParameterMetaData param : metaData.getParameters().values()) {
@@ -633,7 +410,7 @@ public abstract class AbstractChange implements ExecutableChange {
     @Override
     public ParsedNode serialize() throws ParsedNodeException {
         ParsedNode node = new ParsedNode(null, getSerializedObjectName());
-        ChangeMetaData metaData = ExecutableChangeFactory.getInstance().getChangeMetaData(this);
+        ChangeMetaData metaData = ChangeFactory.getInstance().getChangeMetaData(this);
         for (ChangeParameterMetaData param : metaData.getSetParameters(this).values()) {
             Object currentValue = param.getCurrentValue(this);
             currentValue = serializeValue(currentValue);

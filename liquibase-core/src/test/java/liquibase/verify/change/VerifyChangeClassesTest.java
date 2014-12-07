@@ -3,7 +3,7 @@ package liquibase.verify.change;
 import liquibase.change.ChangeParameterService;
 import liquibase.change.ChangeService;
 import liquibase.change.ExecutableChange;
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeParameterMetaData;
 import liquibase.database.Database;
@@ -31,7 +31,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
     @Ignore
     @Test
     public void minimumRequiredIsValidSql() throws Exception {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
         for (String changeName : changeFactory.getDefinedChanges()) {
             if (changeName.equals("addDefaultValue")) {
                 continue; //need to better handle strange "one of defaultValue* is required" logic
@@ -54,7 +54,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 if (change.generateStatementsVolatile(database)) {
                     continue;
                 }
-                ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(change);
+                ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(change);
                 ChangeService changeService = new ChangeService(changeMetaData);
 
                 change.setResourceAccessor(new JUnitResourceAccessor());
@@ -93,7 +93,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
 
     @Test
     public void lessThanMinimumFails() throws Exception {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
         for (String changeName : changeFactory.getDefinedChanges()) {
             for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
                 if (database.getShortName() == null) {
@@ -107,7 +107,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 if (change.generateStatementsVolatile(database)) {
                     continue;
                 }
-                ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(change);
+                ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(change);
                 ChangeService changeService = new ChangeService(changeMetaData);
 
                 change.setResourceAccessor(new JUnitResourceAccessor());
@@ -136,7 +136,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
     @Ignore
     @Test
     public void extraParamsIsValidSql() throws Exception {
-        ChangeFactory changeFactory = ChangeFactory.getInstance();
+        ExecutableChangeFactory changeFactory = ExecutableChangeFactory.getInstance();
         for (String changeName : changeFactory.getDefinedChanges()) {
             if (changeName.equals("addDefaultValue")) {
                 continue; //need to better handle strange "one of defaultValue* is required" logic
@@ -161,7 +161,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 if (baseChange.generateStatementsVolatile(database)) {
                     continue;
                 }
-                ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(baseChange);
+                ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(baseChange);
                 ChangeService changeService = new ChangeService(changeMetaData);
                 ArrayList<String> optionalParameters = new ArrayList<String>(changeService.getOptionalParameters(database).keySet());
                 Collections.sort(optionalParameters);

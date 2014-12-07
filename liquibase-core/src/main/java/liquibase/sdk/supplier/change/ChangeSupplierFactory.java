@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import liquibase.change.ExecutableChange;
-import liquibase.change.ChangeFactory;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.Change;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -22,8 +22,8 @@ public class ChangeSupplierFactory {
 
     public Set<ExecutableChange> getExtensionChanges() {
         Set<ExecutableChange> returnSet = new HashSet<ExecutableChange>();
-        for (String change : ChangeFactory.getInstance().getDefinedChanges()) {
-            returnSet.add(ChangeFactory.getInstance().create(change));
+        for (String change : ExecutableChangeFactory.getInstance().getDefinedChanges()) {
+            returnSet.add(ExecutableChangeFactory.getInstance().create(change));
         }
         return returnSet;
     }
@@ -31,7 +31,7 @@ public class ChangeSupplierFactory {
     public Set<String> getExtensionChangeNames() {
         Set<String> returnSet = new HashSet<String>();
         for (ExecutableChange change : getExtensionChanges()) {
-            returnSet.add(ChangeFactory.getInstance().getChangeMetaData(change).getName());
+            returnSet.add(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
         }
         return returnSet;
     }

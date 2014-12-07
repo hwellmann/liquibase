@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.structure.DatabaseObject;
 import liquibase.util.PrioritizedService;
 
 /**
@@ -112,7 +111,7 @@ public class ChangeMetaData implements PrioritizedService {
         return appliesTo;
     }
 
-    public boolean appliesTo(DatabaseObject databaseObject) {
-        return appliesTo != null && appliesTo.contains(databaseObject.getObjectTypeName());
+    public boolean appliesTo(String databaseObjectTypeName) {
+        return appliesTo != null && appliesTo.contains(databaseObjectTypeName);
     }
 }

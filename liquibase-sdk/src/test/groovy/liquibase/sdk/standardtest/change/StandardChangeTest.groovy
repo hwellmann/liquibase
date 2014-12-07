@@ -2,7 +2,7 @@ package liquibase.sdk.standardtest.change
 
 import liquibase.CatalogAndSchema
 import liquibase.change.Change
-import liquibase.change.ChangeFactory
+import liquibase.change.ExecutableChangeFactory
 import liquibase.changelog.ChangeSet
 import liquibase.changelog.ChangeSetImpl
 import liquibase.database.Database
@@ -50,8 +50,8 @@ class StandardChangeTest extends Specification {
             change.setChangeSet(changeSet)
             def permutation = new TestPermutation(test)
             permutation.describe("Database", database.shortName);
-            permutation.describeAsGroup("Change", ChangeFactory.instance.getChangeMetaData(change).getName())
-            permutation.describeAsTable("Change Parameters", ChangeFactory.instance.getParameters(change))
+            permutation.describeAsGroup("Change", ExecutableChangeFactory.instance.getChangeMetaData(change).getName())
+            permutation.describeAsTable("Change Parameters", ExecutableChangeFactory.instance.getParameters(change))
 
 
             permutation.canVerify = database.connection != null && !(database.connection instanceof OfflineConnection)
