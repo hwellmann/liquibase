@@ -1,7 +1,8 @@
 package liquibase.change.core;
 
+import liquibase.action.AddAutoIncrementAction
+import liquibase.change.ChangeStatus
 import liquibase.change.ExecutableChangeFactory
-import liquibase.change.ChangeStatus;
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -14,14 +15,14 @@ public class AddAutoIncrementChangeTest extends StandardChangeTest {
 
     def getAppliesTo() {
         expect:
-        def change = new AddAutoIncrementChange();
+        def change = new AddAutoIncrementAction();
         ExecutableChangeFactory.getInstance().getChangeMetaData(change).getAppliesTo().iterator().next() == "column"
     }
 
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddAutoIncrementChange();
+        def change = new AddAutoIncrementAction();
         change.setSchemaName("SCHEMA_NAME");
         change.setTableName("TABLE_NAME");
         change.setColumnName("COLUMN_NAME");
@@ -33,7 +34,7 @@ public class AddAutoIncrementChangeTest extends StandardChangeTest {
 
     def "check change metadata"() {
         expect:
-        def change = new AddAutoIncrementChange();
+        def change = new AddAutoIncrementAction();
         def metaData = ExecutableChangeFactory.getInstance().getChangeMetaData(change);
         metaData.getName() == "addAutoIncrement"
 
@@ -51,7 +52,7 @@ public class AddAutoIncrementChangeTest extends StandardChangeTest {
         table.getColumns().add(new Column(Table.class, null, null, table.name, "other_col"))
         table.getColumns().add(testColumn)
 
-        def change = new AddAutoIncrementChange()
+        def change = new AddAutoIncrementAction()
         change.tableName = table.name
         change.columnName = testColumn.name
 

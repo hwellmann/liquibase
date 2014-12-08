@@ -1,14 +1,13 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.math.BigInteger;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeNote;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddAutoIncrementChange;
 import liquibase.database.Database;
 import liquibase.database.core.PostgresDatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -33,77 +32,70 @@ import org.kohsuke.MetaInfServices;
         databaseNotes = {@DatabaseChangeNote(database = "sqlite", notes = "If the column type is not INTEGER it is converted to INTEGER")}
 )
 @MetaInfServices(ExecutableChange.class)
-public class AddAutoIncrementChange extends AbstractChange {
+public class AddAutoIncrementAction extends AbstractAction<AddAutoIncrementChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String columnName;
-    private String columnDataType;
-    private BigInteger startWith;
-    private BigInteger incrementBy;
+    public AddAutoIncrementAction() {
+        this(new AddAutoIncrementChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
+    public AddAutoIncrementAction(AddAutoIncrementChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column")
     public String getColumnName() {
-        return columnName;
+        return change.getColumnName();
     }
 
     public void setColumnName(String columnName) {
-        this.columnName = columnName;
+        change.setColumnName(columnName);
     }
 
-    @DatabaseChangeProperty(description = "Current data type of the column to make auto-increment", exampleValue = "int")
     public String getColumnDataType() {
-        return columnDataType;
+        return change.getColumnDataType();
     }
 
     public void setColumnDataType(String columnDataType) {
-        this.columnDataType = columnDataType;
+        change.setColumnDataType(columnDataType);
     }
 
-    @DatabaseChangeProperty(exampleValue = "100")
     public BigInteger getStartWith() {
-    	return startWith;
+    	return change.getStartWith();
     }
 
     public void setStartWith(BigInteger startWith) {
-    	this.startWith = startWith;
+    	change.setStartWith(startWith);
     }
 
-    @DatabaseChangeProperty(exampleValue = "1")
     public BigInteger getIncrementBy() {
-    	return incrementBy;
+    	return change.getIncrementBy();
     }
 
     public void setIncrementBy(BigInteger incrementBy) {
-    	this.incrementBy = incrementBy;
+    	change.setIncrementBy(incrementBy);
     }
 
     @Override
@@ -111,9 +103,9 @@ public class AddAutoIncrementChange extends AbstractChange {
         if (database instanceof PostgresDatabase) {
             String sequenceName = (getTableName() + "_" + getColumnName() + "_seq").toLowerCase();
             return new SqlStatement[]{
-                    new CreateSequenceStatement(catalogName, schemaName, sequenceName),
-                    new SetNullableStatement(catalogName, schemaName, getTableName(), getColumnName(), null, false),
-                    new AddDefaultValueStatement(catalogName, schemaName, getTableName(), getColumnName(), getColumnDataType(), new SequenceNextValueFunction(sequenceName)),
+                    new CreateSequenceStatement(getCatalogName(), getSchemaName(), sequenceName),
+                    new SetNullableStatement(getCatalogName(), getSchemaName(), getTableName(), getColumnName(), null, false),
+                    new AddDefaultValueStatement(getCatalogName(), getSchemaName(), getTableName(), getColumnName(), getColumnDataType(), new SequenceNextValueFunction(sequenceName)),
             };
         }
 
@@ -150,10 +142,5 @@ public class AddAutoIncrementChange extends AbstractChange {
         }
 
 
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

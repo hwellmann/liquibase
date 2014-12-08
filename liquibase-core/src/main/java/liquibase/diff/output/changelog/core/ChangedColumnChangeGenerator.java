@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import liquibase.action.AddAutoIncrementAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddAutoIncrementChange;
 import liquibase.change.core.AddDefaultValueChange;
 import liquibase.change.core.AddNotNullConstraintChange;
 import liquibase.change.core.DropDefaultValueChange;
@@ -116,17 +116,17 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
                 LogFactory.getLogger().info("ChangedColumnChangeGenerator cannot fix dropped auto increment values");
                 //todo: Support dropping auto increments
             } else {
-                AddAutoIncrementChange change = new AddAutoIncrementChange();
+                AddAutoIncrementAction action = new AddAutoIncrementAction();
                 if (control.getIncludeCatalog()) {
-                    change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
+                    action.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
                 }
                 if (control.getIncludeSchema()) {
-                    change.setSchemaName(column.getRelation().getSchema().getName());
+                    action.setSchemaName(column.getRelation().getSchema().getName());
                 }
-                change.setTableName(column.getRelation().getName());
-                change.setColumnName(column.getName());
-                change.setColumnDataType(DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase).toString());
-                changes.add(change);
+                action.setTableName(column.getRelation().getName());
+                action.setColumnName(column.getName());
+                action.setColumnDataType(DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase).toString());
+                changes.add(action);
             }
         }
     }
