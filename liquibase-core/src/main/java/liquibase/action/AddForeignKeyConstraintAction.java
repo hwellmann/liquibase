@@ -1,18 +1,14 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddForeignKeyConstraintChange;
+import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.AddForeignKeyConstraintStatement;
@@ -26,204 +22,159 @@ import org.kohsuke.MetaInfServices;
 /**
  * Adds a foreign key constraint to an existing column.
  */
- @DatabaseChange(name="addForeignKeyConstraint", description = "Adds a foreign key constraint to an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
- @MetaInfServices(ExecutableChange.class)
-public class AddForeignKeyConstraintChange extends AbstractChange {
+@DatabaseChange(name="addForeignKeyConstraint", description = "Adds a foreign key constraint to an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
+@MetaInfServices(ExecutableChange.class)
+public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyConstraintChange> {
 
-    private String baseTableCatalogName;
-    private String baseTableSchemaName;
-    private String baseTableName;
-    private String baseColumnNames;
-
-    private String referencedTableCatalogName;
-    private String referencedTableSchemaName;
-    private String referencedTableName;
-    private String referencedColumnNames;
-
-    private String constraintName;
-
-    private Boolean deferrable;
-    private Boolean initiallyDeferred;
-
-    private String onUpdate;
-    private String onDelete;
-
-    @Override
-    protected String[] createSupportedDatabasesMetaData(String parameterName, DatabaseChangeProperty changePropertyAnnotation) {
-        if (parameterName.equals("deferrable") || parameterName.equals("initiallyDeferred")) {
-            List<String> supported = new ArrayList<String>();
-            for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
-                if (database.supportsInitiallyDeferrableColumns()) {
-                    supported.add(database.getShortName());
-                }
-            }
-            return supported.toArray(new String[supported.size()]);
-
-        } else {
-            return super.createSupportedDatabasesMetaData(parameterName, changePropertyAnnotation);
-        }
+    public AddForeignKeyConstraintAction() {
+        super(new AddForeignKeyConstraintChange());
     }
+
+    public AddForeignKeyConstraintAction(AddForeignKeyConstraintChange change) {
+        super(change);
+    }
+
+    // FIXME where to place this method?
+
+//    @Override
+//    protected String[] createSupportedDatabasesMetaData(String parameterName, DatabaseChangeProperty changePropertyAnnotation) {
+//        if (parameterName.equals("deferrable") || parameterName.equals("initiallyDeferred")) {
+//            List<String> supported = new ArrayList<String>();
+//            for (Database database : DatabaseFactory.getInstance().getImplementedDatabases()) {
+//                if (database.supportsInitiallyDeferrableColumns()) {
+//                    supported.add(database.getShortName());
+//                }
+//            }
+//            return supported.toArray(new String[supported.size()]);
+//
+//        } else {
+//            return super.createSupportedDatabasesMetaData(parameterName, changePropertyAnnotation);
+//        }
+//    }
 
     @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getBaseTableCatalogName() {
-        return baseTableCatalogName;
+        return change.getBaseTableCatalogName();
     }
 
     public void setBaseTableCatalogName(String baseTableCatalogName) {
-        this.baseTableCatalogName = baseTableCatalogName;
+        change.setBaseTableCatalogName(baseTableCatalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getBaseTableSchemaName() {
-        return baseTableSchemaName;
+        return change.getBaseTableSchemaName();
     }
 
     public void setBaseTableSchemaName(String baseTableSchemaName) {
-        this.baseTableSchemaName = baseTableSchemaName;
+        change.setBaseTableSchemaName(baseTableSchemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table containing the column to constrain", exampleValue = "address")
     public String getBaseTableName() {
-        return baseTableName;
+        return change.getBaseTableName();
     }
 
     public void setBaseTableName(String baseTableName) {
-        this.baseTableName = baseTableName;
+        change.setBaseTableName(baseTableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column",description = "Name of column(s) to place the foreign key constraint on. Comma-separate if multiple", exampleValue = "person_id")
     public String getBaseColumnNames() {
-        return baseColumnNames;
+        return change.getBaseColumnNames();
     }
 
     public void setBaseColumnNames(String baseColumnNames) {
-        this.baseColumnNames = baseColumnNames;
+        change.setBaseColumnNames(baseColumnNames);
     }
 
     @DatabaseChangeProperty(since = "3.0", mustEqualExisting = "column")
     public String getReferencedTableCatalogName() {
-        return referencedTableCatalogName;
+        return change.getReferencedTableCatalogName();
     }
 
     public void setReferencedTableCatalogName(String referencedTableCatalogName) {
-        this.referencedTableCatalogName = referencedTableCatalogName;
+        change.setReferencedTableCatalogName(referencedTableCatalogName);
     }
 
     public String getReferencedTableSchemaName() {
-        return referencedTableSchemaName;
+        return change.getReferencedTableSchemaName();
     }
 
     public void setReferencedTableSchemaName(String referencedTableSchemaName) {
-        this.referencedTableSchemaName = referencedTableSchemaName;
+        change.setReferencedTableSchemaName(referencedTableSchemaName);
     }
 
     @DatabaseChangeProperty(description = "Name of the table the foreign key points to", exampleValue = "person")
     public String getReferencedTableName() {
-        return referencedTableName;
+        return change.getReferencedTableName();
     }
 
     public void setReferencedTableName(String referencedTableName) {
-        this.referencedTableName = referencedTableName;
+        change.setReferencedTableName(referencedTableName);
     }
 
     @DatabaseChangeProperty(description = "Column(s) the foreign key points to. Comma-separate if multiple", exampleValue = "id")
     public String getReferencedColumnNames() {
-        return referencedColumnNames;
+        return change.getReferencedColumnNames();
     }
 
     public void setReferencedColumnNames(String referencedColumnNames) {
-        this.referencedColumnNames = referencedColumnNames;
+        change.setReferencedColumnNames(referencedColumnNames);
     }
 
     @DatabaseChangeProperty(description = "Name of the new foreign key constraint", exampleValue = "fk_address_person")
     public String getConstraintName() {
-        return constraintName;
+        return change.getConstraintName();
     }
 
     public void setConstraintName(String constraintName) {
-        this.constraintName = constraintName;
+        change.setConstraintName(constraintName);
     }
 
     @DatabaseChangeProperty(description = "Is the foreign key deferrable")
     public Boolean getDeferrable() {
-        return deferrable;
+        return change.getDeferrable();
     }
 
     public void setDeferrable(Boolean deferrable) {
-        this.deferrable = deferrable;
+        change.setDeferrable(deferrable);
     }
 
     @DatabaseChangeProperty(description = "Is the foreign key initially deferred")
     public Boolean getInitiallyDeferred() {
-        return initiallyDeferred;
+        return change.getInitiallyDeferred();
     }
 
     public void setInitiallyDeferred(Boolean initiallyDeferred) {
-        this.initiallyDeferred = initiallyDeferred;
+        change.setInitiallyDeferred(initiallyDeferred);
     }
 
-//    public Boolean getDeleteCascade() {
-//        return deleteCascade;
-//    }
-
     public void setDeleteCascade(Boolean deleteCascade) {
-        if (deleteCascade != null && deleteCascade) {
-            setOnDelete("CASCADE");
-        }
+        change.setDeleteCascade(deleteCascade);
     }
 
     public void setOnUpdate(String rule) {
-        this.onUpdate = rule;
+        change.setOnUpdate(rule);
     }
 
     @DatabaseChangeProperty(description = "ON UPDATE functionality. Possible values: 'CASCADE', 'SET NULL', 'SET DEFAULT', 'RESTRICT', 'NO ACTION'", exampleValue = "RESTRICT")
     public String getOnUpdate() {
-        return onUpdate;
+        return change.getOnUpdate();
     }
 
     public void setOnDelete(String onDelete) {
-        this.onDelete = onDelete;
+        change.setOnDelete(onDelete);
     }
 
     @DatabaseChangeProperty(description = "ON DELETE functionality. Possible values: 'CASCADE', 'SET NULL', 'SET DEFAULT', 'RESTRICT', 'NO ACTION'", exampleValue = "CASCADE")
     public String getOnDelete() {
-        return this.onDelete;
+        return change.getOnDelete();
     }
 
-	public void setOnDelete(ForeignKeyConstraintType rule) {
-        if (rule == null) {
-            //nothing
-        } else if (rule == ForeignKeyConstraintType.importedKeyCascade) {
-            setOnDelete("CASCADE");
-        } else if (rule == ForeignKeyConstraintType.importedKeySetNull) {
-            setOnDelete("SET NULL");
-        } else if (rule == ForeignKeyConstraintType.importedKeySetDefault) {
-            setOnDelete("SET DEFAULT");
-        } else if (rule == ForeignKeyConstraintType.importedKeyRestrict) {
-            setOnDelete("RESTRICT");
-        } else if (rule == ForeignKeyConstraintType.importedKeyNoAction){
-            setOnDelete("NO ACTION");
-        } else {
-            throw new UnexpectedLiquibaseException("Unknown onDelete action: "+rule);
-        }
+    public void setOnDelete(ForeignKeyConstraintType rule) {
+        change.setOnDelete(rule);
     }
 
     public void setOnUpdate(ForeignKeyConstraintType rule) {
-        if (rule == null) {
-            //nothing
-        } else if (rule == ForeignKeyConstraintType.importedKeyCascade) {
-            setOnUpdate("CASCADE");
-        } else  if (rule == ForeignKeyConstraintType.importedKeySetNull) {
-            setOnUpdate("SET NULL");
-        } else if (rule == ForeignKeyConstraintType.importedKeySetDefault) {
-            setOnUpdate("SET DEFAULT");
-        } else if (rule == ForeignKeyConstraintType.importedKeyRestrict) {
-            setOnUpdate("RESTRICT");
-        } else if (rule == ForeignKeyConstraintType.importedKeyNoAction) {
-            setOnUpdate("NO ACTION");
-        } else {
-            throw new UnexpectedLiquibaseException("Unknown onUpdate action: "+onUpdate);
-        }
+        change.setOnUpdate(rule);
     }
 
     @Override
@@ -299,21 +250,5 @@ public class AddForeignKeyConstraintChange extends AbstractChange {
     @Override
     public String getConfirmationMessage() {
         return "Foreign key contraint added to " + getBaseTableName() + " (" + getBaseColumnNames() + ")";
-    }
-
-    /**
-     * @deprecated No longer supported in 3.0
-     */
-    @Deprecated
-    public Boolean getReferencesUniqueColumn() {
-        return null;
-    }
-
-    public void setReferencesUniqueColumn(Boolean referencesUniqueColumn) {
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import liquibase.action.AddForeignKeyConstraintAction;
 import liquibase.action.AddPrimaryKeyAction;
 import liquibase.action.DropTableAction;
 import liquibase.change.AbstractChange;
@@ -225,16 +226,16 @@ public class AddLookupTableChange extends AbstractChange {
             statements.add(new ReorganizeTableStatement(newTableCatalogName,newTableSchemaName, getNewTableName()));
         }
 
-        AddForeignKeyConstraintChange addFKChange = new AddForeignKeyConstraintChange();
-        addFKChange.setBaseTableSchemaName(existingTableSchemaName);
-        addFKChange.setBaseTableName(getExistingTableName());
-        addFKChange.setBaseColumnNames(getExistingColumnName());
-        addFKChange.setReferencedTableSchemaName(newTableSchemaName);
-        addFKChange.setReferencedTableName(getNewTableName());
-        addFKChange.setReferencedColumnNames(getNewColumnName());
+        AddForeignKeyConstraintAction addFKAction = new AddForeignKeyConstraintAction();
+        addFKAction.setBaseTableSchemaName(existingTableSchemaName);
+        addFKAction.setBaseTableName(getExistingTableName());
+        addFKAction.setBaseColumnNames(getExistingColumnName());
+        addFKAction.setReferencedTableSchemaName(newTableSchemaName);
+        addFKAction.setReferencedTableName(getNewTableName());
+        addFKAction.setReferencedColumnNames(getNewColumnName());
 
-        addFKChange.setConstraintName(getFinalConstraintName());
-        statements.addAll(Arrays.asList(addFKChange.generateStatements(database)));
+        addFKAction.setConstraintName(getFinalConstraintName());
+        statements.addAll(Arrays.asList(addFKAction.generateStatements(database)));
 
         return statements.toArray(new SqlStatement[statements.size()]);
     }

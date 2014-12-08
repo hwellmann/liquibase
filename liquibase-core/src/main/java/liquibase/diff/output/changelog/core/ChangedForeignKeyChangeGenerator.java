@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.AddForeignKeyConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
@@ -53,30 +53,30 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
         dropFkChange.setConstraintName(fk.getName());
         dropFkChange.setBaseTableName(fk.getForeignKeyTable().getName());
 
-        AddForeignKeyConstraintChange addFkChange = new AddForeignKeyConstraintChange();
-        addFkChange.setConstraintName(fk.getName());
-        addFkChange.setBaseTableName(fk.getForeignKeyTable().getName());
-        addFkChange.setBaseColumnNames(StringUtils.join(fk.getForeignKeyColumns(), ",", formatter));
-        addFkChange.setReferencedTableName(fk.getPrimaryKeyTable().getName());
-        addFkChange.setReferencedColumnNames(StringUtils.join(fk.getPrimaryKeyColumns(), ",", formatter));
+        AddForeignKeyConstraintAction addFkAction = new AddForeignKeyConstraintAction();
+        addFkAction.setConstraintName(fk.getName());
+        addFkAction.setBaseTableName(fk.getForeignKeyTable().getName());
+        addFkAction.setBaseColumnNames(StringUtils.join(fk.getForeignKeyColumns(), ",", formatter));
+        addFkAction.setReferencedTableName(fk.getPrimaryKeyTable().getName());
+        addFkAction.setReferencedColumnNames(StringUtils.join(fk.getPrimaryKeyColumns(), ",", formatter));
 
         if (control.getIncludeCatalog()) {
             dropFkChange.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
 
-            addFkChange.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
-            addFkChange.setReferencedTableCatalogName(fk.getPrimaryKeyTable().getSchema().getCatalogName());
+            addFkAction.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
+            addFkAction.setReferencedTableCatalogName(fk.getPrimaryKeyTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
             dropFkChange.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
 
-            addFkChange.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
-            addFkChange.setReferencedTableSchemaName(fk.getPrimaryKeyTable().getSchema().getName());
+            addFkAction.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
+            addFkAction.setReferencedTableSchemaName(fk.getPrimaryKeyTable().getSchema().getName());
         }
 
         if (fk.getBackingIndex() != null) {
             control.setAlreadyHandledChanged(fk.getBackingIndex());
         }
 
-        return new ExecutableChange[] { dropFkChange, addFkChange };
+        return new ExecutableChange[] { dropFkChange, addFkAction };
     }
 }

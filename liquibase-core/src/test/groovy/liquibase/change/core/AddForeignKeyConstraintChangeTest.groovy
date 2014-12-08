@@ -1,5 +1,6 @@
 package liquibase.change.core
 
+import liquibase.action.AddForeignKeyConstraintAction
 import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
@@ -10,11 +11,11 @@ import liquibase.structure.core.ForeignKey
 import liquibase.structure.core.Table
 import spock.lang.Unroll
 
-public class AddForeignKeyConstraintChangeTest extends StandardChangeTest {
+public class AddForeignKeyConstraintActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddForeignKeyConstraintChange();
+        def change = new AddForeignKeyConstraintAction();
         change.setConstraintName("FK_NAME");
         change.setBaseTableSchemaName("SCHEMA_NAME");
         change.setBaseTableName("TABLE_NAME");
@@ -40,7 +41,7 @@ public class AddForeignKeyConstraintChangeTest extends StandardChangeTest {
 
         snapshotFactory.addObjects(baseTable, refColumn)
 
-        def change = new AddForeignKeyConstraintChange()
+        def change = new AddForeignKeyConstraintAction()
         change.baseTableName = baseTable.name
         change.baseColumnNames = baseColumn.name
         change.referencedTableName = "ref_table"

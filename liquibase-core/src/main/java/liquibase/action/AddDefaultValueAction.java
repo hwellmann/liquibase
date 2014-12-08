@@ -8,7 +8,6 @@ import java.util.Locale;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddDefaultValueChange;
 import liquibase.change.core.DropDefaultValueChange;
@@ -76,7 +75,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         return validate;
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation.catalog", since = "3.0")
     public String getCatalogName() {
         return change.getCatalogName();
     }
@@ -85,7 +83,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation.schema")
     public String getSchemaName() {
         return change.getSchemaName();
     }
@@ -94,7 +91,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table to containing the column", exampleValue = "file")
     public String getTableName() {
         return change.getTableName();
     }
@@ -103,7 +99,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column", description = "Name of the column to add a default value to", exampleValue = "fileName")
     public String getColumnName() {
         return change.getColumnName();
     }
@@ -112,7 +107,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setColumnName(columnName);
     }
 
-    @DatabaseChangeProperty(description = "Current data type of the column to add default value to", exampleValue = "varchar(50)")
     public String getColumnDataType() {
         return change.getColumnDataType();
     }
@@ -121,7 +115,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setColumnDataType(columnDataType);
     }
 
-    @DatabaseChangeProperty(description = "Default value. Either this property or one of the other defaultValue* properties are required.", exampleValue = "Something Else", requiredForDatabase = "none")
     public String getDefaultValue() {
         return change.getDefaultValue();
     }
@@ -131,7 +124,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
     }
 
 
-    @DatabaseChangeProperty(requiredForDatabase = "none", exampleValue = "439.2")
     public String getDefaultValueNumeric() {
         return change.getDefaultValueNumeric();
     }
@@ -140,7 +132,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setDefaultValueNumeric(defaultValueNumeric);
     }
 
-    @DatabaseChangeProperty(requiredForDatabase = "none", exampleValue = "2008-02-12T12:34:03")
     public String getDefaultValueDate() {
         return change.getDefaultValueDate();
     }
@@ -150,7 +141,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
     }
 
 
-    @DatabaseChangeProperty(requiredForDatabase = "none")
     public Boolean getDefaultValueBoolean() {
         return change.getDefaultValueBoolean();
     }
@@ -159,7 +149,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setDefaultValueBoolean(defaultValueBoolean);
     }
 
-    @DatabaseChangeProperty(requiredForDatabase = "none")
     public DatabaseFunction getDefaultValueComputed() {
         return change.getDefaultValueComputed();
     }
@@ -168,7 +157,6 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
         change.setDefaultValueComputed(defaultValueComputed);
     }
 
-    @DatabaseChangeProperty(requiredForDatabase = "none")
     public SequenceNextValueFunction getDefaultValueSequenceNext() {
         return change.getDefaultValueSequenceNext();
     }
