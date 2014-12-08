@@ -5,7 +5,6 @@ import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddPrimaryKeyChange;
-import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -174,7 +173,7 @@ public class AddPrimaryKeyAction extends AbstractAction<AddPrimaryKeyChange> {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropPrimaryKeyChange inverse = new DropPrimaryKeyChange();
+        DropPrimaryKeyAction inverse = new DropPrimaryKeyAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setConstraintName(getConstraintName());

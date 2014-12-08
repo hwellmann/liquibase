@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropPrimaryKeyAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropPrimaryKeyChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -39,21 +39,21 @@ public class UnexpectedPrimaryKeyChangeGenerator implements UnexpectedObjectChan
     public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
 //        if (!diffResult.getObjectDiff(Table.class).getUnexpected().contains(pk.getTable())) {
         PrimaryKey pk = (PrimaryKey) unexpectedObject;
-        DropPrimaryKeyChange change = new DropPrimaryKeyChange();
-        change.setTableName(pk.getTable().getName());
+        DropPrimaryKeyAction action = new DropPrimaryKeyAction();
+        action.setTableName(pk.getTable().getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(pk.getTable().getSchema().getCatalogName());
+            action.setCatalogName(pk.getTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(pk.getTable().getSchema().getName());
+            action.setSchemaName(pk.getTable().getSchema().getName());
         }
-        change.setConstraintName(pk.getName());
+        action.setConstraintName(pk.getName());
 
         Index backingIndex = pk.getBackingIndex();
         control.setAlreadyHandledUnexpected(backingIndex);
 
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 //        }
 
     }
