@@ -1,7 +1,8 @@
 package liquibase.change.core
 
+import liquibase.action.AddDefaultValueAction
 import liquibase.change.ChangeStatus
-import liquibase.change.StandardChangeTest;
+import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
@@ -12,11 +13,11 @@ import liquibase.structure.core.Table
 import liquibase.util.ISODateFormat
 import spock.lang.Unroll
 
-public class AddDefaultValueChangeTest extends StandardChangeTest {
+public class AddDefaultValueActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddDefaultValueChange();
+        def change = new AddDefaultValueAction();
         change.setSchemaName("SCHEMA_NAME");
         change.setTableName("TABLE_NAME");
         change.setColumnName("COLUMN_NAME");
@@ -24,6 +25,7 @@ public class AddDefaultValueChangeTest extends StandardChangeTest {
         then:
         change.getConfirmationMessage() == "Default value added to TABLE_NAME.COLUMN_NAME"
     }
+
 
     @Unroll
     def "checkStatus"() {
@@ -37,7 +39,7 @@ public class AddDefaultValueChangeTest extends StandardChangeTest {
         table.getColumns().add(new Column(Table.class, null, null, table.name, "other_col"))
         table.getColumns().add(testColumn)
 
-        def change = new AddDefaultValueChange()
+        def change = new AddDefaultValueAction()
         change.tableName = table.name
         change.columnName = testColumn.name
         change.columnDataType = "int"

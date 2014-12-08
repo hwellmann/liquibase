@@ -1,16 +1,17 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddDefaultValueChange;
+import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -32,41 +33,37 @@ import org.kohsuke.MetaInfServices;
                 "One of defaultValue, defaultValueNumeric, defaultValueBoolean or defaultValueDate must be set",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class AddDefaultValueChange extends AbstractChange {
+public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String columnName;
-    private String columnDataType;
-    private String defaultValue;
-    private String defaultValueNumeric;
-    private String defaultValueDate;
-    private Boolean defaultValueBoolean;
-    private DatabaseFunction defaultValueComputed;
-    private SequenceNextValueFunction defaultValueSequenceNext;
+    public AddDefaultValueAction() {
+        super(new AddDefaultValueChange());
+    }
+
+    public AddDefaultValueAction(AddDefaultValueChange change) {
+        super(change);
+    }
 
     @Override
     public ValidationErrors validate(Database database) {
         ValidationErrors validate = new ValidationErrors();
 
         int nonNullValues = 0;
-        if (defaultValue != null) {
+        if (getDefaultValue() != null) {
             nonNullValues++;
         }
-        if (defaultValueNumeric != null) {
+        if (getDefaultValueNumeric() != null) {
             nonNullValues++;
         }
-        if (defaultValueBoolean != null) {
+        if (getDefaultValueBoolean() != null) {
             nonNullValues++;
         }
-        if (defaultValueDate != null) {
+        if (getDefaultValueDate() != null) {
             nonNullValues++;
         }
-        if (defaultValueComputed != null) {
+        if (getDefaultValueComputed() != null) {
             nonNullValues++;
         }
-        if (defaultValueSequenceNext != null) {
+        if (getDefaultValueSequenceNext() != null) {
             nonNullValues++;
         }
 
@@ -81,103 +78,103 @@ public class AddDefaultValueChange extends AbstractChange {
 
     @DatabaseChangeProperty(mustEqualExisting = "column.relation.catalog", since = "3.0")
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table to containing the column", exampleValue = "file")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column", description = "Name of the column to add a default value to", exampleValue = "fileName")
     public String getColumnName() {
-        return columnName;
+        return change.getColumnName();
     }
 
     public void setColumnName(String columnName) {
-        this.columnName = columnName;
+        change.setColumnName(columnName);
     }
 
     @DatabaseChangeProperty(description = "Current data type of the column to add default value to", exampleValue = "varchar(50)")
     public String getColumnDataType() {
-        return columnDataType;
+        return change.getColumnDataType();
     }
 
     public void setColumnDataType(String columnDataType) {
-        this.columnDataType = columnDataType;
+        change.setColumnDataType(columnDataType);
     }
 
     @DatabaseChangeProperty(description = "Default value. Either this property or one of the other defaultValue* properties are required.", exampleValue = "Something Else", requiredForDatabase = "none")
     public String getDefaultValue() {
-        return defaultValue;
+        return change.getDefaultValue();
     }
 
     public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+        change.setDefaultValue(defaultValue);
     }
 
 
     @DatabaseChangeProperty(requiredForDatabase = "none", exampleValue = "439.2")
     public String getDefaultValueNumeric() {
-        return defaultValueNumeric;
+        return change.getDefaultValueNumeric();
     }
 
     public void setDefaultValueNumeric(String defaultValueNumeric) {
-        this.defaultValueNumeric = defaultValueNumeric;
+        change.setDefaultValueNumeric(defaultValueNumeric);
     }
 
     @DatabaseChangeProperty(requiredForDatabase = "none", exampleValue = "2008-02-12T12:34:03")
     public String getDefaultValueDate() {
-        return defaultValueDate;
+        return change.getDefaultValueDate();
     }
 
     public void setDefaultValueDate(String defaultValueDate) {
-        this.defaultValueDate = defaultValueDate;
+        change.setDefaultValueDate(defaultValueDate);
     }
 
 
     @DatabaseChangeProperty(requiredForDatabase = "none")
     public Boolean getDefaultValueBoolean() {
-        return defaultValueBoolean;
+        return change.getDefaultValueBoolean();
     }
 
     public void setDefaultValueBoolean(Boolean defaultValueBoolean) {
-        this.defaultValueBoolean = defaultValueBoolean;
+        change.setDefaultValueBoolean(defaultValueBoolean);
     }
 
     @DatabaseChangeProperty(requiredForDatabase = "none")
     public DatabaseFunction getDefaultValueComputed() {
-        return defaultValueComputed;
+        return change.getDefaultValueComputed();
     }
 
     public void setDefaultValueComputed(DatabaseFunction defaultValueComputed) {
-        this.defaultValueComputed = defaultValueComputed;
+        change.setDefaultValueComputed(defaultValueComputed);
     }
 
     @DatabaseChangeProperty(requiredForDatabase = "none")
     public SequenceNextValueFunction getDefaultValueSequenceNext() {
-        return defaultValueSequenceNext;
+        return change.getDefaultValueSequenceNext();
     }
 
     public void setDefaultValueSequenceNext(SequenceNextValueFunction defaultValueSequenceNext) {
-        this.defaultValueSequenceNext = defaultValueSequenceNext;
+        change.setDefaultValueSequenceNext(defaultValueSequenceNext);
     }
 
     @Override
@@ -227,11 +224,6 @@ public class AddDefaultValueChange extends AbstractChange {
     @Override
     public String getConfirmationMessage() {
         return "Default value added to " + getTableName() + "." + getColumnName();
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 
     @Override

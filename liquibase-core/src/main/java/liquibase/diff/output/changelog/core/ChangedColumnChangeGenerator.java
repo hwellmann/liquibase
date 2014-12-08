@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import liquibase.action.AddAutoIncrementAction;
+import liquibase.action.AddDefaultValueAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddDefaultValueChange;
 import liquibase.change.core.AddNotNullConstraintChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.change.core.DropNotNullConstraintChange;
@@ -172,31 +172,31 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
                 changes.add(change);
 
             } else {
-                AddDefaultValueChange change = new AddDefaultValueChange();
+                AddDefaultValueAction action = new AddDefaultValueAction();
                 if (control.getIncludeCatalog()) {
-                    change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
+                    action.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
                 }
                 if (control.getIncludeSchema()) {
-                    change.setSchemaName(column.getRelation().getSchema().getName());
+                    action.setSchemaName(column.getRelation().getSchema().getName());
                 }
-                change.setTableName(column.getRelation().getName());
-                change.setColumnName(column.getName());
-                change.setColumnDataType(columnDataType.toString());
+                action.setTableName(column.getRelation().getName());
+                action.setColumnName(column.getName());
+                action.setColumnDataType(columnDataType.toString());
 
                 if (value instanceof Boolean) {
-                    change.setDefaultValueBoolean((Boolean) value);
+                    action.setDefaultValueBoolean((Boolean) value);
                 } else if (value instanceof Date) {
-                    change.setDefaultValueDate(new ISODateFormat().format(((Date) value)));
+                    action.setDefaultValueDate(new ISODateFormat().format(((Date) value)));
                 } else if (value instanceof Number) {
-                    change.setDefaultValueNumeric(value.toString());
+                    action.setDefaultValueNumeric(value.toString());
                 } else if (value instanceof DatabaseFunction) {
-                    change.setDefaultValueComputed(((DatabaseFunction) value));
+                    action.setDefaultValueComputed(((DatabaseFunction) value));
                 } else {
-                    change.setDefaultValue(value.toString());
+                    action.setDefaultValue(value.toString());
                 }
 
 
-                changes.add(change);
+                changes.add(action);
             }
         }
     }
