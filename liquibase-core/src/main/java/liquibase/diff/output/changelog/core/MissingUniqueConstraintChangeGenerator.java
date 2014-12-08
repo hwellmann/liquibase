@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.AddUniqueConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -46,22 +46,22 @@ public class MissingUniqueConstraintChangeGenerator implements MissingObjectChan
             return null;
         }
 
-        AddUniqueConstraintChange change = new AddUniqueConstraintChange();
-        change.setTableName(uc.getTable().getName());
+        AddUniqueConstraintAction action = new AddUniqueConstraintAction();
+        action.setTableName(uc.getTable().getName());
         if (uc.getBackingIndex() != null && control.getIncludeTablespace()) {
-            change.setTablespace(uc.getBackingIndex().getTablespace());
+            action.setTablespace(uc.getBackingIndex().getTablespace());
         }
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(uc.getTable().getSchema().getCatalogName());
+            action.setCatalogName(uc.getTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(uc.getTable().getSchema().getName());
+            action.setSchemaName(uc.getTable().getSchema().getName());
         }
-        change.setConstraintName(uc.getName());
-        change.setColumnNames(uc.getColumnNames());
-        change.setDeferrable(uc.isDeferrable());
-        change.setInitiallyDeferred(uc.isInitiallyDeferred());
-        change.setDisabled(uc.isDisabled());
+        action.setConstraintName(uc.getName());
+        action.setColumnNames(uc.getColumnNames());
+        action.setDeferrable(uc.isDeferrable());
+        action.setInitiallyDeferred(uc.isInitiallyDeferred());
+        action.setDisabled(uc.isDisabled());
 
         Index backingIndex = uc.getBackingIndex();
 //        if (backingIndex == null) {
@@ -75,7 +75,7 @@ public class MissingUniqueConstraintChangeGenerator implements MissingObjectChan
 //        }
 
 
-        return new ExecutableChange[]{change};
+        return new ExecutableChange[]{action};
 
 
     }

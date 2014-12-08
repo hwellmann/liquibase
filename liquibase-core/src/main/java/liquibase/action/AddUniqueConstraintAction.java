@@ -1,12 +1,13 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddUniqueConstraintChange;
+import liquibase.change.core.DropUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -21,97 +22,94 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="addUniqueConstraint", description = "Adds a unique constrant to an existing column or set of columns.", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class AddUniqueConstraintChange extends AbstractChange {
+public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstraintChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String columnNames;
-    private String constraintName;
-    private String tablespace;
+    public AddUniqueConstraintAction() {
+        super(new AddUniqueConstraintChange());
+    }
 
-    private Boolean deferrable;
-    private Boolean initiallyDeferred;
-    private Boolean disabled;
+    public AddUniqueConstraintAction(AddUniqueConstraintChange change) {
+        super(change);
+    }
 
     @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table to create the unique constraint on")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column", description =
             "Name of the column(s) to create the unique constraint on. Comma separated if multiple")
     public String getColumnNames() {
-        return columnNames;
+        return change.getColumnNames();
     }
 
     public void setColumnNames(String columnNames) {
-        this.columnNames = columnNames;
+        change.setColumnNames(columnNames);
     }
 
     @DatabaseChangeProperty(description = "Name of the unique constraint")
     public String getConstraintName() {
-        return constraintName;
+        return change.getConstraintName();
     }
 
     public void setConstraintName(String constraintName) {
-        this.constraintName = constraintName;
+        change.setConstraintName(constraintName);
     }
 
 
     @DatabaseChangeProperty(description = "'Tablespace' to create the index in. Corresponds to file group in mssql")
     public String getTablespace() {
-        return tablespace;
+        return change.getTablespace();
     }
 
     public void setTablespace(String tablespace) {
-        this.tablespace = tablespace;
+        change.setTablespace(tablespace);
     }
 
     public Boolean getDeferrable() {
-        return deferrable;
+        return change.getDeferrable();
     }
 
     public void setDeferrable(Boolean deferrable) {
-        this.deferrable = deferrable;
+        change.setDeferrable(deferrable);
     }
 
     public Boolean getInitiallyDeferred() {
-        return initiallyDeferred;
+        return change.getInitiallyDeferred();
     }
 
     public void setInitiallyDeferred(Boolean initiallyDeferred) {
-        this.initiallyDeferred = initiallyDeferred;
+        change.setInitiallyDeferred(initiallyDeferred);
     }
 
     public Boolean getDisabled() {
-        return disabled;
+        return change.getDisabled();
     }
 
     public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+        change.setDisabled(disabled);
     }
 
     @Override

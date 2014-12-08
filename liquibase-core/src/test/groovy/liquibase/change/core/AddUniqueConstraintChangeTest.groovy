@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.AddUniqueConstraintAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -9,11 +10,11 @@ import liquibase.structure.core.Column
 import liquibase.structure.core.Table
 import liquibase.structure.core.UniqueConstraint
 
-public class AddUniqueConstraintChangeTest extends StandardChangeTest {
+public class AddUniqueConstraintActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddUniqueConstraintChange();
+        def change = new AddUniqueConstraintAction();
         change.setTableName("TABLE_NAME");
         change.setColumnNames("COL_HERE");
 
@@ -32,7 +33,7 @@ public class AddUniqueConstraintChangeTest extends StandardChangeTest {
         table.getColumns().add(new Column(Table.class, null, null, table.name, "other_col"))
         table.getColumns().add(testColumn)
 
-        def change = new AddUniqueConstraintChange()
+        def change = new AddUniqueConstraintAction()
         change.tableName = table.name
         change.columnNames = testColumn.name
 
