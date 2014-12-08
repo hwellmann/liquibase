@@ -1,5 +1,6 @@
 package liquibase.change.core
 
+import liquibase.action.AddLookupTableAction
 import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
@@ -9,11 +10,11 @@ import liquibase.structure.core.Column
 import liquibase.structure.core.ForeignKey
 import liquibase.structure.core.Table
 
-public class AddLookupTableChangeTest extends StandardChangeTest {
+public class AddLookupTableActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddLookupTableChange();
+        def change = new AddLookupTableAction();
         change.setExistingTableName("OLD_TABLE_NAME");
         change.setExistingColumnName("OLD_COLUMN_NAME");
 
@@ -40,7 +41,7 @@ public class AddLookupTableChangeTest extends StandardChangeTest {
 
         snapshotFactory.addObjects(baseTable)
 
-        def change = new AddLookupTableChange()
+        def change = new AddLookupTableAction()
         change.existingTableName = baseTable.name
         change.existingColumnName = baseColumn.name
         change.newTableName = newTable.name

@@ -4,7 +4,6 @@ import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
 import liquibase.change.core.DropForeignKeyConstraintChange;
@@ -52,7 +51,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
 //        }
 //    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getBaseTableCatalogName() {
         return change.getBaseTableCatalogName();
     }
@@ -85,7 +83,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setBaseColumnNames(baseColumnNames);
     }
 
-    @DatabaseChangeProperty(since = "3.0", mustEqualExisting = "column")
     public String getReferencedTableCatalogName() {
         return change.getReferencedTableCatalogName();
     }
@@ -102,7 +99,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setReferencedTableSchemaName(referencedTableSchemaName);
     }
 
-    @DatabaseChangeProperty(description = "Name of the table the foreign key points to", exampleValue = "person")
     public String getReferencedTableName() {
         return change.getReferencedTableName();
     }
@@ -111,7 +107,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setReferencedTableName(referencedTableName);
     }
 
-    @DatabaseChangeProperty(description = "Column(s) the foreign key points to. Comma-separate if multiple", exampleValue = "id")
     public String getReferencedColumnNames() {
         return change.getReferencedColumnNames();
     }
@@ -120,7 +115,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setReferencedColumnNames(referencedColumnNames);
     }
 
-    @DatabaseChangeProperty(description = "Name of the new foreign key constraint", exampleValue = "fk_address_person")
     public String getConstraintName() {
         return change.getConstraintName();
     }
@@ -129,7 +123,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setConstraintName(constraintName);
     }
 
-    @DatabaseChangeProperty(description = "Is the foreign key deferrable")
     public Boolean getDeferrable() {
         return change.getDeferrable();
     }
@@ -138,7 +131,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setDeferrable(deferrable);
     }
 
-    @DatabaseChangeProperty(description = "Is the foreign key initially deferred")
     public Boolean getInitiallyDeferred() {
         return change.getInitiallyDeferred();
     }
@@ -155,7 +147,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setOnUpdate(rule);
     }
 
-    @DatabaseChangeProperty(description = "ON UPDATE functionality. Possible values: 'CASCADE', 'SET NULL', 'SET DEFAULT', 'RESTRICT', 'NO ACTION'", exampleValue = "RESTRICT")
     public String getOnUpdate() {
         return change.getOnUpdate();
     }
@@ -164,7 +155,6 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
         change.setOnDelete(onDelete);
     }
 
-    @DatabaseChangeProperty(description = "ON DELETE functionality. Possible values: 'CASCADE', 'SET NULL', 'SET DEFAULT', 'RESTRICT', 'NO ACTION'", exampleValue = "CASCADE")
     public String getOnDelete() {
         return change.getOnDelete();
     }
