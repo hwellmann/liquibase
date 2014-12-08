@@ -8,7 +8,6 @@ import liquibase.change.Change
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
-import liquibase.change.core.CreateIndexChange
 import liquibase.change.core.CreateViewChange
 import liquibase.change.core.EmptyChange
 import liquibase.change.core.ExecuteShellCommandChange
@@ -535,8 +534,8 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].name == "new_col_seq"
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[1]).columns[5].defaultValueSequenceNext.toString() == "seq_test"
 
-        ((CreateIndexChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].name == "id"
-        assert ((CreateIndexChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].constraints.isUnique()
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].name == "id"
+        assert (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].constraints.isUnique()
 
         ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[0].name == "id"
         ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].name == "new_col"

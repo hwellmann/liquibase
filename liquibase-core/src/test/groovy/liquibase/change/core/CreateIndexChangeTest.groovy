@@ -1,7 +1,8 @@
 package liquibase.change.core
 
+import liquibase.action.CreateIndexAction
 import liquibase.change.AddColumnConfig
-import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -12,7 +13,7 @@ import liquibase.structure.core.Index
 public class CreateIndexChangeTest extends StandardChangeTest {
     def getConfirmationMessage() throws Exception {
         when:
-        CreateIndexChange refactoring = new CreateIndexChange();
+        CreateIndexAction refactoring = new CreateIndexAction();
         refactoring.setIndexName("IDX_TEST");
 
         then:
@@ -28,7 +29,7 @@ public class CreateIndexChangeTest extends StandardChangeTest {
         def index = new Index("idx_test", null, null, "test_table", new Column("test_col"))
         index.unique = true
 
-        def change = new CreateIndexChange()
+        def change = new CreateIndexAction()
         change.indexName = index.name
         change.tableName = index.table.name
         change.columns = [new AddColumnConfig().setName("test_col")]

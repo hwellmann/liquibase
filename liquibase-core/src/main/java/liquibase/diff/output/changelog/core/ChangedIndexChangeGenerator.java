@@ -3,9 +3,9 @@ package liquibase.diff.output.changelog.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import liquibase.action.CreateIndexAction;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.CreateIndexChange;
 import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.diff.Difference;
@@ -50,23 +50,23 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
         dropIndexChange.setTableName(index.getTable().getName());
         dropIndexChange.setIndexName(index.getName());
 
-        CreateIndexChange addIndexChange = new CreateIndexChange();
-        addIndexChange.setTableName(index.getTable().getName());
+        CreateIndexAction addIndexAction = new CreateIndexAction();
+        addIndexAction.setTableName(index.getTable().getName());
         List<AddColumnConfig> columns = new ArrayList<AddColumnConfig>();
         for (Column col : index.getColumns()) {
             columns.add(new AddColumnConfig(col));
         }
-        addIndexChange.setColumns(columns);
-        addIndexChange.setIndexName(index.getName());
+        addIndexAction.setColumns(columns);
+        addIndexAction.setIndexName(index.getName());
 
 
         if (control.getIncludeCatalog()) {
             dropIndexChange.setCatalogName(index.getSchema().getCatalogName());
-            addIndexChange.setCatalogName(index.getSchema().getCatalogName());
+            addIndexAction.setCatalogName(index.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
             dropIndexChange.setSchemaName(index.getSchema().getName());
-            addIndexChange.setSchemaName(index.getSchema().getName());
+            addIndexAction.setSchemaName(index.getSchema().getName());
         }
 
         Difference columnsDifference = differences.getDifference("columns");
@@ -95,6 +95,6 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
             }
         }
 
-        return new ExecutableChange[] { dropIndexChange, addIndexChange };
+        return new ExecutableChange[] { dropIndexChange, addIndexAction };
     }
 }

@@ -1,8 +1,8 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.CreateIndexAction;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.CreateIndexChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -42,7 +42,7 @@ public class MissingIndexChangeGenerator implements MissingObjectChangeGenerator
     public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Index index = (Index) missingObject;
 
-        CreateIndexChange change = createCreateIndexChange();
+        CreateIndexAction change = createCreateIndexChange();
         change.setTableName(index.getTable().getName());
         if (control.getIncludeTablespace()) {
             change.setTablespace(index.getTablespace());
@@ -69,7 +69,7 @@ public class MissingIndexChangeGenerator implements MissingObjectChangeGenerator
         return new ExecutableChange[] { change };
     }
 
-    protected CreateIndexChange createCreateIndexChange() {
-        return new CreateIndexChange();
+    protected CreateIndexAction createCreateIndexChange() {
+        return new CreateIndexAction();
     }
 }
