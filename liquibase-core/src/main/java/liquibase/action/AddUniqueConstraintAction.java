@@ -32,7 +32,6 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
         super(change);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getCatalogName() {
         return change.getCatalogName();
     }
@@ -41,7 +40,6 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
         change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
         return change.getSchemaName();
     }
@@ -50,7 +48,6 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
         change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table to create the unique constraint on")
     public String getTableName() {
         return change.getTableName();
     }
@@ -59,8 +56,6 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
         change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column", description =
-            "Name of the column(s) to create the unique constraint on. Comma separated if multiple")
     public String getColumnNames() {
         return change.getColumnNames();
     }
@@ -79,7 +74,6 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
     }
 
 
-    @DatabaseChangeProperty(description = "'Tablespace' to create the index in. Corresponds to file group in mssql")
     public String getTablespace() {
         return change.getTablespace();
     }

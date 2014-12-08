@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.AlterSequenceAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -11,7 +12,7 @@ public class AlterSequenceChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def refactoring = new AlterSequenceChange();
+        def refactoring = new AlterSequenceAction();
         refactoring.setSequenceName("SEQ_NAME");
 
         then:
@@ -31,7 +32,7 @@ public class AlterSequenceChangeTest extends StandardChangeTest {
         sequence.maxValue = snapshotMaxValue
         sequence.ordered = snapshotOrdered
 
-        def change = new AlterSequenceChange()
+        def change = new AlterSequenceAction()
         change.sequenceName = sequence.name
         change.incrementBy = changeIncrementBy
         change.minValue = changeMinValue

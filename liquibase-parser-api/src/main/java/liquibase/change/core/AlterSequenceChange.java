@@ -2,17 +2,11 @@ package liquibase.change.core;
 
 import java.math.BigInteger;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
-import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.AlterSequenceStatement;
-import liquibase.structure.core.Sequence;
 
 import org.kohsuke.MetaInfServices;
 
@@ -20,8 +14,8 @@ import org.kohsuke.MetaInfServices;
  * Modifies properties of an existing sequence. StartValue is not allowed since we cannot alter the starting sequence number
  */
 @DatabaseChange(name="alterSequence", description = "Alter properties of an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
-@MetaInfServices(ExecutableChange.class)
-public class AlterSequenceChange extends AbstractChange {
+@MetaInfServices(Change.class)
+public class AlterSequenceChange extends BaseChange {
 
     private String catalogName;
     private String schemaName;
@@ -93,49 +87,6 @@ public class AlterSequenceChange extends AbstractChange {
 
     public void setOrdered(Boolean ordered) {
         this.ordered = ordered;
-    }
-
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        return new SqlStatement[] {
-                new AlterSequenceStatement(getCatalogName(), getSchemaName(), getSequenceName())
-                .setIncrementBy(getIncrementBy())
-                .setMaxValue(getMaxValue())
-                .setMinValue(getMinValue())
-                .setOrdered(isOrdered())
-        };
-    }
-
-    @Override
-    public ChangeStatus checkStatus(Database database) {
-        ChangeStatus result = new ChangeStatus();
-        try {
-            Sequence sequence = SnapshotGeneratorFactory.getInstance().createSnapshot(new Sequence(getCatalogName(), getSchemaName(), getSequenceName()), database);
-            if (sequence == null) {
-                return result.unknown("Sequence " + getSequenceName() + " does not exist");
-            }
-
-            if (getIncrementBy() != null) {
-                result.assertCorrect(getIncrementBy().equals(sequence.getIncrementBy()), "Increment by has a different value");
-            }
-            if (getMinValue() != null) {
-                result.assertCorrect(getMinValue().equals(sequence.getMinValue()), "Min Value is different");
-            }
-            if (getMaxValue() != null) {
-                result.assertCorrect(getMaxValue().equals(sequence.getMaxValue()), "Max Value is different");
-            }
-            if (isOrdered() != null) {
-                result.assertCorrect(isOrdered().equals(sequence.getOrdered()), "Max Value is different");
-            }
-        } catch (Exception e) {
-            return result.unknown(e);
-        }
-        return result;
-    }
-
-    @Override
-    public String getConfirmationMessage() {
-        return "Sequence " + getSequenceName() + " altered";
     }
 
     @Override
