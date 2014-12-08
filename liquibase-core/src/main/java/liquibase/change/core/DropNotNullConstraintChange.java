@@ -1,11 +1,12 @@
 package liquibase.change.core;
 
+import liquibase.action.AddNotNullConstraintAction;
 import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -139,7 +140,7 @@ public class DropNotNullConstraintChange extends AbstractChange {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        AddNotNullConstraintChange inverse = new AddNotNullConstraintChange();
+        AddNotNullConstraintAction inverse = new AddNotNullConstraintAction();
         inverse.setColumnName(getColumnName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());

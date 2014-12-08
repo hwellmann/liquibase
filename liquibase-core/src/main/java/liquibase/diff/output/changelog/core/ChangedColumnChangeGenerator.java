@@ -6,8 +6,8 @@ import java.util.List;
 
 import liquibase.action.AddAutoIncrementAction;
 import liquibase.action.AddDefaultValueAction;
+import liquibase.action.AddNotNullConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.AddNotNullConstraintChange;
 import liquibase.change.core.DropDefaultValueChange;
 import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.change.core.ModifyDataTypeChange;
@@ -94,17 +94,17 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
                 change.setColumnDataType(DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase).toString());
                 changes.add(change);
             } else {
-                AddNotNullConstraintChange change = new AddNotNullConstraintChange();
+                AddNotNullConstraintAction action = new AddNotNullConstraintAction();
                 if (control.getIncludeCatalog()) {
-                    change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
+                    action.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
                 }
                 if (control.getIncludeSchema()) {
-                    change.setSchemaName(column.getRelation().getSchema().getName());
+                    action.setSchemaName(column.getRelation().getSchema().getName());
                 }
-                change.setTableName(column.getRelation().getName());
-                change.setColumnName(column.getName());
-                change.setColumnDataType(DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase).toString());
-                changes.add(change);
+                action.setTableName(column.getRelation().getName());
+                action.setColumnName(column.getName());
+                action.setColumnDataType(DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase).toString());
+                changes.add(action);
             }
         }
     }

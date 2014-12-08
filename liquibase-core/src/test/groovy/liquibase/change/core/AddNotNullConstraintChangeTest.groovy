@@ -1,18 +1,14 @@
 package liquibase.change.core;
 
-import liquibase.change.ExecutableChangeFactory;
-import liquibase.change.StandardChangeTest;
-import liquibase.database.Database;
-import liquibase.database.core.FirebirdDatabase;
-import liquibase.database.core.SQLiteDatabase;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.*
+import liquibase.action.AddNotNullConstraintAction
+import liquibase.change.StandardChangeTest
 
 public class AddNotNullConstraintChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new AddNotNullConstraintChange();
+        def change = new AddNotNullConstraintAction();
         change.setTableName("TABLE_NAME");
         change.setColumnName("COL_HERE");
 

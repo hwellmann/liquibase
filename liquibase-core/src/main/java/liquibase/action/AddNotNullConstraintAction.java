@@ -1,14 +1,14 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.AddNotNullConstraintChange;
+import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.SQLiteDatabase;
@@ -29,66 +29,63 @@ import org.kohsuke.MetaInfServices;
         description = "Adds a not-null constraint to an existing table. If a defaultNullValue attribute is passed, all null values for the column will be updated to the passed value before the constraint is applied.",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class AddNotNullConstraintChange extends AbstractChange {
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String columnName;
-    private String defaultNullValue;
-    private String columnDataType;
+public class AddNotNullConstraintAction extends AbstractAction<AddNotNullConstraintChange> {
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
+
+    public AddNotNullConstraintAction() {
+        super(new AddNotNullConstraintChange());
+    }
+
+    public AddNotNullConstraintAction(AddNotNullConstraintChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Adds a not-null constraint to an existing table. If a defaultNullValue attribute is passed, all null values for the column will be updated to the passed value before the constraint is applied.")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "column.relation.column", description = "Name of the column to add the constraint to")
     public String getColumnName() {
-        return columnName;
+        return change.getColumnName();
     }
 
     public void setColumnName(String columnName) {
-        this.columnName = columnName;
+        change.setColumnName(columnName);
     }
 
-    @DatabaseChangeProperty(description = "Value to set all currently null values to. If not set, change will fail if null values exist")
     public String getDefaultNullValue() {
-        return defaultNullValue;
+        return change.getDefaultNullValue();
     }
 
     public void setDefaultNullValue(String defaultNullValue) {
-        this.defaultNullValue = defaultNullValue;
+        change.setDefaultNullValue(defaultNullValue);
     }
 
-    @DatabaseChangeProperty(description = "Current data type of the column")
     public String getColumnDataType() {
-        return columnDataType;
+        return change.getColumnDataType();
     }
 
     public void setColumnDataType(String columnDataType) {
-        this.columnDataType = columnDataType;
+        change.setColumnDataType(columnDataType);
     }
 
     @Override
@@ -101,9 +98,9 @@ public class AddNotNullConstraintChange extends AbstractChange {
 
     	List<SqlStatement> statements = new ArrayList<SqlStatement>();
 
-        if (defaultNullValue != null) {
+        if (getDefaultNullValue() != null) {
             statements.add(new UpdateStatement(getCatalogName(), getSchemaName(), getTableName())
-                    .addNewColumnValue(getColumnName(), defaultNullValue)
+                    .addNewColumnValue(getColumnName(), getDefaultNullValue())
                     .setWhereClause(database.escapeObjectName(getColumnName(), Column.class) + " IS NULL"));
         }
 
@@ -123,14 +120,14 @@ public class AddNotNullConstraintChange extends AbstractChange {
 
     	List<SqlStatement> statements = new ArrayList<SqlStatement>();
 
-        if (defaultNullValue != null) {
+        if (getDefaultNullValue() != null) {
             statements.add(new UpdateStatement(getCatalogName(), getSchemaName(), getTableName())
                     .addNewColumnValue(getColumnName(), getDefaultNullValue())
                     .setWhereClause(getColumnName() + " IS NULL"));
         }
 
 //		// ... test if column contains NULL values
-//		if (defaultNullValue == null) {
+//		if (getDefaultNullValue() == null) {
 //			List<Map> null_rows = null;
 //			try {
 //				null_rows = database.getExecutor().
