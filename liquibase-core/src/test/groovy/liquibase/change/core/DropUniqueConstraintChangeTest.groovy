@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.DropUniqueConstraintAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -9,11 +10,11 @@ import liquibase.structure.core.Column
 import liquibase.structure.core.Table
 import liquibase.structure.core.UniqueConstraint
 
-public class DropUniqueConstraintChangeTest  extends StandardChangeTest {
+public class DropUniqueConstraintActionTest  extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new DropUniqueConstraintChange();
+        def change = new DropUniqueConstraintAction();
         change.setSchemaName("SCHEMA_NAME");
         change.setTableName("TAB_NAME");
         change.setConstraintName("UQ_CONSTRAINT");
@@ -32,7 +33,7 @@ public class DropUniqueConstraintChangeTest  extends StandardChangeTest {
         def testColumn = new Column(Table.class, null, null, table.name, "test_col").setDefaultValue("def_val").setNullable(false)
         def constraint = new UniqueConstraint("uq_test", null, null, table.name, new Column(testColumn.name))
 
-        def change = new DropUniqueConstraintChange()
+        def change = new DropUniqueConstraintAction()
         change.tableName = table.name
         change.constraintName = constraint.name
         change.uniqueColumns = testColumn.name

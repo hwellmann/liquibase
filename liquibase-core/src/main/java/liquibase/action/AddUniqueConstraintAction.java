@@ -7,7 +7,6 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddUniqueConstraintChange;
-import liquibase.change.core.DropUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -208,7 +207,7 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropUniqueConstraintChange inverse = new DropUniqueConstraintChange();
+        DropUniqueConstraintAction inverse = new DropUniqueConstraintAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setConstraintName(getConstraintName());
@@ -216,10 +215,5 @@ public class AddUniqueConstraintAction extends AbstractAction<AddUniqueConstrain
         return new ExecutableChange[]{
                 inverse,
         };
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

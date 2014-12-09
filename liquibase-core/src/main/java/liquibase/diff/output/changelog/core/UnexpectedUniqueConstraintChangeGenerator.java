@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropUniqueConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropUniqueConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -44,15 +44,15 @@ public class UnexpectedUniqueConstraintChangeGenerator implements UnexpectedObje
             return null;
         }
 
-        DropUniqueConstraintChange change = new DropUniqueConstraintChange();
-        change.setTableName(uc.getTable().getName());
+        DropUniqueConstraintAction action = new DropUniqueConstraintAction();
+        action.setTableName(uc.getTable().getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(uc.getTable().getSchema().getCatalogName());
+            action.setCatalogName(uc.getTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(uc.getTable().getSchema().getName());
+            action.setSchemaName(uc.getTable().getSchema().getName());
         }
-        change.setConstraintName(uc.getName());
+        action.setConstraintName(uc.getName());
 
         Index backingIndex = uc.getBackingIndex();
 //        if (backingIndex == null) {
@@ -65,6 +65,6 @@ public class UnexpectedUniqueConstraintChangeGenerator implements UnexpectedObje
             control.setAlreadyHandledUnexpected(backingIndex);
 //        }
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
     }
 }
