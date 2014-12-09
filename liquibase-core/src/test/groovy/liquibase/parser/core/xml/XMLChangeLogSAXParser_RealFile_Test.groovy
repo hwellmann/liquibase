@@ -575,8 +575,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).args == ["-out", "-test"]
 
         and: "view change parsed correctly"
-        ((CreateViewChange) changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).viewName == "test_view"
-        ((CreateViewChange) changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
+        (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).viewName == "test_view"
+        (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
 
         and: "stop change parsed correctly"
         ((StopChange) changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"

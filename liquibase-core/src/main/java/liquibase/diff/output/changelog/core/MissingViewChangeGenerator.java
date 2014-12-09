@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.CreateViewAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.CreateViewChange;
 import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
 import liquibase.diff.output.DiffOutputControl;
@@ -42,13 +42,13 @@ public class MissingViewChangeGenerator implements MissingObjectChangeGenerator 
     public ExecutableChange[] fixMissing(DatabaseObject missingObject, DiffOutputControl control, Database referenceDatabase, final Database comparisonDatabase, ChangeGeneratorChain chain) {
         View view = (View) missingObject;
 
-        CreateViewChange change = new CreateViewChange();
-        change.setViewName(view.getName());
+        CreateViewAction action = new CreateViewAction();
+        action.setViewName(view.getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(view.getSchema().getCatalogName());
+            action.setCatalogName(view.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(view.getSchema().getName());
+            action.setSchemaName(view.getSchema().getName());
         }
         String selectQuery = view.getDefinition();
         boolean fullDefinitionOverridden = false;
@@ -56,10 +56,10 @@ public class MissingViewChangeGenerator implements MissingObjectChangeGenerator 
             selectQuery = "COULD NOT DETERMINE VIEW QUERY";
         } else if (comparisonDatabase instanceof OracleDatabase && view.getColumns() != null && view.getColumns().size() > 0) {
             String viewName;
-            if (change.getCatalogName() == null && change.getSchemaName() == null) {
-                viewName = comparisonDatabase.escapeObjectName(change.getViewName(), View.class);
+            if (action.getCatalogName() == null && action.getSchemaName() == null) {
+                viewName = comparisonDatabase.escapeObjectName(action.getViewName(), View.class);
             } else {
-                viewName = comparisonDatabase.escapeViewName(change.getCatalogName(), change.getSchemaName(), change.getViewName());
+                viewName = comparisonDatabase.escapeViewName(action.getCatalogName(), action.getSchemaName(), action.getViewName());
             }
             selectQuery = "CREATE OR REPLACE FORCE VIEW "+ viewName
                     + " (" + StringUtils.join(view.getColumns(), ", ", new StringUtils.StringUtilsFormatter() {
@@ -72,16 +72,16 @@ public class MissingViewChangeGenerator implements MissingObjectChangeGenerator 
                     }
                 }
             }) + ") AS "+selectQuery;
-            change.setFullDefinition(true);
+            action.setFullDefinition(true);
             fullDefinitionOverridden = true;
 
         }
-        change.setSelectQuery(selectQuery);
+        action.setSelectQuery(selectQuery);
         if (!fullDefinitionOverridden) {
-            change.setFullDefinition(view.getContainsFullDefinition());
+            action.setFullDefinition(view.getContainsFullDefinition());
         }
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 
     }
 }

@@ -8,7 +8,6 @@ import liquibase.change.Change
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
-import liquibase.change.core.CreateViewChange
 import liquibase.change.core.EmptyChange
 import liquibase.change.core.ExecuteShellCommandChange
 import liquibase.change.core.InsertDataChange
@@ -562,8 +561,8 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).args == ["-out", "-test"]
 
         and: "view change parsed correctly"
-        ((CreateViewChange) changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).viewName == "test_view"
-        ((CreateViewChange) changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
+        (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).viewName == "test_view"
+        (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
 
         and: "stop change parsed correctly"
         ((StopChange) changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"

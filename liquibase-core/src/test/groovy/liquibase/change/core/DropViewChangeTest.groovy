@@ -1,7 +1,8 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
-import liquibase.change.StandardChangeTest;
+import liquibase.action.DropViewAction
+import liquibase.change.ChangeStatus
+import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
@@ -11,7 +12,7 @@ public class DropViewChangeTest  extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        DropViewChange change = new DropViewChange();
+        DropViewAction change = new DropViewAction();
         change.setViewName("VIEW_NAME");
 
         then:
@@ -26,7 +27,7 @@ public class DropViewChangeTest  extends StandardChangeTest {
 
         def view = new View(null, null, "test_view")
 
-        def change = new DropViewChange()
+        def change = new DropViewAction()
         change.viewName = view.name
 
         then: "view is not there yet"

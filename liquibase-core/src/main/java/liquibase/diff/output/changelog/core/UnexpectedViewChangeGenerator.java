@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropViewAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropViewChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -41,13 +41,13 @@ public class UnexpectedViewChangeGenerator implements UnexpectedObjectChangeGene
     public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         View view = (View) unexpectedObject;
 
-        DropViewChange change = new DropViewChange();
-        change.setViewName(view.getName());
+        DropViewAction action = new DropViewAction();
+        action.setViewName(view.getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(view.getSchema().getCatalogName());
+            action.setCatalogName(view.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(view.getSchema().getName());
+            action.setSchemaName(view.getSchema().getName());
         }
 
         for (Column column : view.getColumns()) {
@@ -55,7 +55,7 @@ public class UnexpectedViewChangeGenerator implements UnexpectedObjectChangeGene
         };
 
 
-        return new ExecutableChange[]{change};
+        return new ExecutableChange[]{action};
 
 
     }

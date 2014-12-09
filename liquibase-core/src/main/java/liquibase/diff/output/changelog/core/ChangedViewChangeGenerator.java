@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.CreateViewAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.CreateViewChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
@@ -40,21 +40,21 @@ public class ChangedViewChangeGenerator implements ChangedObjectChangeGenerator 
     public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         View view = (View) changedObject;
 
-        CreateViewChange change = new CreateViewChange();
-        change.setViewName(view.getName());
+        CreateViewAction action = new CreateViewAction();
+        action.setViewName(view.getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(view.getSchema().getCatalogName());
+            action.setCatalogName(view.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(view.getSchema().getName());
+            action.setSchemaName(view.getSchema().getName());
         }
         String selectQuery = view.getDefinition();
         if (selectQuery == null) {
             selectQuery = "COULD NOT DETERMINE VIEW QUERY";
         }
-        change.setSelectQuery(selectQuery);
-        change.setReplaceIfExists(true);
+        action.setSelectQuery(selectQuery);
+        action.setReplaceIfExists(true);
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
     }
 }

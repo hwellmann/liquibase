@@ -1,11 +1,10 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropViewChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -19,37 +18,38 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="dropView", description = "Drops an existing view", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "view")
 @MetaInfServices(ExecutableChange.class)
-public class DropViewChange extends AbstractChange {
-    private String catalogName;
-    private String schemaName;
-    private String viewName;
+public class DropViewAction extends AbstractAction<DropViewChange> {
 
+    public DropViewAction() {
+        super(new DropViewChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="view.catalog", since = "3.0")
+    public DropViewAction(DropViewChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="view.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "view", description = "Name of the view to drop")
     public String getViewName() {
-        return viewName;
+        return change.getViewName();
     }
 
     public void setViewName(String viewName) {
-        this.viewName = viewName;
+        change.setViewName(viewName);
     }
 
     @Override
