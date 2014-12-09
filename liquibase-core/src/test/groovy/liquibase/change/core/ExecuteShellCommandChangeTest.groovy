@@ -1,21 +1,23 @@
 package liquibase.change.core
 
+import static spock.util.matcher.HamcrestSupport.that
+import liquibase.action.ExecuteShellCommandAction
 import liquibase.exception.SetupException
 import liquibase.parser.core.ParsedNodeException
 import liquibase.sdk.supplier.resource.ResourceSupplier
+
 import org.hamcrest.Matchers
+
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static spock.util.matcher.HamcrestSupport.that
-
-class ExecuteShellCommandChangeTest extends Specification {
+class ExecuteShellCommandActionTest extends Specification {
 
     @Shared resourceSupplier = new ResourceSupplier()
 
     def "load works correctly"() {
         when:
-        def change = new ExecuteShellCommandChange()
+        def change = new ExecuteShellCommandAction()
         try {
             change.load(new liquibase.parser.core.ParsedNode(null, "executeCommand")
                     .addChildren([executable: "/usr/bin/test", os: "linux,mac"])
@@ -36,7 +38,7 @@ class ExecuteShellCommandChangeTest extends Specification {
 
     def "load handles nested 'args' collection"() {
         when:
-        def change = new ExecuteShellCommandChange()
+        def change = new ExecuteShellCommandAction()
         try {
             change.load(new liquibase.parser.core.ParsedNode(null, "executeCommand")
                     .addChildren([executable: "/usr/bin/test", os: "linux,mac"])

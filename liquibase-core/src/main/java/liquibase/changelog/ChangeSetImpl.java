@@ -13,10 +13,10 @@ import java.util.Set;
 import liquibase.ContextExpression;
 import liquibase.Labels;
 import liquibase.change.Change;
-import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
 import liquibase.change.ExecutableChange;
+import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.core.EmptyChange;
 import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.visitor.ChangeExecListener;
@@ -812,7 +812,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      */
     @Override
     public Change[] getRollBackChanges() {
-        return rollBackChanges.toArray(new ExecutableChange[rollBackChanges.size()]);
+        return rollBackChanges.toArray(new Change[rollBackChanges.size()]);
     }
 
     /* (non-Javadoc)

@@ -570,9 +570,9 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).whereParams.size() == 0
 
         and: "shell commmand parses correctly"
-        ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).executable == "/usr/bin/test"
-        ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).os == ["linux", "mac"]
-        ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).args == ["-out", "-test"]
+        (changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).executable == "/usr/bin/test"
+        (changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).os == ["linux", "mac"]
+        (changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).args == ["-out", "-test"]
 
         and: "view change parsed correctly"
         (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).viewName == "test_view"
