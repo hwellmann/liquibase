@@ -1,11 +1,11 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -20,46 +20,48 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="dropForeignKeyConstraint", description = "Drops an existing foreign key", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "foreignKey")
 @MetaInfServices(ExecutableChange.class)
-public class DropForeignKeyConstraintChange extends AbstractChange {
-    private String baseTableCatalogName;
-    private String baseTableSchemaName;
-    private String baseTableName;
-    private String constraintName;
+public class DropForeignKeyConstraintAction extends AbstractAction<DropForeignKeyConstraintChange> {
 
-    @DatabaseChangeProperty(mustEqualExisting ="foreignKey.table.catalog", since = "3.0")
+    public DropForeignKeyConstraintAction() {
+        super(new DropForeignKeyConstraintChange());
+    }
+
+    public DropForeignKeyConstraintAction(DropForeignKeyConstraintChange change) {
+        super(change);
+    }
+
     public String getBaseTableCatalogName() {
-        return baseTableCatalogName;
+        return change.getBaseTableCatalogName();
     }
 
     public void setBaseTableCatalogName(String baseTableCatalogName) {
-        this.baseTableCatalogName = baseTableCatalogName;
+        change.setBaseTableCatalogName(baseTableCatalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="foreignKey.table.schema")
     public String getBaseTableSchemaName() {
-        return baseTableSchemaName;
+        return change.getBaseTableSchemaName();
     }
 
     public void setBaseTableSchemaName(String baseTableSchemaName) {
-        this.baseTableSchemaName = baseTableSchemaName;
+        change.setBaseTableSchemaName(baseTableSchemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "foreignKey.table", description = "Name of the table containing the column constrained by the foreign key")
     public String getBaseTableName() {
-        return baseTableName;
+        return change.getBaseTableName();
     }
 
     public void setBaseTableName(String baseTableName) {
-        this.baseTableName = baseTableName;
+        change.setBaseTableName(baseTableName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "foreignKey", description = "Name of the foreign key constraint to drop", exampleValue = "fk_address_person")
     public String getConstraintName() {
-        return constraintName;
+        return change.getConstraintName();
     }
 
     public void setConstraintName(String constraintName) {
-        this.constraintName = constraintName;
+        change.setConstraintName(constraintName);
     }
 
     @Override

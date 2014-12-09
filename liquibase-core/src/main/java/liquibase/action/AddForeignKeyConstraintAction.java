@@ -6,7 +6,6 @@ import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddForeignKeyConstraintChange;
-import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -199,7 +198,7 @@ public class AddForeignKeyConstraintAction extends AbstractAction<AddForeignKeyC
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropForeignKeyConstraintChange inverse = new DropForeignKeyConstraintChange();
+        DropForeignKeyConstraintAction inverse = new DropForeignKeyConstraintAction();
         inverse.setBaseTableSchemaName(getBaseTableSchemaName());
         inverse.setBaseTableName(getBaseTableName());
         inverse.setConstraintName(getConstraintName());

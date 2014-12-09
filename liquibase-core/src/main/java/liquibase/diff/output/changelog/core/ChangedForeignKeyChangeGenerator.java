@@ -1,8 +1,8 @@
 package liquibase.diff.output.changelog.core;
 
 import liquibase.action.AddForeignKeyConstraintAction;
+import liquibase.action.DropForeignKeyConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.ObjectDifferences;
 import liquibase.diff.output.DiffOutputControl;
@@ -49,9 +49,9 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
             }
         };
 
-        DropForeignKeyConstraintChange dropFkChange = new DropForeignKeyConstraintChange();
-        dropFkChange.setConstraintName(fk.getName());
-        dropFkChange.setBaseTableName(fk.getForeignKeyTable().getName());
+        DropForeignKeyConstraintAction dropFk = new DropForeignKeyConstraintAction();
+        dropFk.setConstraintName(fk.getName());
+        dropFk.setBaseTableName(fk.getForeignKeyTable().getName());
 
         AddForeignKeyConstraintAction addFkAction = new AddForeignKeyConstraintAction();
         addFkAction.setConstraintName(fk.getName());
@@ -61,13 +61,13 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
         addFkAction.setReferencedColumnNames(StringUtils.join(fk.getPrimaryKeyColumns(), ",", formatter));
 
         if (control.getIncludeCatalog()) {
-            dropFkChange.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
+            dropFk.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
 
             addFkAction.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
             addFkAction.setReferencedTableCatalogName(fk.getPrimaryKeyTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            dropFkChange.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
+            dropFk.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
 
             addFkAction.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
             addFkAction.setReferencedTableSchemaName(fk.getPrimaryKeyTable().getSchema().getName());
@@ -77,6 +77,6 @@ public class ChangedForeignKeyChangeGenerator implements ChangedObjectChangeGene
             control.setAlreadyHandledChanged(fk.getBackingIndex());
         }
 
-        return new ExecutableChange[] { dropFkChange, addFkAction };
+        return new ExecutableChange[] { dropFk, addFkAction };
     }
 }

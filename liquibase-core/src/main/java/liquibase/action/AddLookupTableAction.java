@@ -10,7 +10,6 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddLookupTableChange;
-import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.HsqlDatabase;
@@ -142,7 +141,7 @@ public class AddLookupTableAction extends AbstractAction<AddLookupTableChange> {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropForeignKeyConstraintChange dropFK = new DropForeignKeyConstraintChange();
+        DropForeignKeyConstraintAction dropFK = new DropForeignKeyConstraintAction();
         dropFK.setBaseTableSchemaName(getExistingTableSchemaName());
         dropFK.setBaseTableName(getExistingTableName());
         dropFK.setConstraintName(getFinalConstraintName());

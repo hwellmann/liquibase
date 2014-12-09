@@ -1,4 +1,4 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropAllForeignKeyConstraintsChange;
 import liquibase.database.Database;
 import liquibase.diff.compare.DatabaseObjectComparatorFactory;
 import liquibase.exception.DatabaseException;
@@ -26,47 +25,48 @@ import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="dropAllForeignKeyConstraints", description = "Drops all foreign key constraints for a table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
 @MetaInfServices(ExecutableChange.class)
-public class DropAllForeignKeyConstraintsChange extends AbstractChange {
+public class DropAllForeignKeyConstraintsAction extends AbstractAction<DropAllForeignKeyConstraintsChange> {
 
-    private String baseTableCatalogName;
-    private String baseTableSchemaName;
-    private String baseTableName;
+    public DropAllForeignKeyConstraintsAction() {
+        super(new DropAllForeignKeyConstraintsChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="table.catalog", description = "Name of the table containing columns constrained by foreign keys", since = "3.0")
+    public DropAllForeignKeyConstraintsAction(DropAllForeignKeyConstraintsChange change) {
+        super(change);
+    }
+
     public String getBaseTableCatalogName() {
-        return baseTableCatalogName;
+        return change.getBaseTableCatalogName();
     }
 
     public void setBaseTableCatalogName(String baseTableCatalogName) {
-        this.baseTableCatalogName = baseTableCatalogName;
+        change.setBaseTableCatalogName(baseTableCatalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="table.schema")
     public String getBaseTableSchemaName() {
-        return baseTableSchemaName;
+        return change.getBaseTableSchemaName();
     }
 
     public void setBaseTableSchemaName(String baseTableSchemaName) {
-        this.baseTableSchemaName = baseTableSchemaName;
+        change.setBaseTableSchemaName(baseTableSchemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "table", requiredForDatabase = "all")
     public String getBaseTableName() {
-        return baseTableName;
+        return change.getBaseTableName();
     }
 
     public void setBaseTableName(String baseTableName) {
-        this.baseTableName = baseTableName;
+        change.setBaseTableName(baseTableName);
     }
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
         List<SqlStatement> sqlStatements = new ArrayList<SqlStatement>();
 
-        List<DropForeignKeyConstraintChange> childDropChanges = generateChildren(database);
+        List<DropForeignKeyConstraintAction> childDropChanges = generateChildren(database);
 
         if (childDropChanges != null) {
-            for (DropForeignKeyConstraintChange change : childDropChanges) {
+            for (DropForeignKeyConstraintAction change : childDropChanges) {
                 sqlStatements.addAll(Arrays.asList(change.generateStatements(database)));
             }
         }
@@ -79,9 +79,9 @@ public class DropAllForeignKeyConstraintsChange extends AbstractChange {
         return "Foreign keys on base table " + getBaseTableName() + " dropped";
     }
 
-    private List<DropForeignKeyConstraintChange> generateChildren(Database database) {
+    private List<DropForeignKeyConstraintAction> generateChildren(Database database) {
         // Make a new list
-        List<DropForeignKeyConstraintChange> childDropChanges = new ArrayList<DropForeignKeyConstraintChange>();
+        List<DropForeignKeyConstraintAction> childDropChanges = new ArrayList<DropForeignKeyConstraintAction>();
 
         Executor executor = ExecutorService.getInstance().getExecutor(database);
 
@@ -99,8 +99,8 @@ public class DropAllForeignKeyConstraintsChange extends AbstractChange {
                             (String) result.get(FindForeignKeyConstraintsStatement.RESULT_COLUMN_CONSTRAINT_NAME);
                     if (DatabaseObjectComparatorFactory.getInstance().isSameObject(new Table().setName(getBaseTableName()), new Table().setName(baseTableName), database)) {
                         if( !handledConstraints.contains(constraintName)) {
-                            DropForeignKeyConstraintChange dropForeignKeyConstraintChange =
-                                    new DropForeignKeyConstraintChange();
+                            DropForeignKeyConstraintAction dropForeignKeyConstraintChange =
+                                    new DropForeignKeyConstraintAction();
 
                             dropForeignKeyConstraintChange.setBaseTableSchemaName(getBaseTableSchemaName());
                             dropForeignKeyConstraintChange.setBaseTableName(baseTableName);
@@ -126,10 +126,5 @@ public class DropAllForeignKeyConstraintsChange extends AbstractChange {
     @Override
     public boolean generateStatementsVolatile(Database database) {
         return true;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropForeignKeyConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropForeignKeyConstraintChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -43,14 +43,14 @@ public class UnexpectedForeignKeyChangeGenerator implements UnexpectedObjectChan
     public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         ForeignKey fk = (ForeignKey) unexpectedObject;
 
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
-        change.setConstraintName(fk.getName());
-        change.setBaseTableName(fk.getForeignKeyTable().getName());
+        DropForeignKeyConstraintAction action = new DropForeignKeyConstraintAction();
+        action.setConstraintName(fk.getName());
+        action.setBaseTableName(fk.getForeignKeyTable().getName());
         if (control.getIncludeCatalog()) {
-            change.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
+            action.setBaseTableCatalogName(fk.getForeignKeyTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
+            action.setBaseTableSchemaName(fk.getForeignKeyTable().getSchema().getName());
         }
 
         Index backingIndex = fk.getBackingIndex();
@@ -64,7 +64,7 @@ public class UnexpectedForeignKeyChangeGenerator implements UnexpectedObjectChan
             control.setAlreadyHandledUnexpected(backingIndex);
 //        }
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 
     }
 }
