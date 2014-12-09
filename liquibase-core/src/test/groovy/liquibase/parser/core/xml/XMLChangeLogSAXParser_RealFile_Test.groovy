@@ -372,7 +372,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes.size() == 4
         ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[0]).columns[0].valueNumeric == 1
         ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[1]).columns[0].valueNumeric == 2
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[2]).columns[0].valueNumeric == 3
+        (changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[2]).columns[0].valueNumeric == 3
         ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[3]).columns[0].valueNumeric == 4
 
         and: "changeSet level attributes are parsed correctly"
@@ -554,20 +554,20 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].name == "new_col"
         ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].header == "new_col_header"
 
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].name == "new_col_boolean"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].value == "false"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].name == "new_col_boolean"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].value == "false"
 
         and: "forms of update parse correctly"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).tableName == "updateTest"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).where == "id=:value and other_val=:value"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams.size() == 2
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[0].valueNumeric == 134
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[1].name == "other_val"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[1].valueNumeric == 768
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).tableName == "updateTest"
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).where == "id=:value and other_val=:value"
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams.size() == 2
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[0].valueNumeric == 134
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[1].name == "other_val"
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[0]).whereParams[1].valueNumeric == 768
 
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).tableName == "updateTest"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).where == "id=2"
-        ((UpdateDataChange) changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).whereParams.size() == 0
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).tableName == "updateTest"
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).where == "id=2"
+        (changeLog.getChangeSet(path, "nvoxland", "update with whereParams").changes[1]).whereParams.size() == 0
 
         and: "shell commmand parses correctly"
         ((ExecuteShellCommandChange) changeLog.getChangeSet(path, "nvoxland", "shell command").changes[0]).executable == "/usr/bin/test"

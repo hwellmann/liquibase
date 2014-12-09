@@ -1,20 +1,17 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.UpdateDataChange;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
-import liquibase.parser.core.ParsedNode;
-import liquibase.parser.core.ParsedNodeException;
-import liquibase.resource.ResourceAccessor;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.UpdateExecutablePreparedStatement;
 import liquibase.statement.core.UpdateStatement;
@@ -23,12 +20,14 @@ import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name = "update", description = "Updates data in an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
 @MetaInfServices(ExecutableChange.class)
-public class UpdateDataChange extends AbstractModifyDataChange implements ChangeWithColumns<ColumnConfig> {
+public class UpdateDataAction extends AbstractModifyDataAction<UpdateDataChange> implements ChangeWithColumns<ColumnConfig> {
 
-    private List<ColumnConfig> columns;
+    public UpdateDataAction() {
+        super(new UpdateDataChange());
+    }
 
-    public UpdateDataChange() {
-        columns = new ArrayList<ColumnConfig>();
+    public UpdateDataAction(UpdateDataChange change) {
+        super(change);
     }
 
     @Override
@@ -41,21 +40,21 @@ public class UpdateDataChange extends AbstractModifyDataChange implements Change
     @Override
     @DatabaseChangeProperty(description = "Data to update", requiredForDatabase = "all")
     public List<ColumnConfig> getColumns() {
-        return columns;
+        return change.getColumns();
     }
 
     @Override
     public void setColumns(List<ColumnConfig> columns) {
-        this.columns = columns;
+        change.setColumns(columns);
     }
 
     @Override
     public void addColumn(ColumnConfig column) {
-        columns.add(column);
+        change.addColumn(column);
     }
 
     public void removeColumn(ColumnConfig column) {
-        columns.remove(column);
+        change.removeColumn(column);
     }
 
     @Override
@@ -73,11 +72,11 @@ public class UpdateDataChange extends AbstractModifyDataChange implements Change
         }
 
         if (needsPreparedStatement) {
-            UpdateExecutablePreparedStatement statement = new UpdateExecutablePreparedStatement(database, catalogName, schemaName, tableName, columns, getChangeSet(), this.getResourceAccessor());
+            UpdateExecutablePreparedStatement statement = new UpdateExecutablePreparedStatement(database, getCatalogName(), getSchemaName(), getTableName(), getColumns(), getChangeSet(), change.getResourceAccessor());
 
-            statement.setWhereClause(where);
+            statement.setWhereClause(getWhere());
 
-            for (ColumnConfig whereParam : whereParams) {
+            for (ColumnConfig whereParam : getWhereParams()) {
                 if (whereParam.getName() != null) {
                     statement.addWhereColumnName(whereParam.getName());
                 }
@@ -95,9 +94,9 @@ public class UpdateDataChange extends AbstractModifyDataChange implements Change
             statement.addNewColumnValue(column.getName(), column.getValueObject());
         }
 
-        statement.setWhereClause(where);
+        statement.setWhereClause(getWhere());
 
-        for (ColumnConfig whereParam : whereParams) {
+        for (ColumnConfig whereParam : getWhereParams()) {
             if (whereParam.getName() != null) {
                 statement.addWhereColumnName(whereParam.getName());
             }
@@ -122,21 +121,5 @@ public class UpdateDataChange extends AbstractModifyDataChange implements Change
     @Override
     public String getSerializedObjectNamespace() {
         return STANDARD_CHANGELOG_NAMESPACE;
-    }
-
-    @Override
-    protected void customLoadLogic(ParsedNode parsedNode, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        ParsedNode whereParams = parsedNode.getChild(null, "whereParams");
-        if (whereParams != null) {
-            for (ParsedNode param : whereParams.getChildren(null, "param")) {
-                ColumnConfig columnConfig = new ColumnConfig();
-                try {
-                    columnConfig.load(param, resourceAccessor);
-                } catch (ParsedNodeException e) {
-                    e.printStackTrace();
-                }
-                addWhereParam(columnConfig);
-            }
-        }
     }
 }

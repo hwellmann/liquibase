@@ -1,16 +1,17 @@
 package liquibase.change.core
 
+import liquibase.action.UpdateDataAction
 import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
-import liquibase.sdk.database.MockDatabase
 import liquibase.parser.core.ParsedNode
 import liquibase.parser.core.ParsedNodeException
+import liquibase.sdk.database.MockDatabase
 
 public class UpdateDataChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new UpdateDataChange()
+        def change = new UpdateDataAction()
         change.setTableName("TABLE_NAME");
 
         then:
@@ -26,7 +27,7 @@ public class UpdateDataChangeTest extends StandardChangeTest {
     def "checkStatus"() {
         when:
         def database = new MockDatabase()
-        def change = new UpdateDataChange()
+        def change = new UpdateDataAction()
 
         then:
         assert change.checkStatus(database).status == ChangeStatus.Status.unknown
@@ -35,7 +36,7 @@ public class UpdateDataChangeTest extends StandardChangeTest {
 
     def "load with whereParams"() {
         when:
-        def change = new UpdateDataChange()
+        def change = new UpdateDataAction()
         def whereParams = new ParsedNode(null, "whereParams")
                 .addChild(new ParsedNode(null, "param").addChild(null, "valueNumeric", "134"))
                 .addChild(new ParsedNode(null, "param").addChildren([name: "other_val", value: "asdf"]))

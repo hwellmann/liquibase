@@ -1,45 +1,48 @@
 package liquibase.change.core;
 
-import liquibase.change.ExecutableChange;
+import java.util.ArrayList;
+import java.util.List;
+
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeWithColumns;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
-import liquibase.database.Database;
+import liquibase.change.DatabaseChangeProperty;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.DeleteStatement;
 
 import org.kohsuke.MetaInfServices;
 
-@DatabaseChange(name="delete", description = "Deletes data from an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
-@MetaInfServices(ExecutableChange.class)
-public class DeleteDataChange extends AbstractModifyDataChange {
+@DatabaseChange(name = "update", description = "Updates data in an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
+@MetaInfServices(Change.class)
+public class UpdateDataChange extends BaseModifyDataChange implements ChangeWithColumns<ColumnConfig> {
 
+    private List<ColumnConfig> columns;
 
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-
-        DeleteStatement statement = new DeleteStatement(getCatalogName(), getSchemaName(), getTableName());
-
-        statement.setWhereClause(where);
-
-        for (ColumnConfig whereParam : whereParams) {
-            if (whereParam.getName() != null) {
-                statement.addWhereColumnName(whereParam.getName());
-            }
-            statement.addWhereParameter(whereParam.getValueObject());
-        }
-
-        return new SqlStatement[]{
-                statement
-        };
+    public UpdateDataChange() {
+        columns = new ArrayList<ColumnConfig>();
     }
 
     @Override
-    public String getConfirmationMessage() {
-        return "Data deleted from " + getTableName();
+    @DatabaseChangeProperty(description = "Data to update", requiredForDatabase = "all")
+    public List<ColumnConfig> getColumns() {
+        return columns;
+    }
+
+    @Override
+    public void setColumns(List<ColumnConfig> columns) {
+        this.columns = columns;
+    }
+
+    @Override
+    public void addColumn(ColumnConfig column) {
+        columns.add(column);
+    }
+
+    public void removeColumn(ColumnConfig column) {
+        columns.remove(column);
     }
 
     @Override
@@ -62,5 +65,4 @@ public class DeleteDataChange extends AbstractModifyDataChange {
             }
         }
     }
-
 }
