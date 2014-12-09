@@ -2,17 +2,11 @@ package liquibase.change.core;
 
 import java.math.BigInteger;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
-import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.CreateSequenceStatement;
-import liquibase.structure.core.Sequence;
 
 import org.kohsuke.MetaInfServices;
 
@@ -20,8 +14,8 @@ import org.kohsuke.MetaInfServices;
  * Creates a new sequence.
  */
 @DatabaseChange(name="createSequence", description = "Creates a new database sequence", priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(ExecutableChange.class)
-public class CreateSequenceChange extends AbstractChange {
+@MetaInfServices(Change.class)
+public class CreateSequenceChange extends BaseChange {
 
     private String catalogName;
     private String schemaName;
@@ -121,68 +115,6 @@ public class CreateSequenceChange extends AbstractChange {
 
     public void setCacheSize(BigInteger cacheSize) {
         this.cacheSize = cacheSize;
-    }
-
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        return new SqlStatement[] {
-                new CreateSequenceStatement(getCatalogName(), getSchemaName(), getSequenceName())
-                .setIncrementBy(getIncrementBy())
-                .setMaxValue(getMaxValue())
-                .setMinValue(getMinValue())
-                .setOrdered(isOrdered())
-                .setStartValue(getStartValue())
-                .setCycle(getCycle())
-                .setCacheSize(getCacheSize())
-        };
-    }
-
-    @Override
-    public ChangeStatus checkStatus(Database database) {
-        ChangeStatus result = new ChangeStatus();
-        try {
-            Sequence sequence = SnapshotGeneratorFactory.getInstance().createSnapshot(new Sequence(getCatalogName(), getSchemaName(), getSequenceName()), database);
-            result.assertComplete(sequence != null, "Sequence " + getSequenceName() + " does not exist");
-            if (sequence != null) {
-                if (getIncrementBy() != null) {
-                    result.assertCorrect(getIncrementBy().equals(sequence.getIncrementBy()), "Increment by has a different value");
-                }
-                if (getMinValue() != null) {
-                    result.assertCorrect(getMinValue().equals(sequence.getMinValue()), "Min Value is different");
-                }
-                if (getMaxValue() != null) {
-                    result.assertCorrect(getMaxValue().equals(sequence.getMaxValue()), "Max Value is different");
-                }
-                if (isOrdered() != null) {
-                    result.assertCorrect(isOrdered().equals(sequence.getOrdered()), "Max Value is different");
-                }
-                if (getCycle() != null) {
-                    result.assertCorrect(getCycle().equals(sequence.getWillCycle()), "Will Cycle is different");
-                }
-                if (getCacheSize() != null) {
-                    result.assertCorrect(getCacheSize().equals(sequence.getCacheSize()), "Cache size is different");
-                }
-            }
-        } catch (Exception e) {
-            return result.unknown(e);
-        }
-        return result;
-    }
-
-    @Override
-    protected ExecutableChange[] createInverses() {
-        DropSequenceChange inverse = new DropSequenceChange();
-        inverse.setSequenceName(getSequenceName());
-        inverse.setSchemaName(getSchemaName());
-
-        return new ExecutableChange[]{
-                inverse
-        };
-    }
-
-    @Override
-    public String getConfirmationMessage() {
-        return "Sequence " + getSequenceName() + " created";
     }
 
     @Override

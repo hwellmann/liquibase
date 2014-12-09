@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.DropSequenceAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -10,7 +11,7 @@ public class DropSequenceChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new DropSequenceChange();
+        def change = new DropSequenceAction();
         change.setSequenceName("SEQ_NAME");
 
         then:
@@ -25,7 +26,7 @@ public class DropSequenceChangeTest extends StandardChangeTest {
 
         def sequence = new liquibase.structure.core.Sequence(null, null, "seq_test")
 
-        def change = new DropSequenceChange()
+        def change = new DropSequenceAction()
         change.sequenceName = sequence.name
 
         then: "sequence is not there yet"

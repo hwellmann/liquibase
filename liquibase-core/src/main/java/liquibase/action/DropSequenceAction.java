@@ -1,11 +1,10 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropSequenceChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -19,37 +18,38 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="dropSequence", description = "Drop an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
 @MetaInfServices(ExecutableChange.class)
-public class DropSequenceChange extends AbstractChange {
+public class DropSequenceAction extends AbstractAction<DropSequenceChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String sequenceName;
+    public DropSequenceAction() {
+        super(new DropSequenceChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting = "sequence.catalog", since = "3.0")
+    public DropSequenceAction(DropSequenceChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="sequence.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "sequence", description = "Name of the sequence to drop")
     public String getSequenceName() {
-        return sequenceName;
+        return change.getSequenceName();
     }
 
     public void setSequenceName(String sequenceName) {
-        this.sequenceName = sequenceName;
+        change.setSequenceName(sequenceName);
     }
 
     @Override

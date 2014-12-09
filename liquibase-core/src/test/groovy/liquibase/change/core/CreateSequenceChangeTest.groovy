@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.CreateSequenceAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -11,7 +12,7 @@ public class CreateSequenceChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new CreateSequenceChange();
+        def change = new CreateSequenceAction();
         change.setSequenceName("SEQ_NAME");
 
         then:
@@ -33,7 +34,7 @@ public class CreateSequenceChangeTest extends StandardChangeTest {
         sequence.cacheSize = snapshotCacheSize
         sequence.willCycle = snapshotCycle
 
-        def change = new CreateSequenceChange()
+        def change = new CreateSequenceAction()
         change.sequenceName = sequence.name
         change.incrementBy = changeIncrementBy
         change.minValue = changeMinValue

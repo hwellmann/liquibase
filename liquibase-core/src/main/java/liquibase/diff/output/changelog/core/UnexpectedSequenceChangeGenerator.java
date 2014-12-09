@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropSequenceAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropSequenceChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -37,16 +37,16 @@ public class UnexpectedSequenceChangeGenerator implements UnexpectedObjectChange
     public ExecutableChange[] fixUnexpected(DatabaseObject unexpectedObject, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Sequence sequence = (Sequence) unexpectedObject;
 
-        DropSequenceChange change = new DropSequenceChange();
-        change.setSequenceName(sequence.getName());
+        DropSequenceAction action = new DropSequenceAction();
+        action.setSequenceName(sequence.getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(sequence.getSchema().getCatalogName());
+            action.setCatalogName(sequence.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(sequence.getSchema().getName());
+            action.setSchemaName(sequence.getSchema().getName());
         }
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 
     }
 }
