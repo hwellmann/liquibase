@@ -3,6 +3,7 @@ package liquibase.changelog
 import static org.junit.Assert.assertTrue
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.action.CreateTableAction
+import liquibase.action.InsertDataAction
 import liquibase.change.CheckSum
 import liquibase.change.core.*
 import liquibase.parser.core.ParsedNode
@@ -30,12 +31,12 @@ public class ChangeSetTest extends Specification {
         changeSet.getDescription() == "Empty"
 
         when:
-        changeSet.addChange(new InsertDataChange());
+        changeSet.addChange(new InsertDataAction());
         then:
         changeSet.getDescription() == insertDescription
 
         when:
-        changeSet.addChange(new InsertDataChange());
+        changeSet.addChange(new InsertDataAction());
         then:
         changeSet.getDescription() == insertDescription + " (x2)"
 

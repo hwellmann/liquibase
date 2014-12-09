@@ -370,10 +370,10 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
         and: "changeSet with multiple changes is parsed correctly"
         changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes.size() == 4
-        ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[0]).columns[0].valueNumeric == 1
-        ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[1]).columns[0].valueNumeric == 2
+        (changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[0]).columns[0].valueNumeric == 1
+        (changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[1]).columns[0].valueNumeric == 2
         (changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[2]).columns[0].valueNumeric == 3
-        ((InsertDataChange) changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[3]).columns[0].valueNumeric == 4
+        (changeLog.getChangeSet(path, "nvoxland", "multiple changes").changes[3]).columns[0].valueNumeric == 4
 
         and: "changeSet level attributes are parsed correctly"
         that changeLog.getChangeSet(path, "nvoxland", "context and dbms").contexts.contexts, containsInAnyOrder(["test", "qa"].toArray())

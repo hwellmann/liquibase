@@ -1,5 +1,6 @@
 package liquibase.change.core
 
+import liquibase.action.InsertDataAction
 import liquibase.change.ChangeStatus
 import liquibase.change.ColumnConfig
 import liquibase.change.StandardChangeTest
@@ -11,7 +12,7 @@ public class InsertDataChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new InsertDataChange();
+        def change = new InsertDataAction();
         change.setTableName("TABLE_NAME");
 
         ColumnConfig col1 = new ColumnConfig();
@@ -50,7 +51,7 @@ public class InsertDataChangeTest extends StandardChangeTest {
         def snapshotFactory = new MockSnapshotGeneratorFactory()
         SnapshotGeneratorFactory.instance = snapshotFactory
 
-        def change = new InsertDataChange()
+        def change = new InsertDataAction()
 
         then:
         assert change.checkStatus(database).status == ChangeStatus.Status.unknown

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import liquibase.change.ExecutableChange;
+import liquibase.action.InsertDataAction;
 import liquibase.change.ColumnConfig;
-import liquibase.change.core.InsertDataChange;
+import liquibase.change.ExecutableChange;
 import liquibase.database.Database;
 import liquibase.database.core.InformixDatabase;
 import liquibase.database.jvm.JdbcConnection;
@@ -78,14 +78,14 @@ public class MissingDataChangeGenerator implements MissingObjectChangeGenerator 
 
             List<ExecutableChange> changes = new ArrayList<ExecutableChange>();
             while (rs.next()) {
-                InsertDataChange change = new InsertDataChange();
+                InsertDataAction action = new InsertDataAction();
                 if (outputControl.getIncludeCatalog()) {
-                    change.setCatalogName(table.getSchema().getCatalogName());
+                    action.setCatalogName(table.getSchema().getCatalogName());
                 }
                 if (outputControl.getIncludeSchema()) {
-                    change.setSchemaName(table.getSchema().getName());
+                    action.setSchemaName(table.getSchema().getName());
                 }
-                change.setTableName(table.getName());
+                action.setTableName(table.getName());
 
                 // loop over all columns for this row
                 for (int i = 0; i < columnNames.size(); i++) {
@@ -112,13 +112,13 @@ public class MissingDataChangeGenerator implements MissingObjectChangeGenerator 
                         column.setValue(value.toString().replace("\\", "\\\\"));
                     }
 
-                    change.addColumn(column);
+                    action.addColumn(column);
 
                 }
 
                 // for each row, add a new change
                 // (there will be one group per table)
-                changes.add(change);
+                changes.add(action);
             }
 
             return changes.toArray(new ExecutableChange[changes.size()]);
