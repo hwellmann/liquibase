@@ -1,7 +1,17 @@
 package liquibase.diff.output.changelog.core;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import liquibase.action.LoadDataAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.LoadDataChange;
 import liquibase.change.core.LoadDataColumnConfig;
 import liquibase.database.Database;
 import liquibase.database.core.OracleDatabase;
@@ -17,16 +27,6 @@ import liquibase.util.ISODateFormat;
 import liquibase.util.JdbcUtils;
 import liquibase.util.LiquibaseService;
 import liquibase.util.csv.CSVWriter;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @LiquibaseService(skip = true)
 public class MissingDataExternalFileChangeGenerator extends MissingDataChangeGenerator {
@@ -128,16 +128,16 @@ public class MissingDataExternalFileChangeGenerator extends MissingDataChangeGen
             outputFile.flush();
             outputFile.close();
 
-            LoadDataChange change = new LoadDataChange();
-            change.setFile(fileName);
-            change.setEncoding("UTF-8");
+            LoadDataAction action = new LoadDataAction();
+            action.setFile(fileName);
+            action.setEncoding("UTF-8");
             if (outputControl.getIncludeCatalog()) {
-                change.setCatalogName(table.getSchema().getCatalogName());
+                action.setCatalogName(table.getSchema().getCatalogName());
             }
             if (outputControl.getIncludeSchema()) {
-                change.setSchemaName(table.getSchema().getName());
+                action.setSchemaName(table.getSchema().getName());
             }
-            change.setTableName(table.getName());
+            action.setTableName(table.getName());
 
             for (int i = 0; i < columnNames.size(); i++) {
                 String colName = columnNames.get(i);
@@ -146,11 +146,11 @@ public class MissingDataExternalFileChangeGenerator extends MissingDataChangeGen
                 columnConfig.setName(colName);
                 columnConfig.setType(dataTypes[i]);
 
-                change.addColumn(columnConfig);
+                action.addColumn(columnConfig);
             }
 
             return new ExecutableChange[]{
-                    change
+                    action
             };
         } catch (Exception e) {
             throw new UnexpectedLiquibaseException(e);

@@ -1,20 +1,21 @@
 package liquibase.change.core
 
+import static org.junit.Assert.*
+import liquibase.action.LoadUpdateDataAction
 import liquibase.change.ChangeStatus
+import liquibase.change.StandardChangeTest
+import liquibase.resource.ClassLoaderResourceAccessor
+import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
-import liquibase.change.StandardChangeTest;
-import liquibase.sdk.database.MockDatabase
-import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.statement.SqlStatement
-import liquibase.statement.core.InsertOrUpdateStatement;
-import static org.junit.Assert.*
+import liquibase.statement.core.InsertOrUpdateStatement
 
 public class LoadUpdateDataChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        LoadUpdateDataChange refactoring = new LoadUpdateDataChange();
+        LoadUpdateDataAction refactoring = new LoadUpdateDataAction();
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("FILE_NAME");
 
@@ -27,7 +28,7 @@ public class LoadUpdateDataChangeTest extends StandardChangeTest {
         when:
         MockDatabase database = new MockDatabase();
 
-        LoadUpdateDataChange change = new LoadUpdateDataChange();
+        LoadUpdateDataAction change = new LoadUpdateDataAction();
 
         change.setSchemaName("SCHEMA_NAME");
         change.setTableName("TABLE_NAME");
@@ -42,7 +43,7 @@ public class LoadUpdateDataChangeTest extends StandardChangeTest {
     }
 
     def "generateChecksum produces different values with each field"() {
-        LoadUpdateDataChange refactoring = new LoadUpdateDataChange();
+        LoadUpdateDataAction refactoring = new LoadUpdateDataAction();
         refactoring.setSchemaName("SCHEMA_NAME");
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("liquibase/change/core/sample.data1.csv");
@@ -69,7 +70,7 @@ public class LoadUpdateDataChangeTest extends StandardChangeTest {
         def snapshotFactory = new MockSnapshotGeneratorFactory()
         SnapshotGeneratorFactory.instance = snapshotFactory
 
-        def change = new LoadUpdateDataChange()
+        def change = new LoadUpdateDataAction()
 
         then:
         assert change.checkStatus(database).status == ChangeStatus.Status.unknown

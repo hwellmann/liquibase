@@ -1,25 +1,27 @@
 package liquibase.change.core
 
+import liquibase.action.LoadDataAction
+import liquibase.action.LoadUpdateDataAction
 import liquibase.change.ChangeStatus
-import liquibase.change.StandardChangeTest;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeSetImpl;
-import liquibase.sdk.database.MockDatabase
-import liquibase.parser.core.ParsedNodeException;
+import liquibase.change.StandardChangeTest
+import liquibase.changelog.ChangeSet
+import liquibase.changelog.ChangeSetImpl
+import liquibase.parser.core.ParsedNodeException
 import liquibase.resource.ClassLoaderResourceAccessor
+import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
-import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.statement.SqlStatement;
+import liquibase.snapshot.SnapshotGeneratorFactory
+import liquibase.statement.SqlStatement
 import liquibase.statement.core.InsertStatement
-import spock.lang.Unroll
 import liquibase.test.JUnitResourceAccessor
+import spock.lang.Unroll
 
 public class LoadDataChangeTest extends StandardChangeTest {
 
 
     def loadDataEmpty() throws Exception {
         when:
-        LoadDataChange refactoring = new LoadDataChange();
+        LoadDataAction refactoring = new LoadDataAction();
         refactoring.setSchemaName("SCHEMA_NAME");
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("liquibase/change/core/empty.data.csv");
@@ -36,7 +38,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
     @Unroll("multiple formats with the same data for #fileName")
     def "multiple formats with the same data"() throws Exception {
         when:
-        LoadDataChange refactoring = new LoadDataChange();
+        LoadDataAction refactoring = new LoadDataAction();
         refactoring.setSchemaName("SCHEMA_NAME");
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile(fileName);
@@ -76,7 +78,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
     def generateStatement_excel() throws Exception {
         when:
-        LoadDataChange refactoring = new LoadDataChange();
+        LoadDataAction refactoring = new LoadDataAction();
         refactoring.setSchemaName("SCHEMA_NAME");
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("liquibase/change/core/sample.data1-excel.csv");
@@ -117,7 +119,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        LoadDataChange refactoring = new LoadDataChange();
+        LoadDataAction refactoring = new LoadDataAction();
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("FILE_NAME");
 
@@ -127,7 +129,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
     def "generateChecksum produces different values with each field"() {
         when:
-        LoadDataChange refactoring = new LoadDataChange();
+        LoadDataAction refactoring = new LoadDataAction();
         refactoring.setSchemaName("SCHEMA_NAME");
         refactoring.setTableName("TABLE_NAME");
         refactoring.setFile("liquibase/change/core/sample.data1.csv");
@@ -155,7 +157,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
         def snapshotFactory = new MockSnapshotGeneratorFactory()
         SnapshotGeneratorFactory.instance = snapshotFactory
 
-        def change = new LoadDataChange()
+        def change = new LoadDataAction()
 
         then:
         assert change.checkStatus(database).status == ChangeStatus.Status.unknown
@@ -164,7 +166,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
     def "load works"() {
         when:
-        def change = new LoadDataChange()
+        def change = new LoadDataAction()
         try {
             change.load(new liquibase.parser.core.ParsedNode(null, "loadData").setValue([
                     [column: [name: "id"]],
@@ -189,7 +191,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
                                             "liquibase/change/fakeChangeSet.xml",
                                             null, null, false, null, null);
 
-        LoadDataChange relativeChange = new LoadDataChange();
+        LoadDataAction relativeChange = new LoadDataAction();
 
         relativeChange.setSchemaName("SCHEMA_NAME");
         relativeChange.setTableName("TABLE_NAME");
@@ -200,7 +202,7 @@ public class LoadDataChangeTest extends StandardChangeTest {
 
         SqlStatement[] relativeStatements = relativeChange.generateStatements(new MockDatabase());
 
-        LoadUpdateDataChange nonRelativeChange = new LoadUpdateDataChange();
+        LoadUpdateDataAction nonRelativeChange = new LoadUpdateDataAction();
         nonRelativeChange.setSchemaName("SCHEMA_NAME");
         nonRelativeChange.setTableName("TABLE_NAME");
         nonRelativeChange.setChangeSet(changeSet);

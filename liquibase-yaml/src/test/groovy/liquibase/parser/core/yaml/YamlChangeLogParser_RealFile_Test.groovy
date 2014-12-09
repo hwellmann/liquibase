@@ -9,7 +9,6 @@ import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
 import liquibase.change.core.EmptyChange
-import liquibase.change.core.LoadDataChange
 import liquibase.change.core.RawSQLChange
 import liquibase.change.core.StopChange
 import liquibase.change.custom.CustomChangeWrapper
@@ -533,9 +532,9 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].name == "id"
         assert (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[2]).columns[0].constraints.isUnique()
 
-        ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[0].name == "id"
-        ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].name == "new_col"
-        ((LoadDataChange) changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].header == "new_col_header"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[0].name == "id"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].name == "new_col"
+        (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[3]).columns[1].header == "new_col_header"
 
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].name == "new_col_boolean"
         (changeLog.getChangeSet(path, "nvoxland", "different object types for column").changes[4]).columns[0].value == "false"

@@ -1,8 +1,8 @@
 package liquibase.change.core.supplier;
 
-import liquibase.change.ColumnConfig;
+import liquibase.action.CreateTableAction;
 import liquibase.change.Change;
-import liquibase.change.core.CreateTableChange;
+import liquibase.change.ColumnConfig;
 import liquibase.change.core.LoadDataChange;
 import liquibase.diff.DiffResult;
 import liquibase.sdk.supplier.change.AbstractChangeSupplier;
@@ -15,7 +15,7 @@ public class LoadDataChangeSupplier extends AbstractChangeSupplier<LoadDataChang
 
     @Override
     public Change[]  prepareDatabase(LoadDataChange change) throws Exception {
-        CreateTableChange createTableChange = new CreateTableChange();
+        CreateTableAction createTableChange = new CreateTableAction();
         createTableChange.setCatalogName(change.getCatalogName());
         createTableChange.setSchemaName(change.getSchemaName());
         createTableChange.setTableName(change.getTableName());

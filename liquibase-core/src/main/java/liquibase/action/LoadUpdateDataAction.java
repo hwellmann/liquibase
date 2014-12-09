@@ -1,13 +1,14 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.LoadUpdateDataChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.exception.LiquibaseException;
@@ -25,40 +26,52 @@ import org.kohsuke.MetaInfServices;
                 "A value of NULL in a cell will be converted to a database NULL rather than the string 'NULL'",
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table", since = "2.0")
 @MetaInfServices(ExecutableChange.class)
-public class LoadUpdateDataChange extends LoadDataChange {
-    private String primaryKey;
-    private Boolean onlyUpdate = Boolean.FALSE;
+public class LoadUpdateDataAction extends LoadDataAction {
+
+    public LoadUpdateDataAction() {
+        super(new LoadUpdateDataChange());
+    }
+
+    public LoadUpdateDataAction(LoadUpdateDataChange change) {
+        super(change);
+    }
 
     @Override
-    @DatabaseChangeProperty(description = "Name of the table to insert or update data in", requiredForDatabase = "all")
+    public LoadUpdateDataChange getChange() {
+        return (LoadUpdateDataChange) change;
+    }
+
+    @Override
     public String getTableName() {
-        return super.getTableName();
+        return change.getTableName();
+    }
+
+    @Override
+    public void setTableName(String tableName) {
+        change.setTableName(tableName);
     }
 
     public void setPrimaryKey(String primaryKey) throws LiquibaseException {
-        this.primaryKey = primaryKey;
+        getChange().setPrimaryKey(primaryKey);
     }
 
     @DatabaseChangeProperty(description = "Comma delimited list of the columns for the primary key", requiredForDatabase = "all")
     public String getPrimaryKey() {
-        return primaryKey;
+        return getChange().getPrimaryKey();
     }
 
     @DatabaseChangeProperty(description = "If true, records with no matching database record should be ignored", since = "3.3" )
     public Boolean getOnlyUpdate() {
-    	if ( onlyUpdate == null ) {
-    		return false;
-    	}
-		return onlyUpdate;
+        return getChange().getOnlyUpdate();
 	}
 
 	public void setOnlyUpdate(Boolean onlyUpdate) {
-		this.onlyUpdate = (onlyUpdate == null ? Boolean.FALSE : onlyUpdate) ;
+		getChange().setOnlyUpdate(onlyUpdate);
 	}
 
-	@Override
+    @Override
     protected InsertStatement createStatement(String catalogName, String schemaName, String tableName) {
-        return new InsertOrUpdateStatement(catalogName, schemaName, tableName, this.primaryKey, this.getOnlyUpdate());
+        return new InsertOrUpdateStatement(catalogName, schemaName, tableName, getPrimaryKey(), getOnlyUpdate());
     }
 
     @Override
@@ -68,7 +81,7 @@ public class LoadUpdateDataChange extends LoadDataChange {
 
         for(SqlStatement thisForward: forward){
             InsertOrUpdateStatement thisInsert = (InsertOrUpdateStatement)thisForward;
-            DeleteStatement delete = new DeleteStatement(getCatalogName(), getSchemaName(),getTableName());
+            DeleteStatement delete = new DeleteStatement(change.getCatalogName(), change.getSchemaName(),getTableName());
             delete.setWhere(getWhere(thisInsert,database));
             statements.add(delete);
         }
@@ -103,12 +116,8 @@ public class LoadUpdateDataChange extends LoadDataChange {
     }
 
     @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
-    }
-
-    @Override
     public ChangeStatus checkStatus(Database database) {
         return new ChangeStatus().unknown("Cannot check loadUpdateData status");
     }
+
 }

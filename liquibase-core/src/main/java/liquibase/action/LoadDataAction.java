@@ -1,34 +1,29 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ChangeWithColumns;
-import liquibase.change.CheckSum;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.LoadDataChange;
+import liquibase.change.core.LoadDataColumnConfig;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.Warnings;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
-import liquibase.resource.ResourceAccessor;
-import liquibase.resource.UtfBomAwareReader;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.InsertStatement;
 import liquibase.structure.core.Column;
 import liquibase.util.BooleanParser;
-import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 import liquibase.util.csv.CSVReader;
 
@@ -46,18 +41,15 @@ import org.kohsuke.MetaInfServices;
         priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table",
         since="1.7")
 @MetaInfServices(ExecutableChange.class)
-public class LoadDataChange extends AbstractChange implements ChangeWithColumns<LoadDataColumnConfig> {
+public class LoadDataAction extends AbstractAction<LoadDataChange> implements ChangeWithColumns<LoadDataColumnConfig> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String file;
-    private Boolean relativeToChangelogFile;
-    private String encoding = null;
-    private String separator = liquibase.util.csv.opencsv.CSVReader.DEFAULT_SEPARATOR + "";
-	private String quotchar = liquibase.util.csv.opencsv.CSVReader.DEFAULT_QUOTE_CHARACTER + "";
+    public LoadDataAction() {
+        super(new LoadDataChange());
+    }
 
-    private List<LoadDataColumnConfig> columns = new ArrayList<LoadDataColumnConfig>();
+    public LoadDataAction(LoadDataChange change) {
+        super(change);
+    }
 
     @Override
     public boolean supports(Database database) {
@@ -73,99 +65,96 @@ public class LoadDataChange extends AbstractChange implements ChangeWithColumns<
 
     @DatabaseChangeProperty(mustEqualExisting ="table.catalog", since = "3.0")
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="table.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "table", description = "Name of the table to insert data into", requiredForDatabase = "all")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @DatabaseChangeProperty(description = "CSV file to load", exampleValue = "com/example/users.csv", requiredForDatabase = "all")
     public String getFile() {
-        return file;
+        return change.getFile();
     }
 
     public void setFile(String file) {
-        this.file = file;
+        change.setFile(file);
     }
 
     public Boolean isRelativeToChangelogFile() {
-        return relativeToChangelogFile;
+        return change.isRelativeToChangelogFile();
     }
 
     public void setRelativeToChangelogFile(Boolean relativeToChangelogFile) {
-        this.relativeToChangelogFile = relativeToChangelogFile;
+        change.setRelativeToChangelogFile(relativeToChangelogFile);
     }
 
     @DatabaseChangeProperty(exampleValue = "UTF-8", description = "Encoding of the CSV file (defaults to UTF-8)")
     public String getEncoding() {
-        return encoding;
+        return change.getEncoding();
     }
 
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        change.setEncoding(encoding);
     }
 
     @DatabaseChangeProperty(exampleValue = ",")
     public String getSeparator() {
-		return separator;
+		return change.getSeparator();
 	}
 
 	public void setSeparator(String separator) {
-        if (separator != null && separator.equals("\\t")) {
-            separator = "\t";
-        }
-		this.separator = separator;
+	    change.setSeparator(separator);
 	}
 
     @DatabaseChangeProperty(exampleValue = "'")
 	public String getQuotchar() {
-		return quotchar;
+		return change.getQuotchar();
 	}
 
 	public void setQuotchar(String quotchar) {
-		this.quotchar = quotchar;
+		change.setQuotchar(quotchar);
 	}
 
 	@Override
     public void addColumn(LoadDataColumnConfig column) {
-      	columns.add(column);
+      	change.addColumn(column);
     }
 
     @Override
     @DatabaseChangeProperty(description = "Defines how the data should be loaded.", requiredForDatabase = "all")
     public List<LoadDataColumnConfig> getColumns() {
-        return columns;
+        return change.getColumns();
     }
 
     @Override
     public void setColumns(List<LoadDataColumnConfig> columns) {
-        this.columns = columns;
+        change.setColumns(columns);
     }
 
     @Override
     public SqlStatement[] generateStatements(Database database) {
         CSVReader reader = null;
         try {
-            reader = getCSVReader();
+            reader = change.getCSVReader();
 
             if (reader == null) {
                 throw new UnexpectedLiquibaseException("Unable to read file "+this.getFile());
@@ -243,9 +232,10 @@ public class LoadDataChange extends AbstractChange implements ChangeWithColumns<
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (UnexpectedLiquibaseException ule) {
-                if (getChangeSet() != null && getChangeSet().getFailOnError() != null && !getChangeSet().getFailOnError()) {
+                ExecutableChangeSet changeSet = (ExecutableChangeSet) getChangeSet();
+                if (changeSet != null && changeSet.getFailOnError() != null && !changeSet.getFailOnError()) {
                     Logger log = LogFactory.getLogger();
-                    log.info("Change set " + getChangeSet().toString(false) + " failed, but failOnError was false.  Error: " + ule.getMessage());
+                    log.info("Change set " + changeSet.toString(false) + " failed, but failOnError was false.  Error: " + ule.getMessage());
                     return new SqlStatement[0];
                 } else {
                     throw ule;
@@ -266,43 +256,12 @@ public class LoadDataChange extends AbstractChange implements ChangeWithColumns<
         return true;
     }
 
-    public CSVReader getCSVReader() throws IOException {
-        ResourceAccessor resourceAccessor = getResourceAccessor();
-        if (resourceAccessor == null) {
-            throw new UnexpectedLiquibaseException("No file resourceAccessor specified for "+getFile());
-        }
-        InputStream stream = StreamUtil.openStream(file, isRelativeToChangelogFile(), getChangeSet(), resourceAccessor);
-        if (stream == null) {
-            return null;
-        }
-        Reader streamReader;
-        if (getEncoding() == null) {
-            streamReader = new UtfBomAwareReader(stream);
-        } else {
-            streamReader = new UtfBomAwareReader(stream, getEncoding());
-        }
-
-        char quotchar;
-        if (StringUtils.trimToEmpty(this.quotchar).length() == 0) {
-            // hope this is impossible to have a field surrounded with non ascii char 0x01
-            quotchar = '\1';
-        } else {
-            quotchar = this.quotchar.charAt(0);
-        }
-
-        if (separator == null) {
-            separator = liquibase.util.csv.opencsv.CSVReader.DEFAULT_SEPARATOR + "";
-        }
-
-        return new CSVReader(streamReader, separator.charAt(0), quotchar );
-    }
-
     protected InsertStatement createStatement(String catalogName, String schemaName, String tableName){
         return new InsertStatement(catalogName, schemaName,tableName);
     }
 
     protected ColumnConfig getColumnConfig(int index, String header) {
-        for (LoadDataColumnConfig config : columns) {
+        for (LoadDataColumnConfig config : getColumns()) {
             if (config.getIndex() != null && config.getIndex().equals(index)) {
                 return config;
             }
@@ -328,33 +287,7 @@ public class LoadDataChange extends AbstractChange implements ChangeWithColumns<
     }
 
     @Override
-    public CheckSum generateCheckSum() {
-        InputStream stream = null;
-        try {
-            stream = StreamUtil.openStream(file, isRelativeToChangelogFile(), getChangeSet(), getResourceAccessor());
-            if (stream == null) {
-                throw new UnexpectedLiquibaseException(getFile() + " could not be found");
-            }
-            stream = new BufferedInputStream(stream);
-            return CheckSum.compute(getTableName()+":"+CheckSum.compute(stream, true));
-        } catch (IOException e) {
-            throw new UnexpectedLiquibaseException(e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException ignore) { }
-            }
-        }
-    }
-
-    @Override
     public Warnings warn(Database database) {
         return null;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }
