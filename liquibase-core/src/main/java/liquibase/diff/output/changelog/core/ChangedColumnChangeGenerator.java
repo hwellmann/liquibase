@@ -7,8 +7,8 @@ import java.util.List;
 import liquibase.action.AddAutoIncrementAction;
 import liquibase.action.AddDefaultValueAction;
 import liquibase.action.AddNotNullConstraintAction;
+import liquibase.action.DropDefaultValueAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropDefaultValueChange;
 import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.change.core.ModifyDataTypeChange;
 import liquibase.database.Database;
@@ -158,7 +158,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
 
             LiquibaseDataType columnDataType = DataTypeFactory.getInstance().from(column.getType(), comparisonDatabase);
             if (value == null) {
-                DropDefaultValueChange change = new DropDefaultValueChange();
+                DropDefaultValueAction change = new DropDefaultValueAction();
                 if (control.getIncludeCatalog()) {
                     change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
                 }

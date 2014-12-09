@@ -10,7 +10,6 @@ import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddDefaultValueChange;
-import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -198,7 +197,7 @@ public class AddDefaultValueAction extends AbstractAction<AddDefaultValueChange>
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropDefaultValueChange inverse = new DropDefaultValueChange();
+        DropDefaultValueAction inverse = new DropDefaultValueAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setColumnName(getColumnName());

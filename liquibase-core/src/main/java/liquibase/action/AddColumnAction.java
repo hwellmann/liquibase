@@ -15,7 +15,6 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddColumnChange;
 import liquibase.change.core.DropColumnChange;
-import liquibase.change.core.DropDefaultValueChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.FirebirdDatabase;
@@ -197,12 +196,12 @@ public class AddColumnAction extends AbstractAction<AddColumnChange> implements 
 
         for (ColumnConfig aColumn : getColumns()) {
             if (aColumn.hasDefaultValue()) {
-                DropDefaultValueChange dropChange = new DropDefaultValueChange();
-                dropChange.setTableName(getTableName());
-                dropChange.setColumnName(aColumn.getName());
-                dropChange.setSchemaName(getSchemaName());
+                DropDefaultValueAction dropAction = new DropDefaultValueAction();
+                dropAction.setTableName(getTableName());
+                dropAction.setColumnName(aColumn.getName());
+                dropAction.setSchemaName(getSchemaName());
 
-                inverses.add(dropChange);
+                inverses.add(dropAction);
             }
 
             change.addColumn(aColumn);

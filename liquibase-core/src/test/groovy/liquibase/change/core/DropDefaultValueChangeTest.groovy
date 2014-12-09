@@ -1,7 +1,8 @@
 package liquibase.change.core
 
+import liquibase.action.DropDefaultValueAction
 import liquibase.change.AddColumnConfig
-import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -13,7 +14,7 @@ public class DropDefaultValueChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        DropDefaultValueChange change = new DropDefaultValueChange();
+        DropDefaultValueAction change = new DropDefaultValueAction();
         change.setTableName("TABLE_NAME");
         change.setColumnName("COL_HERE");
 
@@ -33,7 +34,7 @@ public class DropDefaultValueChangeTest extends StandardChangeTest {
         testColumnConfig.type = "varchar(5)"
         testColumnConfig.name = testColumn.name
 
-        def change = new DropDefaultValueChange()
+        def change = new DropDefaultValueAction()
         change.tableName = table.name
         change.columnName = testColumn.name
 
