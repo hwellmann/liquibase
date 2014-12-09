@@ -1,12 +1,11 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.action.AddNotNullConstraintAction;
-import liquibase.change.AbstractChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -21,57 +20,58 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="dropNotNullConstraint", description = "Makes a column nullable", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class DropNotNullConstraintChange extends AbstractChange {
+public class DropNotNullConstraintAction extends AbstractAction<DropNotNullConstraintChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String columnName;
-    private String columnDataType;
+    public DropNotNullConstraintAction() {
+        super(new DropNotNullConstraintChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="notNullConstraint.table.catalog", since = "3.0")
+    public DropNotNullConstraintAction(DropNotNullConstraintChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="notNullConstraint.table.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "notNullConstraint.table", description = "Name of the table containing that the column to drop the constraint from")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "notNullConstraint.column", description = "Name of the column to drop the constraint from")
     public String getColumnName() {
-        return columnName;
+        return change.getColumnName();
     }
 
     public void setColumnName(String columnName) {
-        this.columnName = columnName;
+        change.setColumnName(columnName);
     }
 
     @DatabaseChangeProperty(description = "Current data type of the column")
     public String getColumnDataType() {
-        return columnDataType;
+        return change.getColumnDataType();
     }
 
     public void setColumnDataType(String columnDataType) {
-        this.columnDataType = columnDataType;
+        change.setColumnDataType(columnDataType);
     }
 
     @Override
@@ -154,10 +154,5 @@ public class DropNotNullConstraintChange extends AbstractChange {
     @Override
     public String getConfirmationMessage() {
         return "Null constraint dropped from " + getTableName() + "." + getColumnName();
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }

@@ -8,7 +8,6 @@ import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.AddNotNullConstraintChange;
-import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.SQLiteDatabase;
@@ -182,7 +181,7 @@ public class AddNotNullConstraintAction extends AbstractAction<AddNotNullConstra
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropNotNullConstraintChange inverse = new DropNotNullConstraintChange();
+        DropNotNullConstraintAction inverse = new DropNotNullConstraintAction();
         inverse.setColumnName(getColumnName());
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());

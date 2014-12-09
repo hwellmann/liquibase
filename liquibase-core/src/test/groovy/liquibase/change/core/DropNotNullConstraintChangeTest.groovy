@@ -1,7 +1,8 @@
 package liquibase.change.core
 
+import liquibase.action.DropNotNullConstraintAction
 import liquibase.change.AddColumnConfig
-import liquibase.change.ChangeStatus;
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -9,11 +10,11 @@ import liquibase.snapshot.SnapshotGeneratorFactory
 import liquibase.structure.core.Column
 import liquibase.structure.core.Table
 
-public class DropNotNullConstraintChangeTest extends StandardChangeTest {
+public class DropNotNullConstraintActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        DropNotNullConstraintChange change = new DropNotNullConstraintChange();
+        DropNotNullConstraintAction change = new DropNotNullConstraintAction();
         change.setTableName("TABLE_NAME");
         change.setColumnName("COL_HERE");
 
@@ -34,7 +35,7 @@ public class DropNotNullConstraintChangeTest extends StandardChangeTest {
         testColumnConfig.type = "varchar(5)"
         testColumnConfig.name = testColumn.name
 
-        def change = new DropNotNullConstraintChange()
+        def change = new DropNotNullConstraintAction()
         change.tableName = table.name
         change.columnName = testColumn.name
 

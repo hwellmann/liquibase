@@ -8,8 +8,8 @@ import liquibase.action.AddAutoIncrementAction;
 import liquibase.action.AddDefaultValueAction;
 import liquibase.action.AddNotNullConstraintAction;
 import liquibase.action.DropDefaultValueAction;
+import liquibase.action.DropNotNullConstraintAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropNotNullConstraintChange;
 import liquibase.change.core.ModifyDataTypeChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
@@ -82,7 +82,7 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
         if (nullableDifference != null && nullableDifference.getReferenceValue() != null) {
             boolean nullable = (Boolean) nullableDifference.getReferenceValue();
             if (nullable) {
-                DropNotNullConstraintChange change = new DropNotNullConstraintChange();
+                DropNotNullConstraintAction change = new DropNotNullConstraintAction();
                 if (control.getIncludeCatalog()) {
                     change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
                 }
