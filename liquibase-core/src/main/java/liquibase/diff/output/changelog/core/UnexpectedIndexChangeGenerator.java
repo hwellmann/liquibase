@@ -1,7 +1,7 @@
 package liquibase.diff.output.changelog.core;
 
+import liquibase.action.DropIndexAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGenerator;
@@ -43,18 +43,18 @@ public class UnexpectedIndexChangeGenerator implements UnexpectedObjectChangeGen
 //            return null;
 //        }
 
-        DropIndexChange change = new DropIndexChange();
-        change.setTableName(index.getTable().getName());
+        DropIndexAction action = new DropIndexAction();
+        action.setTableName(index.getTable().getName());
         if (control.getIncludeCatalog()) {
-            change.setCatalogName(index.getTable().getSchema().getCatalogName());
+            action.setCatalogName(index.getTable().getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            change.setSchemaName(index.getTable().getSchema().getName());
+            action.setSchemaName(index.getTable().getSchema().getName());
         }
-        change.setIndexName(index.getName());
-        change.setAssociatedWith(index.getAssociatedWithAsString());
+        action.setIndexName(index.getName());
+        action.setAssociatedWith(index.getAssociatedWithAsString());
 
-        return new ExecutableChange[] { change };
+        return new ExecutableChange[] { action };
 
     }
 }

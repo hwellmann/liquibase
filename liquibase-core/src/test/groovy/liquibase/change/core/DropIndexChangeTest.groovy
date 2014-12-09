@@ -1,7 +1,8 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
-import liquibase.change.StandardChangeTest;
+import liquibase.action.DropIndexAction
+import liquibase.change.ChangeStatus
+import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
 import liquibase.snapshot.SnapshotGeneratorFactory
@@ -9,11 +10,11 @@ import liquibase.structure.core.Column
 import liquibase.structure.core.Index
 import liquibase.structure.core.Table
 
-public class DropIndexChangeTest extends StandardChangeTest {
+public class DropIndexActionTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        DropIndexChange refactoring = new DropIndexChange();
+        DropIndexAction refactoring = new DropIndexAction();
         refactoring.setIndexName("IDX_NAME");
         refactoring.setTableName("TABLE_NAME");
 
@@ -34,7 +35,7 @@ public class DropIndexChangeTest extends StandardChangeTest {
 
         def index = new Index("idx_test", null, null, table.name, new Column(test_col.name))
 
-        def change = new DropIndexChange()
+        def change = new DropIndexAction()
         change.indexName = index.name
         change.tableName = table.name
 

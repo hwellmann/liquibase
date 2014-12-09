@@ -1,16 +1,10 @@
 package liquibase.change.core;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
-import liquibase.snapshot.SnapshotGeneratorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.DropIndexStatement;
-import liquibase.structure.core.Index;
 
 import org.kohsuke.MetaInfServices;
 
@@ -18,8 +12,8 @@ import org.kohsuke.MetaInfServices;
  * Drops an existing index.
  */
 @DatabaseChange(name="dropIndex", description = "Drops an existing index", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "index")
-@MetaInfServices(ExecutableChange.class)
-public class DropIndexChange extends AbstractChange {
+@MetaInfServices(Change.class)
+public class DropIndexChange extends BaseChange {
 
     private String schemaName;
     private String indexName;
@@ -53,27 +47,6 @@ public class DropIndexChange extends AbstractChange {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
-    }
-
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        return new SqlStatement[] {
-            new DropIndexStatement(getIndexName(), getCatalogName(), getSchemaName(), getTableName(), getAssociatedWith())
-        };
-    }
-
-    @Override
-    public ChangeStatus checkStatus(Database database) {
-        try {
-            return new ChangeStatus().assertComplete(!SnapshotGeneratorFactory.getInstance().has(new Index(getIndexName(), getCatalogName(), getSchemaName(), getTableName()), database), "Index exists");
-        } catch (Exception e) {
-            return new ChangeStatus().unknown(e);
-        }
-    }
-
-    @Override
-    public String getConfirmationMessage() {
-        return "Index " + getIndexName() + " dropped from table " + getTableName();
     }
 
     @DatabaseChangeProperty(isChangeProperty = false)

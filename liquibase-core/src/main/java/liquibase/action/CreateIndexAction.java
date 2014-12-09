@@ -11,7 +11,6 @@ import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
 import liquibase.change.core.CreateIndexChange;
-import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -99,7 +98,7 @@ public class CreateIndexAction extends AbstractAction<CreateIndexChange> impleme
 
     @Override
     protected ExecutableChange[] createInverses() {
-        DropIndexChange inverse = new DropIndexChange();
+        DropIndexAction inverse = new DropIndexAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setIndexName(getIndexName());

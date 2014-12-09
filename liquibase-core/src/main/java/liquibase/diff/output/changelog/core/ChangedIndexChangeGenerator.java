@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import liquibase.action.CreateIndexAction;
+import liquibase.action.DropIndexAction;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.DropIndexChange;
 import liquibase.database.Database;
 import liquibase.diff.Difference;
 import liquibase.diff.ObjectDifferences;
@@ -46,9 +46,9 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
     public ExecutableChange[] fixChanged(DatabaseObject changedObject, ObjectDifferences differences, DiffOutputControl control, Database referenceDatabase, Database comparisonDatabase, ChangeGeneratorChain chain) {
         Index index = (Index) changedObject;
 
-        DropIndexChange dropIndexChange = new DropIndexChange();
-        dropIndexChange.setTableName(index.getTable().getName());
-        dropIndexChange.setIndexName(index.getName());
+        DropIndexAction dropIndexAction = new DropIndexAction();
+        dropIndexAction.setTableName(index.getTable().getName());
+        dropIndexAction.setIndexName(index.getName());
 
         CreateIndexAction addIndexAction = new CreateIndexAction();
         addIndexAction.setTableName(index.getTable().getName());
@@ -61,11 +61,11 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
 
 
         if (control.getIncludeCatalog()) {
-            dropIndexChange.setCatalogName(index.getSchema().getCatalogName());
+            dropIndexAction.setCatalogName(index.getSchema().getCatalogName());
             addIndexAction.setCatalogName(index.getSchema().getCatalogName());
         }
         if (control.getIncludeSchema()) {
-            dropIndexChange.setSchemaName(index.getSchema().getName());
+            dropIndexAction.setSchemaName(index.getSchema().getName());
             addIndexAction.setSchemaName(index.getSchema().getName());
         }
 
@@ -95,6 +95,6 @@ public class ChangedIndexChangeGenerator implements ChangedObjectChangeGenerator
             }
         }
 
-        return new ExecutableChange[] { dropIndexChange, addIndexAction };
+        return new ExecutableChange[] { dropIndexAction, addIndexAction };
     }
 }
