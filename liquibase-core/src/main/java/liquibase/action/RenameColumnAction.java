@@ -1,15 +1,15 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.RenameColumnChange;
 import liquibase.database.Database;
 import liquibase.database.core.SQLiteDatabase;
 import liquibase.database.core.SQLiteDatabase.AlterTableVisitor;
@@ -27,77 +27,76 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="renameColumn", description = "Renames an existing column", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
 @MetaInfServices(ExecutableChange.class)
-public class RenameColumnChange extends AbstractChange {
+public class RenameColumnAction extends AbstractAction<RenameColumnChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String oldColumnName;
-    private String newColumnName;
-    private String columnDataType;
-    private String remarks;
+    public RenameColumnAction() {
+        super(new RenameColumnChange());
+    }
 
-    @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
+    public RenameColumnAction(RenameColumnChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="column.relation.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column.relation", description = "Name of the table containing that the column to rename")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "column", exampleValue = "name", description = "Name of the existing column to rename")
     public String getOldColumnName() {
-        return oldColumnName;
+        return change.getOldColumnName();
     }
 
     public void setOldColumnName(String oldColumnName) {
-        this.oldColumnName = oldColumnName;
+        change.setOldColumnName(oldColumnName);
     }
 
     @DatabaseChangeProperty(description = "Name to rename the column to", exampleValue = "full_name")
     public String getNewColumnName() {
-        return newColumnName;
+        return change.getNewColumnName();
     }
 
     public void setNewColumnName(String newColumnName) {
-        this.newColumnName = newColumnName;
+        change.setNewColumnName(newColumnName);
     }
 
     @DatabaseChangeProperty(description = "Data type of the column")
     public String getColumnDataType() {
-        return columnDataType;
+        return change.getColumnDataType();
     }
 
     public void setColumnDataType(String columnDataType) {
-        this.columnDataType = columnDataType;
+        change.setColumnDataType(columnDataType);
     }
 
     @DatabaseChangeProperty(description = "Remarks of the column")
     public String getRemarks() {
-        return remarks;
+        return change.getRemarks();
     }
 
     public void setRemarks(String remarks) {
-        this.remarks = remarks;
+        change.setRemarks(remarks);
     }
 
     @Override
@@ -187,7 +186,7 @@ public class RenameColumnChange extends AbstractChange {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        RenameColumnChange inverse = new RenameColumnChange();
+        RenameColumnAction inverse = new RenameColumnAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setTableName(getTableName());
         inverse.setOldColumnName(getNewColumnName());
@@ -201,11 +200,6 @@ public class RenameColumnChange extends AbstractChange {
 
     @Override
     public String getConfirmationMessage() {
-        return "Column "+tableName+"."+ oldColumnName + " renamed to " + newColumnName;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
+        return "Column "+ getTableName() +"."+ getOldColumnName() + " renamed to " + getNewColumnName();
     }
 }

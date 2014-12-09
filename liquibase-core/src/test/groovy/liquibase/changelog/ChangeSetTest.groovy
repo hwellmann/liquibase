@@ -208,7 +208,7 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 1
         changeSet.rollBackChanges.size() == 1
-        ((RenameTableChange) changeSet.rollBackChanges[0]).newTableName == "rename_to_x"
+        (changeSet.rollBackChanges[0]).newTableName == "rename_to_x"
     }
 
     def "load node with rollback containing collection of change nodes as value"() {
@@ -229,8 +229,8 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 1
         changeSet.rollBackChanges.size() == 2
-        ((RenameTableChange) changeSet.rollBackChanges[0]).newTableName == "rename_to_x"
-        ((RenameTableChange) changeSet.rollBackChanges[1]).newTableName == "rename_to_y"
+        (changeSet.rollBackChanges[0]).newTableName == "rename_to_x"
+        (changeSet.rollBackChanges[1]).newTableName == "rename_to_y"
     }
 
     def "load node with rollback containing rollback nodes as children"() {
@@ -251,8 +251,8 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 1
         changeSet.rollBackChanges.size() == 3
-        ((RenameTableChange) changeSet.rollBackChanges[0]).newTableName == "rename_to_a"
-        ((RenameTableChange) changeSet.rollBackChanges[1]).newTableName == "rename_to_b"
+        (changeSet.rollBackChanges[0]).newTableName == "rename_to_a"
+        (changeSet.rollBackChanges[1]).newTableName == "rename_to_b"
         ((RawSQLChange) changeSet.rollBackChanges[2]).sql == "rollback sql"
     }
 

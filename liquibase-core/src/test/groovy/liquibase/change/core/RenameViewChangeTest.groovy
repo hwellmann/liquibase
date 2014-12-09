@@ -1,6 +1,7 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.RenameViewAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.snapshot.MockSnapshotGeneratorFactory
@@ -11,7 +12,7 @@ public class RenameViewChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new RenameViewChange()
+        def change = new RenameViewAction()
         change.setOldViewName("OLD_NAME");
         change.setNewViewName("NEW_NAME");
 
@@ -28,7 +29,7 @@ public class RenameViewChangeTest extends StandardChangeTest {
         def oldView = new View(null, null, "test_view")
         def newView = new View(null, null, "new_view")
 
-        def change = new RenameViewChange()
+        def change = new RenameViewAction()
         change.oldViewName= oldView.name
         change.newViewName= newView.name
 

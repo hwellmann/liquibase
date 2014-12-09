@@ -1,13 +1,13 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.RenameSequenceChange;
 import liquibase.database.Database;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RenameSequenceStatement;
@@ -19,51 +19,49 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="renameSequence", description = "Renames an existing sequence", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "sequence")
 @MetaInfServices(ExecutableChange.class)
-public class RenameSequenceChange extends AbstractChange {
+public class RenameSequenceAction extends AbstractAction<RenameSequenceChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String oldSequenceName;
-
-    private String newSequenceName;
-
-    public RenameSequenceChange() {
+    public RenameSequenceAction() {
+        super(new RenameSequenceChange());
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="sequence.catalog", since = "3.0")
+    public RenameSequenceAction(RenameSequenceChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="sequence.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "sequence", description = "Name of the sequence to rename")
     public String getOldSequenceName() {
-        return oldSequenceName;
+        return change.getOldSequenceName();
     }
 
     public void setOldSequenceName(String oldSequenceName) {
-        this.oldSequenceName = oldSequenceName;
+        change.setOldSequenceName(oldSequenceName);
     }
 
     @DatabaseChangeProperty(description = "New name for the sequence")
     public String getNewSequenceName() {
-        return newSequenceName;
+        return change.getNewSequenceName();
     }
 
     public void setNewSequenceName(String newSequenceName) {
-        this.newSequenceName = newSequenceName;
+        change.setNewSequenceName(newSequenceName);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class RenameSequenceChange extends AbstractChange {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        RenameSequenceChange inverse = new RenameSequenceChange();
+        RenameSequenceAction inverse = new RenameSequenceAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setOldSequenceName(getNewSequenceName());
         inverse.setNewSequenceName(getOldSequenceName());
@@ -87,11 +85,6 @@ public class RenameSequenceChange extends AbstractChange {
 
     @Override
     public String getConfirmationMessage() {
-        return "Sequence " + oldSequenceName + " renamed to " + newSequenceName;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
+        return "Sequence " + getOldSequenceName() + " renamed to " + getNewSequenceName();
     }
 }

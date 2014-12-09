@@ -1,9 +1,10 @@
 package liquibase.change.core;
 
-import liquibase.change.StandardChangeTest;
+import liquibase.action.RenameSequenceAction
+import liquibase.change.StandardChangeTest
 import liquibase.sdk.database.MockDatabase
 import liquibase.statement.SqlStatement
-import liquibase.statement.core.RenameSequenceStatement;
+import liquibase.statement.core.RenameSequenceStatement
 
 /**
  * Tests for {@link RenameSequenceChange}
@@ -12,7 +13,7 @@ public class RenameSequenceChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new RenameSequenceChange()
+        def change = new RenameSequenceAction()
         change.setOldSequenceName("OLD_NAME");
         change.setNewSequenceName("NEW_NAME");
 
@@ -22,7 +23,7 @@ public class RenameSequenceChangeTest extends StandardChangeTest {
 
    def generateStatement() throws Exception {
         when:
-        def RenameSequenceChange change = new RenameSequenceChange();
+        def RenameSequenceAction change = new RenameSequenceAction();
         change.setSchemaName("SCHEMA_NAME");
         change.setOldSequenceName("OLD_NAME");
         change.setNewSequenceName("NEW_NAME");

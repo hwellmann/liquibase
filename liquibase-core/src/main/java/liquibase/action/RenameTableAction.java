@@ -1,14 +1,13 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.RenameTableChange;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
@@ -24,51 +23,45 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="renameTable", description = "Renames an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "table")
 @MetaInfServices(ExecutableChange.class)
-public class RenameTableChange extends AbstractChange {
+public class RenameTableAction extends AbstractAction<RenameTableChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String oldTableName;
-
-    private String newTableName;
-
-    public RenameTableChange() {
+    public RenameTableAction() {
+        super(new RenameTableChange());
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="table.catalog")
+    public RenameTableAction(RenameTableChange change) {
+        super(change);
+    }
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting ="table.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(mustEqualExisting = "table", description = "Name of the table to rename", exampleValue = "person")
     public String getOldTableName() {
-        return oldTableName;
+        return change.getOldTableName();
     }
 
     public void setOldTableName(String oldTableName) {
-        this.oldTableName = oldTableName;
+        change.setOldTableName(oldTableName);
     }
 
-    @DatabaseChangeProperty(description = "New name for the table", exampleValue = "employee")
     public String getNewTableName() {
-        return newTableName;
+        return change.getNewTableName();
     }
 
     public void setNewTableName(String newTableName) {
-        this.newTableName = newTableName;
+        change.setNewTableName(newTableName);
     }
 
     @Override
@@ -106,7 +99,7 @@ public class RenameTableChange extends AbstractChange {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        RenameTableChange inverse = new RenameTableChange();
+        RenameTableAction inverse = new RenameTableAction();
         inverse.setSchemaName(getSchemaName());
         inverse.setOldTableName(getNewTableName());
         inverse.setNewTableName(getOldTableName());
@@ -118,11 +111,6 @@ public class RenameTableChange extends AbstractChange {
 
     @Override
     public String getConfirmationMessage() {
-        return "Table " + oldTableName + " renamed to " + newTableName;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
+        return "Table " + getOldTableName() + " renamed to " + getNewTableName();
     }
 }

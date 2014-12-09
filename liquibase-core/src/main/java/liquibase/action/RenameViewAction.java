@@ -1,11 +1,11 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ChangeStatus;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.RenameViewChange;
 import liquibase.database.Database;
 import liquibase.snapshot.SnapshotGeneratorFactory;
 import liquibase.statement.SqlStatement;
@@ -19,46 +19,49 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="renameView", description = "Renames an existing view", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "view")
 @MetaInfServices(ExecutableChange.class)
-public class RenameViewChange extends AbstractChange {
-    private String catalogName;
-    private String schemaName;
-    private String oldViewName;
-    private String newViewName;
+public class RenameViewAction extends AbstractAction<RenameViewChange> {
 
-    @DatabaseChangeProperty(mustEqualExisting ="view.catalog", since = "3.0")
+    public RenameViewAction() {
+        super(new RenameViewChange());
+    }
+
+    public RenameViewAction(RenameViewChange change) {
+        super(change);
+    }
+
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting ="view.schema")
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
     @DatabaseChangeProperty(mustEqualExisting = "view", description = "Name of the view to rename")
     public String getOldViewName() {
-        return oldViewName;
+        return change.getOldViewName();
     }
 
     public void setOldViewName(String oldViewName) {
-        this.oldViewName = oldViewName;
+        change.setOldViewName(oldViewName);
     }
 
     @DatabaseChangeProperty(description = "Name to rename the view to")
     public String getNewViewName() {
-        return newViewName;
+        return change.getNewViewName();
     }
 
     public void setNewViewName(String newViewName) {
-        this.newViewName = newViewName;
+        change.setNewViewName(newViewName);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class RenameViewChange extends AbstractChange {
 
     @Override
     protected ExecutableChange[] createInverses() {
-        RenameViewChange inverse = new RenameViewChange();
+        RenameViewAction inverse = new RenameViewAction();
         inverse.setOldViewName(getNewViewName());
         inverse.setNewViewName(getOldViewName());
 
@@ -101,11 +104,6 @@ public class RenameViewChange extends AbstractChange {
 
     @Override
     public String getConfirmationMessage() {
-        return "View " + oldViewName + " renamed to " + newViewName;
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
+        return "View " + getOldViewName() + " renamed to " + getNewViewName();
     }
 }
