@@ -1,17 +1,15 @@
 package liquibase.sql.visitor;
 
+import java.util.Set;
+
 import liquibase.ContextExpression;
-import liquibase.Contexts;
 import liquibase.Labels;
 import liquibase.change.CheckSum;
-import liquibase.database.Database;
 import liquibase.serializer.LiquibaseSerializable;
-
-import java.util.Set;
 
 public interface SqlVisitor extends LiquibaseSerializable {
 
-    String modifySql(String sql, Database database);
+    String modifySql(String sql);
 
     String getName();
 

@@ -1,6 +1,5 @@
 package liquibase.sql.visitor;
 
-import liquibase.database.Database;
 
 public class RegExpReplaceSqlVisitor extends AbstractSqlVisitor {
 
@@ -29,7 +28,7 @@ public class RegExpReplaceSqlVisitor extends AbstractSqlVisitor {
     }
 
     @Override
-    public String modifySql(String sql, Database database) {
+    public String modifySql(String sql) {
         return sql.replaceAll(getReplace(), getWith());
     }
 

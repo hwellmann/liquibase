@@ -1,16 +1,13 @@
 package liquibase.executor;
 
+import java.util.List;
+
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
-import liquibase.exception.StatementNotSupportedOnDatabaseException;
 import liquibase.sql.Sql;
 import liquibase.sql.visitor.SqlVisitor;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.SqlStatement;
-import liquibase.util.StringUtils;
-
-import java.util.List;
-import java.util.Set;
 
 public abstract class AbstractExecutor {
     protected Database database;
@@ -33,7 +30,7 @@ public abstract class AbstractExecutor {
             returnSql[i] = sql[i].toSql();
             if (sqlVisitors != null) {
                 for (SqlVisitor visitor : sqlVisitors) {
-                    returnSql[i] = visitor.modifySql(returnSql[i], database);
+                    returnSql[i] = visitor.modifySql(returnSql[i]);
                 }
             }
 

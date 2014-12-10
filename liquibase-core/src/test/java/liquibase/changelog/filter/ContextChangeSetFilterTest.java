@@ -1,11 +1,12 @@
 package liquibase.changelog.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import liquibase.ContextExpression;
 import liquibase.Contexts;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
-import static org.junit.Assert.*;
-import liquibase.database.Database;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.sql.visitor.AbstractSqlVisitor;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ContextChangeSetFilterTest {
         }
 
         @Override
-        public String modifySql(String sql, Database database) {
+        public String modifySql(String sql) {
             throw new UnsupportedOperationException("modifySql has not been implemented");
         }
 
@@ -65,7 +66,7 @@ public class ContextChangeSetFilterTest {
       assertTrue(filter.accepts(new ExecutableChangeSetImpl(null, null, false, false, null, "test1, test2", null, null)).isAccepted());
       assertTrue(filter.accepts(new ExecutableChangeSetImpl(null, null, false, false, null, null, null, null)).isAccepted());
     }
-    
+
     @Test
     public void nullListContexts() {
         ContextChangeSetFilter filter = new ContextChangeSetFilter();
