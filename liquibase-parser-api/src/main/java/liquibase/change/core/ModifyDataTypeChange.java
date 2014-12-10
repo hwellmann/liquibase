@@ -1,47 +1,22 @@
 package liquibase.change.core;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
-import liquibase.database.core.DB2Database;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.ModifyDataTypeStatement;
-import liquibase.statement.core.ReorganizeTableStatement;
 
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="modifyDataType", description = "Modify data type", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@MetaInfServices(ExecutableChange.class)
-public class ModifyDataTypeChange extends AbstractChange {
+@MetaInfServices(Change.class)
+public class ModifyDataTypeChange extends BaseChange {
 
     private String catalogName;
     private String schemaName;
     private String tableName;
     private String columnName;
     private String newDataType;
-
-    @Override
-    public String getConfirmationMessage() {
-        return tableName+"."+columnName+" datatype was changed to "+newDataType;
-    }
-
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        ModifyDataTypeStatement modifyDataTypeStatement = new ModifyDataTypeStatement(getCatalogName(), getSchemaName(), getTableName(), getColumnName(), getNewDataType());
-        if (database instanceof DB2Database) {
-            return new SqlStatement[] {
-                    modifyDataTypeStatement,
-                    new ReorganizeTableStatement(getCatalogName(), getSchemaName(), getTableName())
-            };
-        } else {
-            return new SqlStatement[] {
-                    modifyDataTypeStatement
-            };
-        }
-    }
 
     @DatabaseChangeProperty(mustEqualExisting ="column.relation.catalog", since = "3.0")
     public String getCatalogName() {

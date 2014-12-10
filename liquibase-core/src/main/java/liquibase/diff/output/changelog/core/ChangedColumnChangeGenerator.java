@@ -9,8 +9,8 @@ import liquibase.action.AddDefaultValueAction;
 import liquibase.action.AddNotNullConstraintAction;
 import liquibase.action.DropDefaultValueAction;
 import liquibase.action.DropNotNullConstraintAction;
+import liquibase.action.ModifyDataTypeAction;
 import liquibase.change.ExecutableChange;
-import liquibase.change.core.ModifyDataTypeChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.datatype.LiquibaseDataType;
@@ -134,19 +134,19 @@ public class ChangedColumnChangeGenerator implements ChangedObjectChangeGenerato
     protected void handleTypeDifferences(Column column, ObjectDifferences differences, DiffOutputControl control, List<ExecutableChange> changes, Database referenceDatabase, Database comparisonDatabase) {
         Difference typeDifference = differences.getDifference("type");
         if (typeDifference != null) {
-            ModifyDataTypeChange change = new ModifyDataTypeChange();
+            ModifyDataTypeAction action = new ModifyDataTypeAction();
             if (control.getIncludeCatalog()) {
-                change.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
+                action.setCatalogName(column.getRelation().getSchema().getCatalog().getName());
             }
             if (control.getIncludeSchema()) {
-                change.setSchemaName(column.getRelation().getSchema().getName());
+                action.setSchemaName(column.getRelation().getSchema().getName());
             }
-            change.setTableName(column.getRelation().getName());
-            change.setColumnName(column.getName());
+            action.setTableName(column.getRelation().getName());
+            action.setColumnName(column.getName());
             DataType referenceType = (DataType) typeDifference.getReferenceValue();
-            change.setNewDataType(DataTypeFactory.getInstance().from(referenceType, comparisonDatabase).toString());
+            action.setNewDataType(DataTypeFactory.getInstance().from(referenceType, comparisonDatabase).toString());
 
-            changes.add(change);
+            changes.add(action);
         }
     }
 

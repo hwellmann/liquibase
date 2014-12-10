@@ -1,18 +1,17 @@
-package liquibase.change.core;
+package liquibase.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import liquibase.action.AddColumnAction;
-import liquibase.action.DropColumnAction;
-import liquibase.change.AbstractChange;
 import liquibase.change.AddColumnConfig;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.ColumnConfig;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.change.ExecutableChange;
+import liquibase.change.core.DropColumnChange;
+import liquibase.change.core.MergeColumnChange;
 import liquibase.database.Database;
 import liquibase.database.core.DerbyDatabase;
 import liquibase.database.core.SQLiteDatabase;
@@ -29,16 +28,15 @@ import org.kohsuke.MetaInfServices;
  */
 @DatabaseChange(name="mergeColumns", description = "Concatenates the values in two columns, joins them by with string, and stores the resulting value in a new column.", priority = ChangeMetaData.PRIORITY_DEFAULT)
 @MetaInfServices(ExecutableChange.class)
-public class MergeColumnChange extends AbstractChange {
+public class MergeColumnAction extends AbstractAction<MergeColumnChange> {
 
-    private String catalogName;
-    private String schemaName;
-    private String tableName;
-    private String column1Name;
-    private String joinString;
-    private String column2Name;
-    private String finalColumnName;
-    private String finalColumnType;
+    public MergeColumnAction() {
+        super(new MergeColumnChange());
+    }
+
+    public MergeColumnAction(MergeColumnChange change) {
+        super(change);
+    }
 
     @Override
     public boolean supports(Database database) {
@@ -46,73 +44,71 @@ public class MergeColumnChange extends AbstractChange {
     }
 
     public String getCatalogName() {
-        return catalogName;
+        return change.getCatalogName();
     }
 
     public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+        change.setCatalogName(catalogName);
     }
 
     public String getSchemaName() {
-        return schemaName;
+        return change.getSchemaName();
     }
 
     public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        change.setSchemaName(schemaName);
     }
 
-    @DatabaseChangeProperty(description = "Name of the table containing the columns to join")
     public String getTableName() {
-        return tableName;
+        return change.getTableName();
     }
 
     public void setTableName(String tableName) {
-        this.tableName = tableName;
+        change.setTableName(tableName);
     }
 
-    @DatabaseChangeProperty(description = "Name of the column containing the first half of the data", exampleValue = "first_name")
     public String getColumn1Name() {
-        return column1Name;
+        return change.getColumn1Name();
     }
 
     public void setColumn1Name(String column1Name) {
-        this.column1Name = column1Name;
+        change.setColumn1Name(column1Name);
     }
 
     @DatabaseChangeProperty(description = "String to place include between the values from column1 and column2 (may be empty)", exampleValue = " ")
     public String getJoinString() {
-        return joinString;
+        return change.getJoinString();
     }
 
     public void setJoinString(String joinString) {
-        this.joinString = joinString;
+        change.setJoinString(joinString);
     }
 
     @DatabaseChangeProperty(description = "Name of the column containing the second half of the data", exampleValue = "last_name")
     public String getColumn2Name() {
-        return column2Name;
+        return change.getColumn2Name();
     }
 
     public void setColumn2Name(String column2Name) {
-        this.column2Name = column2Name;
+        change.setColumn2Name(column2Name);
     }
 
     @DatabaseChangeProperty(description = "Name of the column to create", exampleValue = "full_name")
     public String getFinalColumnName() {
-        return finalColumnName;
+        return change.getFinalColumnName();
     }
 
     public void setFinalColumnName(String finalColumnName) {
-        this.finalColumnName = finalColumnName;
+        change.setFinalColumnName(finalColumnName);
     }
 
     @DatabaseChangeProperty(description = "Data type of the column to create", exampleValue = "varchar(255)")
     public String getFinalColumnType() {
-        return finalColumnType;
+        return change.getFinalColumnType();
     }
 
     public void setFinalColumnType(String finalColumnType) {
-        this.finalColumnType = finalColumnType;
+        change.setFinalColumnType(finalColumnType);
     }
 
     @Override
@@ -128,7 +124,7 @@ public class MergeColumnChange extends AbstractChange {
         List<SqlStatement> statements = new ArrayList<SqlStatement>();
 
         AddColumnAction addNewColumnAction = new AddColumnAction();
-        addNewColumnAction.setSchemaName(schemaName);
+        addNewColumnAction.setSchemaName(getSchemaName());
         addNewColumnAction.setTableName(getTableName());
         AddColumnConfig columnConfig = new AddColumnConfig();
         columnConfig.setName(getFinalColumnName());
@@ -190,14 +186,14 @@ public class MergeColumnChange extends AbstractChange {
 
 	        DropColumnAction dropColumn1Action = new DropColumnAction();
 	        DropColumnChange dropColumn1Change = dropColumn1Action.getChange();
-	        dropColumn1Change.setSchemaName(schemaName);
+	        dropColumn1Change.setSchemaName(getSchemaName());
 	        dropColumn1Change.setTableName(getTableName());
 	        dropColumn1Change.setColumnName(getColumn1Name());
 	        statements.addAll(Arrays.asList(dropColumn1Action.generateStatements(database)));
 
 	        DropColumnAction dropColumn2Action = new DropColumnAction();
                 DropColumnChange dropColumn2Change = dropColumn2Action.getChange();
-	        dropColumn2Change.setSchemaName(schemaName);
+	        dropColumn2Change.setSchemaName(getSchemaName());
 	        dropColumn2Change.setTableName(getTableName());
 	        dropColumn2Change.setColumnName(getColumn2Name());
 	        statements.addAll(Arrays.asList(dropColumn2Action.generateStatements(database)));
@@ -210,10 +206,5 @@ public class MergeColumnChange extends AbstractChange {
     @Override
     public String getConfirmationMessage() {
         return "Columns "+getTableName()+"."+getColumn1Name()+" and "+getTableName()+"."+getColumn2Name()+" merged";
-    }
-
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
     }
 }
