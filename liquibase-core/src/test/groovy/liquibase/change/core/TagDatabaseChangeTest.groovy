@@ -1,9 +1,10 @@
 package liquibase.change.core
 
-import liquibase.change.ChangeStatus;
+import liquibase.action.TagDatabaseAction
+import liquibase.change.ChangeStatus
 import liquibase.change.StandardChangeTest
 import liquibase.changelog.ChangeLogHistoryService
-import liquibase.changelog.ChangeLogHistoryServiceFactory;
+import liquibase.changelog.ChangeLogHistoryServiceFactory
 import liquibase.sdk.database.MockDatabase
 import spock.lang.Unroll
 
@@ -15,7 +16,7 @@ public class TagDatabaseChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new TagDatabaseChange()
+        def change = new TagDatabaseAction()
         change.setTag("TAG_NAME");
 
         then:
@@ -25,7 +26,7 @@ public class TagDatabaseChangeTest extends StandardChangeTest {
     @Unroll
     def "checkStatus"() {
         when:
-        def change = new TagDatabaseChange()
+        def change = new TagDatabaseAction()
         change.setTag("test_tag")
 
         def database = new MockDatabase()

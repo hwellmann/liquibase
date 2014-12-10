@@ -581,7 +581,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
 
         and: "stop change parsed correctly"
-        ((StopChange) changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"
+        (changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"
 
         and: "large numbers are parsed correctly"
         (changeLog.getChangeSet(path, "nvoxland", "large number").changes[0]).maxValue.toString() ==  "9999999999999999999999999999"

@@ -10,7 +10,6 @@ import liquibase.change.Change
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.AddColumnChange
-import liquibase.change.core.StopChange
 import liquibase.change.custom.CustomChangeWrapper
 import liquibase.change.custom.ExampleCustomSqlChange
 import liquibase.changelog.ChangeLogParametersImpl
@@ -561,7 +560,7 @@ public class YamlChangeLogParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "view creation").changes[0]).selectQuery == "select * from test_table"
 
         and: "stop change parsed correctly"
-        ((StopChange) changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"
+        (changeLog.getChangeSet(path, "nvoxland", "stop change").changes[0]).message == "Stop message!"
     }
 
 
