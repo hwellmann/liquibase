@@ -22,7 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.configuration.GlobalConfiguration;
 import liquibase.configuration.LiquibaseConfiguration;
 import liquibase.database.Database;
@@ -207,7 +207,7 @@ public class DiffToChangeLog {
 
     private void addToChangeSets(ExecutableChange[] changes, List<ChangeSet> changeSets, ObjectQuotingStrategy quotingStrategy) {
         if (changes != null) {
-            ExecutableChangeSetImpl changeSet = new ExecutableChangeSetImpl(generateId(), getChangeSetAuthor(), false, false, null, changeSetContext,
+            ChangeSetImpl changeSet = new ChangeSetImpl(generateId(), getChangeSetAuthor(), false, false, null, changeSetContext,
                     null, false, quotingStrategy, null);
             for (ExecutableChange change : changes) {
                 changeSet.addChange(change);

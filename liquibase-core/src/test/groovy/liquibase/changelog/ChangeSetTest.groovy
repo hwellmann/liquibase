@@ -3,7 +3,6 @@ package liquibase.changelog
 import static org.junit.Assert.assertTrue
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.action.CreateTableAction
-import liquibase.action.EmptyAction
 import liquibase.action.InsertDataAction
 import liquibase.change.CheckSum
 import liquibase.change.core.*
@@ -27,7 +26,7 @@ public class ChangeSetTest extends Specification {
     def getDescriptions() {
         when:
         def insertDescription = "insert";
-        def changeSet = new ExecutableChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
+        def changeSet = new ChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
         then:
         changeSet.getDescription() == "Empty"
 
@@ -49,8 +48,8 @@ public class ChangeSetTest extends Specification {
 
     def generateCheckSum() {
         when:
-        def changeSet1 = new ExecutableChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
-        def changeSet2 = new ExecutableChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
+        def changeSet1 = new ChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
+        def changeSet2 = new ChangeSetImpl("testId", "testAuthor", false, false, null, null, null, null);
 
         def change = new AddDefaultValueChange();
         change.setSchemaName("SCHEMA_NAME");
@@ -75,7 +74,7 @@ public class ChangeSetTest extends Specification {
 
     def isCheckSumValid_validCheckSum() {
         when:
-        def changeSet = new ExecutableChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
+        def changeSet = new ChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
 
         then:
         assertTrue(changeSet.isCheckSumValid(changeSet.generateCheckSum()));
@@ -84,7 +83,7 @@ public class ChangeSetTest extends Specification {
     def isCheckSumValid_invalidCheckSum() {
         when:
         def checkSum = CheckSum.parse("2:asdf");
-        def changeSet = new ExecutableChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
+        def changeSet = new ChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
 
         then:
         assert !changeSet.isCheckSumValid(checkSum)
@@ -94,7 +93,7 @@ public class ChangeSetTest extends Specification {
         when:
         CheckSum checkSum = CheckSum.parse("2:asdf");
 
-        ChangeSet changeSet = new ExecutableChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
+        ChangeSet changeSet = new ChangeSetImpl("1", "2", false, false, "/test.xml", null, null, null);
         changeSet.addValidCheckSum(changeSet.generateCheckSum().toString());
 
         then:
@@ -103,7 +102,7 @@ public class ChangeSetTest extends Specification {
 
     def "load empty node"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet").addChildren([id: "1", author: "nvoxland"])
         try {
             changeSet.load(node, resourceSupplier.simpleResourceAccessor)
@@ -118,9 +117,9 @@ public class ChangeSetTest extends Specification {
 
     def "load node with changeSet properties"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
-        def fields = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl()).getSerializableFields()
+        def fields = new ChangeSetImpl(new DatabaseChangeLogImpl()).getSerializableFields()
         def testValue = new HashMap()
         for (param in fields) {
             if (param in ["runAlways", "runOnChange", "failOnError"]) {
@@ -157,7 +156,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with changes as direct children"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChildren([id: "1", author: "nvoxland"])
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
@@ -178,7 +177,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with rollback containing sql as value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
                 .setValue(new ParsedNode(null, "rollback").setValue("rollback logic here"))
@@ -196,7 +195,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with rollback containing change node as value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
                 .setValue(new ParsedNode(null, "rollback").setValue(new ParsedNode(null, "renameTable").addChild(null, "newTableName", "rename_to_x")))
@@ -214,7 +213,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with rollback containing collection of change nodes as value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
                 .setValue([
@@ -236,7 +235,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with rollback containing rollback nodes as children"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
                 .addChild(new ParsedNode(null, "rollback").setValue(new ParsedNode(null, "renameTable").addChild(null, "newTableName", "rename_to_a")))
@@ -259,7 +258,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with rollback containing multiple sql statements in value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"))
                 .addChild(new ParsedNode(null, "rollback").setValue("\n--a comment here\nrollback sql 1;\nrollback sql 2\n--final comment"))
@@ -279,7 +278,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with valid checksums as children"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChild(null, "validCheckSum", "c2b7b29ce3a75940893cd022501852e2")
                 .addChild(null, "validCheckSum", "8:d54da29ce3a75940858cd093501158b8")
@@ -297,7 +296,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with valid checksums in value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet").setValue([
                 new ParsedNode(null, "validCheckSum").setValue("c2b7b29ce3a75940893cd022501852e2"),
                 new ParsedNode(null, "validCheckSum").setValue("8:d54da29ce3a75940858cd093501158b8")
@@ -316,7 +315,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with preconditions as child"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").addChildren([preConditions: [
                     [runningAs: [username: "my_user"]],
@@ -334,7 +333,7 @@ public class ChangeSetTest extends Specification {
 
     def "load node with preconditions as value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").setValue(new liquibase.parser.core.ParsedNode(null, "preConditions").setValue([
                     [runningAs: [username: "my_user"]],
@@ -352,7 +351,7 @@ public class ChangeSetTest extends Specification {
 
     def "load with modifySql as value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").setValue([
                     new liquibase.parser.core.ParsedNode(null, "modifySql").addChildren([applyToRollback: "true", replace: [replace: "a", with: "b"]]),
@@ -386,7 +385,7 @@ public class ChangeSetTest extends Specification {
 
     def "load with empty rollback creates an EmptyChange"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").addChild(new liquibase.parser.core.ParsedNode(null, "rollback")), resourceSupplier.simpleResourceAccessor)
         } catch (ParsedNodeException e) {
@@ -396,7 +395,7 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 0
         changeSet.rollBackChanges.size() == 1
-        changeSet.rollBackChanges[0] instanceof EmptyAction
+        changeSet.rollBackChanges[0] instanceof EmptyChange
     }
 
     @Unroll("#featureName with changeSetPath=#changeSetPath")
@@ -422,7 +421,7 @@ public class ChangeSetTest extends Specification {
 
     def "load with changes in 'changes' node is parsed correctly"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         def node = new ParsedNode(null, "changeSet")
                 .addChildren([id: "1", author: "nvoxland", changes: [
                 new ParsedNode(null, "createTable").addChild(null, "tableName", "table_1"),
@@ -444,7 +443,7 @@ public class ChangeSetTest extends Specification {
     @Unroll("#featureName: #param=#value")
     def "load handles alwaysRun or runAlways"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").addChild(null, param, value), resourceSupplier.simpleResourceAccessor)
         } catch (ParsedNodeException e) {
@@ -465,7 +464,7 @@ public class ChangeSetTest extends Specification {
     @Unroll
     def "load handles validCheckSum(s) as a collection or a single value"() {
         when:
-        def changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
+        def changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl("com/example/test.xml"))
         try {
             changeSet.load(new liquibase.parser.core.ParsedNode(null, "changeSet").addChild(null, param, value), resourceSupplier.simpleResourceAccessor)
         } catch (ParsedNodeException e) {

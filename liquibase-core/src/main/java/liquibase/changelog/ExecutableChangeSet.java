@@ -1,7 +1,5 @@
 package liquibase.changelog;
 
-import java.util.List;
-
 import liquibase.changelog.visitor.ChangeExecListener;
 import liquibase.database.Database;
 import liquibase.exception.MigrationFailedException;
@@ -10,7 +8,6 @@ import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.resource.ResourceAccessor;
 import liquibase.serializer.LiquibaseSerializable;
-import liquibase.sql.visitor.SqlVisitor;
 
 public interface ExecutableChangeSet extends LiquibaseSerializable, ChangeSet {
 
@@ -34,12 +31,6 @@ public interface ExecutableChangeSet extends LiquibaseSerializable, ChangeSet {
         Database database) throws MigrationFailedException;
 
     void rollback(Database database) throws RollbackFailedException;
-
-    String toString(boolean includeMD5Sum);
-
-    void addSqlVisitor(SqlVisitor sqlVisitor);
-
-    List<SqlVisitor> getSqlVisitors();
 
     boolean supportsRollback(Database database);
 

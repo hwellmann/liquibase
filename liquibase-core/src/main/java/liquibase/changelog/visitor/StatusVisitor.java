@@ -9,7 +9,7 @@ import java.util.Set;
 
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
@@ -90,7 +90,7 @@ public class StatusVisitor implements ChangeSetVisitor, SkippedChangeSetVisitor 
     public List<ChangeSetStatus> getStatuses() {
         ArrayList<ChangeSetStatus> returnList = new ArrayList<ChangeSetStatus>();
         for (RanChangeSet changeSet : ranChangeSets) {
-            ChangeSetStatus status = new ChangeSetStatus(new ExecutableChangeSetImpl(changeSet.getId(), changeSet.getAuthor(), false, false, changeSet.getChangeLog(), null, null, null));
+            ChangeSetStatus status = new ChangeSetStatus(new ChangeSetImpl(changeSet.getId(), changeSet.getAuthor(), false, false, changeSet.getChangeLog(), null, null, null));
             status.setPreviouslyRan(true);
             status.setDateLastExecuted(changeSet.getDateExecuted());
             status.setStoredCheckSum(changeSet.getLastCheckSum());

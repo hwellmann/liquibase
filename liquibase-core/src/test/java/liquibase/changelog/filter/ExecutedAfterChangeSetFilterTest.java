@@ -1,13 +1,16 @@
 package liquibase.changelog.filter;
 
-import liquibase.change.CheckSum;
-import liquibase.changelog.ExecutableChangeSetImpl;
-import liquibase.changelog.RanChangeSet;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import liquibase.change.CheckSum;
+import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.RanChangeSet;
+
+import org.junit.Test;
 
 public class ExecutedAfterChangeSetFilterTest {
 

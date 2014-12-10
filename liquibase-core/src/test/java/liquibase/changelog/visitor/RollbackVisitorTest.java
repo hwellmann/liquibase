@@ -1,10 +1,13 @@
 package liquibase.changelog.visitor;
 
-import liquibase.changelog.ExecutableChangeSetImpl;
-import liquibase.changelog.DatabaseChangeLogImpl;
-import liquibase.database.Database;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.database.Database;
+
 import org.junit.Test;
 
 public class RollbackVisitorTest {
@@ -12,7 +15,7 @@ public class RollbackVisitorTest {
     public void visit() throws Exception {
         Database database = createMock(Database.class);
 
-        ExecutableChangeSetImpl changeSet = createMock(ExecutableChangeSetImpl.class);
+        ExecutableChangeSet changeSet = createMock(ExecutableChangeSet.class);
         changeSet.rollback(database);
         expectLastCall();
 

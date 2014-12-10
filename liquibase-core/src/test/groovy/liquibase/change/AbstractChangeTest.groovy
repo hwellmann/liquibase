@@ -1,23 +1,23 @@
 package liquibase.change
 
-import liquibase.changelog.ChangeSet
-import liquibase.changelog.ExecutableChangeSetImpl
-import liquibase.changelog.DatabaseChangeLog
-import liquibase.changelog.DatabaseChangeLogImpl
-import liquibase.database.Database
-import liquibase.database.core.MSSQLDatabase
-import liquibase.sdk.database.MockDatabase
-import liquibase.exception.RollbackImpossibleException
-import liquibase.exception.UnexpectedLiquibaseException
-import liquibase.exception.ValidationErrors
-import liquibase.serializer.LiquibaseSerializable
-import liquibase.statement.SqlStatement
-import org.junit.Test
-import spock.lang.Specification
-
 import static junit.framework.Assert.assertSame
 import static junit.framework.Assert.assertTrue
 import static liquibase.test.Assert.assertArraysEqual
+import liquibase.changelog.ChangeSet
+import liquibase.changelog.DatabaseChangeLogImpl
+import liquibase.changelog.ExecutableChangeSetImpl
+import liquibase.database.Database
+import liquibase.database.core.MSSQLDatabase
+import liquibase.exception.RollbackImpossibleException
+import liquibase.exception.UnexpectedLiquibaseException
+import liquibase.exception.ValidationErrors
+import liquibase.sdk.database.MockDatabase
+import liquibase.serializer.LiquibaseSerializable
+import liquibase.statement.SqlStatement
+
+import org.junit.Test
+
+import spock.lang.Specification
 
 public class AbstractChangeTest extends Specification {
 
@@ -50,7 +50,7 @@ public class AbstractChangeTest extends Specification {
         ExampleAbstractChange change = new ExampleAbstractChange();
         ChangeMetaData changeMetaData = change.createChangeMetaData();
         Map<String, ChangeParameterMetaData> parameters = changeMetaData.getParameters();
-        
+
         then:
         changeMetaData.getName() == "exampleAbstractChange"
         changeMetaData.getDescription() == "Used for the AbstractChangeTest unit test"
@@ -66,7 +66,7 @@ public class AbstractChangeTest extends Specification {
         ChangeParameterMetaData paramNoWriteMethodMetaData = parameters.get("paramNoWriteMethod");
         ChangeParameterService paramOneAnalyzer = new ChangeParameterService(paramOneMetaData);
         ChangeParameterService paramTwoAnalyzer = new ChangeParameterService(paramTwoMetaData);
-        
+
         dbmsMetaData == null
         paramOneMetaData != null
         paramOneMetaData.getParameterName() == "paramOne"
@@ -94,7 +94,7 @@ public class AbstractChangeTest extends Specification {
         ExampleParamlessAbstractChange change = new ExampleParamlessAbstractChange();
         ChangeMetaData changeMetaData = change.createChangeMetaData();
         Map<String, ChangeParameterMetaData> parameters = changeMetaData.getParameters();
-        
+
         then:
         parameters.size() == 0
     }

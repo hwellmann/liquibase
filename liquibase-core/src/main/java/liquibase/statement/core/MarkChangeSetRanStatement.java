@@ -1,6 +1,6 @@
 package liquibase.statement.core;
 
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.ChangeSet;
 import liquibase.statement.AbstractSqlStatement;
 
@@ -8,9 +8,9 @@ public class MarkChangeSetRanStatement extends AbstractSqlStatement {
 
     private ChangeSet changeSet;
 
-    private ExecutableChangeSetImpl.ExecType execType;
+    private ChangeSetImpl.ExecType execType;
 
-    public MarkChangeSetRanStatement(ChangeSet changeSet, ExecutableChangeSetImpl.ExecType execType) {
+    public MarkChangeSetRanStatement(ChangeSet changeSet, ChangeSetImpl.ExecType execType) {
         this.changeSet = changeSet;
         this.execType = execType;
     }
@@ -19,7 +19,7 @@ public class MarkChangeSetRanStatement extends AbstractSqlStatement {
         return changeSet;
     }
 
-    public ExecutableChangeSetImpl.ExecType getExecType() {
+    public ChangeSetImpl.ExecType getExecType() {
         return execType;
     }
 }

@@ -5,10 +5,9 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.database.Database;
 import liquibase.database.ObjectQuotingStrategy;
 
@@ -23,7 +22,7 @@ public class UpdateVisitorTest {
 
         ChangeExecListener listener = createMock(ChangeExecListener.class);
 
-        ExecutableChangeSetImpl changeSet = createMock(ExecutableChangeSetImpl.class);
+        ExecutableChangeSet changeSet = createMock(ExecutableChangeSet.class);
         DatabaseChangeLog databaseChangeLog = new DatabaseChangeLogImpl("test.xml");
         expect(changeSet.execute(databaseChangeLog, listener, database)).andReturn(ExecutableChangeSet.ExecType.EXECUTED);
 

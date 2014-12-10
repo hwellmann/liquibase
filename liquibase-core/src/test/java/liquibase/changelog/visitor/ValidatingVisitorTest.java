@@ -9,8 +9,8 @@ import java.util.List;
 
 import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.SetupException;

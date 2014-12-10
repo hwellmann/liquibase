@@ -11,6 +11,7 @@ import liquibase.database.ObjectQuotingStrategy;
 import liquibase.parser.core.ParsedNode;
 import liquibase.precondition.core.PreconditionContainer;
 import liquibase.serializer.LiquibaseSerializable;
+import liquibase.sql.visitor.SqlVisitor;
 
 public interface ChangeSet extends LiquibaseSerializable {
 
@@ -149,5 +150,12 @@ public interface ChangeSet extends LiquibaseSerializable {
 
     @Override
     String getSerializableFieldNamespace(String field);
+
+    public String toString(boolean includeMD5Sum);
+
+    void addSqlVisitor(SqlVisitor sqlVisitor);
+
+    List<SqlVisitor> getSqlVisitors();
+
 
 }

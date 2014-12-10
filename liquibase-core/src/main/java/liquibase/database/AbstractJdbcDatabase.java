@@ -15,12 +15,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import liquibase.CatalogAndSchema;
-import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
+import liquibase.change.ExecutableChange;
 import liquibase.change.core.DropTableChange;
 import liquibase.changelog.ChangeLogHistoryServiceFactory;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
@@ -1093,7 +1093,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      * Returns the run status for the given ChangeSet
      */
     @Override
-    public ExecutableChangeSetImpl.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ExecutableChangeSet.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return ChangeLogHistoryServiceFactory.getInstance().getChangeLogService(this).getRunStatus(changeSet);
     }
 
@@ -1120,7 +1120,7 @@ public abstract class AbstractJdbcDatabase implements Database {
      * with the information.
      */
     @Override
-    public void markChangeSetExecStatus(final ChangeSet changeSet, final ExecutableChangeSetImpl.ExecType execType) throws DatabaseException {
+    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSetImpl.ExecType execType) throws DatabaseException {
         ChangeLogHistoryServiceFactory.getInstance().getChangeLogService(this).setExecType(changeSet, execType);
     }
 

@@ -281,7 +281,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
     }
 
     @Override
-    public void setExecType(ChangeSet changeSet, ExecutableChangeSetImpl.ExecType execType) throws DatabaseException {
+    public void setExecType(ChangeSet changeSet, ChangeSetImpl.ExecType execType) throws DatabaseException {
         Database database = getDatabase();
 
         ExecutorService.getInstance().getExecutor(database).execute(new MarkChangeSetRanStatement(changeSet, execType));
@@ -326,7 +326,7 @@ public class StandardChangeLogHistoryService extends AbstractChangeLogHistorySer
         try {
             int totalRows = ExecutorService.getInstance().getExecutor(database).queryForInt(new SelectFromDatabaseChangeLogStatement(new ColumnConfig().setName("COUNT(*)", true)));
             if (totalRows == 0) {
-                ChangeSet emptyChangeSet = new ExecutableChangeSetImpl(String.valueOf(new Date().getTime()), "liquibase", false, false, "liquibase-internal", null, null, getDatabase().getObjectQuotingStrategy(), null);
+                ChangeSet emptyChangeSet = new ChangeSetImpl(String.valueOf(new Date().getTime()), "liquibase", false, false, "liquibase-internal", null, null, getDatabase().getObjectQuotingStrategy(), null);
                 this.setExecType(emptyChangeSet, ExecutableChangeSet.ExecType.EXECUTED);
             }
 

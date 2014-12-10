@@ -4,56 +4,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
-import liquibase.action.EmptyAction;
-import liquibase.action.RawSQLAction;
 import liquibase.change.Change;
+import liquibase.change.ChangeFactory;
 import liquibase.change.CheckSum;
-import liquibase.change.DbmsTargetedChange;
-import liquibase.change.ExecutableChange;
-import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.core.EmptyChange;
-import liquibase.changelog.visitor.ChangeExecListener;
-import liquibase.database.Database;
-import liquibase.database.DatabaseList;
+import liquibase.change.core.RawSQLChange;
 import liquibase.database.ObjectQuotingStrategy;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.MigrationFailedException;
-import liquibase.exception.PreconditionErrorException;
-import liquibase.exception.PreconditionFailedException;
-import liquibase.exception.RollbackFailedException;
-import liquibase.exception.SetupException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.executor.Executor;
-import liquibase.executor.ExecutorService;
 import liquibase.logging.LogFactory;
 import liquibase.logging.Logger;
 import liquibase.parser.core.ParsedNode;
 import liquibase.parser.core.ParsedNodeException;
 import liquibase.precondition.Conditional;
-import liquibase.precondition.ErrorPrecondition;
-import liquibase.precondition.FailedPrecondition;
 import liquibase.precondition.core.PreconditionContainer;
-import liquibase.precondition.core.PreconditionService;
 import liquibase.resource.ResourceAccessor;
-import liquibase.serializer.LiquibaseSerializable;
 import liquibase.sql.visitor.SqlVisitor;
 import liquibase.sql.visitor.SqlVisitorFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.util.StreamUtil;
 import liquibase.util.StringUtils;
 
 /**
  * Encapsulates a changeSet and all its associated changes.
  */
-public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializable, ExecutableChangeSet {
+public class ChangeSetImpl implements Conditional, ChangeSet {
 
     private ChangeLogParameters changeLogParameters;
 
@@ -171,25 +149,25 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
         return runOnChange;
     }
 
-    public ExecutableChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
+    public ChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
         this.changes = new ArrayList<Change>();
         log = LogFactory.getLogger();
         this.changeLog = databaseChangeLog;
     }
 
-    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, DatabaseChangeLog databaseChangeLog) {
+    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, true, ObjectQuotingStrategy.LEGACY, databaseChangeLog);
     }
 
-    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, boolean runInTransaction, DatabaseChangeLog databaseChangeLog) {
+    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, boolean runInTransaction, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, runInTransaction, ObjectQuotingStrategy.LEGACY, databaseChangeLog);
     }
 
-    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
+    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, true, quotingStrategy, databaseChangeLog);
     }
 
-    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList,
+    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList,
                      boolean runInTransaction, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
         this(databaseChangeLog);
         this.id = id;
@@ -388,7 +366,7 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
                 if (finalValue != null) {
                     String[] strings = StringUtils.processMutliLineSQL(finalValue, true, true, ";");
                     for (String string : strings) {
-                        addRollbackChange(new RawSQLAction(string));
+                        addRollbackChange(new RawSQLChange(string));
                         foundValue = true;
                     }
                 }
@@ -397,12 +375,12 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
             }
         }
         if (!foundValue) {
-            addRollbackChange(new EmptyAction());
+            addRollbackChange(new EmptyChange());
         }
     }
 
-    protected ExecutableChange toChange(ParsedNode value, ResourceAccessor resourceAccessor) throws ParsedNodeException {
-        ExecutableChange change = ExecutableChangeFactory.getInstance().create(value.getName());
+    protected Change toChange(ParsedNode value, ResourceAccessor resourceAccessor) throws ParsedNodeException {
+        Change change = ChangeFactory.getInstance().create(value.getName());
         if (change == null) {
             return null;
         } else {
@@ -423,251 +401,6 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
         throw new RuntimeException("TODO");
     }
 
-
-    /* (non-Javadoc)
-     * @see liquibase.changelog.IChangeSet#execute(liquibase.changelog.DatabaseChangeLog, liquibase.database.Database)
-     */
-    @Override
-    public ExecType execute(DatabaseChangeLog databaseChangeLog, Database database) throws MigrationFailedException {
-        return execute(databaseChangeLog, null, database);
-    }
-    /* (non-Javadoc)
-     * @see liquibase.changelog.IChangeSet#execute(liquibase.changelog.DatabaseChangeLog, liquibase.changelog.visitor.ChangeExecListener, liquibase.database.Database)
-     */
-    @Override
-    public ExecType execute(DatabaseChangeLog databaseChangeLog, ChangeExecListener listener, Database database) throws MigrationFailedException {
-        if (validationFailed) {
-            return ExecType.MARK_RAN;
-        }
-
-        long startTime = new Date().getTime();
-
-        ExecType execType = null;
-
-        boolean skipChange = false;
-
-        Executor executor = ExecutorService.getInstance().getExecutor(database);
-        try {
-            // set object quoting strategy
-            database.setObjectQuotingStrategy(objectQuotingStrategy);
-
-            // set auto-commit based on runInTransaction if database supports DDL in transactions
-            if (database.supportsDDLInTransaction()) {
-                database.setAutoCommit(!runInTransaction);
-            }
-
-            executor.comment("Changeset " + toString(false));
-            if (StringUtils.trimToNull(getComments()) != null) {
-                String comments = getComments();
-                String[] lines = comments.split("\\n");
-                for (int i = 0; i < lines.length; i++) {
-                    if (i > 0) {
-                        lines[i] = database.getLineComment() + " " + lines[i];
-                    }
-                }
-                executor.comment(StringUtils.join(Arrays.asList(lines), "\n"));
-            }
-
-            try {
-                if (preconditions != null) {
-                    PreconditionService service = new PreconditionService(preconditions);
-                    service.check(preconditions, database, databaseChangeLog, this);
-                }
-            } catch (PreconditionFailedException e) {
-                if (listener != null) {
-                    listener.preconditionFailed(e, preconditions.getOnFail());
-                }
-                StringBuffer message = new StringBuffer();
-                message.append(StreamUtil.getLineSeparator());
-                for (FailedPrecondition invalid : e.getFailedPreconditions()) {
-                    message.append("          ").append(invalid.toString());
-                    message.append(StreamUtil.getLineSeparator());
-                }
-
-                if (preconditions.getOnFail().equals(PreconditionContainer.FailOption.HALT)) {
-                    throw new MigrationFailedException(this, message.toString(), e);
-                } else if (preconditions.getOnFail().equals(PreconditionContainer.FailOption.CONTINUE)) {
-                    skipChange = true;
-                    execType = ExecType.SKIPPED;
-
-                    LogFactory.getLogger().info("Continuing past: " + toString() + " despite precondition failure due to onFail='CONTINUE': " + message);
-                } else if (preconditions.getOnFail().equals(PreconditionContainer.FailOption.MARK_RAN)) {
-                    execType = ExecType.MARK_RAN;
-                    skipChange = true;
-
-                    log.info("Marking ChangeSet: " + toString() + " ran despite precondition failure due to onFail='MARK_RAN': " + message);
-                } else if (preconditions.getOnFail().equals(PreconditionContainer.FailOption.WARN)) {
-                    execType = null; //already warned
-                } else {
-                    throw new UnexpectedLiquibaseException("Unexpected precondition onFail attribute: " + preconditions.getOnFail(), e);
-                }
-            } catch (PreconditionErrorException e) {
-                if (listener != null) {
-                    listener.preconditionErrored(e, preconditions.getOnError());
-                }
-
-                StringBuffer message = new StringBuffer();
-                message.append(StreamUtil.getLineSeparator());
-                for (ErrorPrecondition invalid : e.getErrorPreconditions()) {
-                    message.append("          ").append(invalid.toString());
-                    message.append(StreamUtil.getLineSeparator());
-                }
-
-                if (preconditions.getOnError().equals(PreconditionContainer.ErrorOption.HALT)) {
-                    throw new MigrationFailedException(this, message.toString(), e);
-                } else if (preconditions.getOnError().equals(PreconditionContainer.ErrorOption.CONTINUE)) {
-                    skipChange = true;
-                    execType = ExecType.SKIPPED;
-
-                } else if (preconditions.getOnError().equals(PreconditionContainer.ErrorOption.MARK_RAN)) {
-                    execType = ExecType.MARK_RAN;
-                    skipChange = true;
-
-                    log.info("Marking ChangeSet: " + toString() + " ran despite precondition error: " + message);
-                } else if (preconditions.getOnError().equals(PreconditionContainer.ErrorOption.WARN)) {
-                    execType = null; //already logged
-                } else {
-                    throw new UnexpectedLiquibaseException("Unexpected precondition onError attribute: " + preconditions.getOnError(), e);
-                }
-
-                database.rollback();
-            } finally {
-                database.rollback();
-            }
-
-            if (!skipChange) {
-                for (Change change : changes) {
-                    try {
-                        change.finishInitialization();
-                    } catch (SetupException se) {
-                        throw new MigrationFailedException(this, se);
-                    }
-                }
-
-                log.debug("Reading ChangeSet: " + toString());
-                for (Change c : getChanges()) {
-                    ExecutableChange change = (ExecutableChange) c;
-                    if ((!(change instanceof DbmsTargetedChange)) || DatabaseList.definitionMatches(((DbmsTargetedChange) change).getDbms(), database, true)) {
-                        if (listener != null) {
-                            listener.willRun(change, this, changeLog, database);
-                        }
-                        database.executeStatements(change, databaseChangeLog, sqlVisitors);
-                        log.info(change.getConfirmationMessage());
-                        if (listener != null) {
-                            listener.ran(change, this, changeLog, database);
-                        }
-                    } else {
-                        log.debug("Change " + change.getSerializedObjectName() + " not included for database " + database.getShortName());
-                    }
-                }
-
-                if (runInTransaction) {
-                    database.commit();
-                }
-                log.info("ChangeSet " + toString(false) + " ran successfully in " + (new Date().getTime() - startTime + "ms"));
-                if (execType == null) {
-                    execType = ExecType.EXECUTED;
-                }
-            } else {
-                log.debug("Skipping ChangeSet: " + toString());
-            }
-
-        } catch (Exception e) {
-            try {
-                database.rollback();
-            } catch (Exception e1) {
-                throw new MigrationFailedException(this, e);
-            }
-            if (getFailOnError() != null && !getFailOnError()) {
-                log.info("Change set " + toString(false) + " failed, but failOnError was false.  Error: " + e.getMessage());
-                log.debug("Failure Stacktrace", e);
-                execType = ExecType.FAILED;
-            } else {
-                log.severe("Change Set " + toString(false) + " failed.  Error: " + e.getMessage(), e);
-                if (e instanceof MigrationFailedException) {
-                    throw ((MigrationFailedException) e);
-                } else {
-                    throw new MigrationFailedException(this, e);
-                }
-            }
-        } finally {
-            // restore auto-commit to false if this ChangeSet was not run in a transaction,
-            // but only if the database supports DDL in transactions
-            if (!runInTransaction && database.supportsDDLInTransaction()) {
-                try {
-                    database.setAutoCommit(false);
-                } catch (DatabaseException e) {
-                    throw new MigrationFailedException(this, "Could not resetInternalState autocommit", e);
-                }
-            }
-        }
-        return execType;
-    }
-
-    /* (non-Javadoc)
-     * @see liquibase.changelog.IChangeSet#rollback(liquibase.database.Database)
-     */
-    @Override
-    public void rollback(Database database) throws RollbackFailedException {
-        try {
-            Executor executor = ExecutorService.getInstance().getExecutor(database);
-            executor.comment("Rolling Back ChangeSet: " + toString());
-
-            // set auto-commit based on runInTransaction if database supports DDL in transactions
-            if (database.supportsDDLInTransaction()) {
-                database.setAutoCommit(!runInTransaction);
-            }
-
-            RanChangeSet ranChangeSet = database.getRanChangeSet(this);
-            if (hasCustomRollbackChanges()) {
-
-                final List<SqlStatement> statements = new LinkedList<SqlStatement>();
-                for (Change change : rollBackChanges) {
-                    ExecutableChange rollback = (ExecutableChange) change;
-                    if (((rollback instanceof DbmsTargetedChange)) && !DatabaseList.definitionMatches(((DbmsTargetedChange) rollback).getDbms(), database, true)) {
-                        continue;
-                    }
-                    SqlStatement[] changeStatements = rollback.generateStatements(database);
-                    if (changeStatements != null) {
-                        statements.addAll(Arrays.asList(changeStatements));
-                    }
-                }
-                if (!statements.isEmpty()) {
-                    database.executeRollbackStatements(statements.toArray(new SqlStatement[]{}), sqlVisitors);
-                }
-
-            } else {
-                List<Change> changes = getChanges();
-                for (int i = changes.size() - 1; i >= 0; i--) {
-                    ExecutableChange change = (ExecutableChange) changes.get(i);
-                    database.executeRollbackStatements(change, sqlVisitors);
-                }
-            }
-
-            if (runInTransaction) {
-                database.commit();
-            }
-            log.debug("ChangeSet " + toString() + " has been successfully rolled back.");
-        } catch (Exception e) {
-            try {
-                database.rollback();
-            } catch (DatabaseException e1) {
-                //ok
-            }
-            throw new RollbackFailedException(e);
-        } finally {
-            // restore auto-commit to false if this ChangeSet was not run in a transaction,
-            // but only if the database supports DDL in transactions
-            if (!runInTransaction && database.supportsDDLInTransaction()) {
-                try {
-                    database.setAutoCommit(false);
-                } catch (DatabaseException e) {
-                    throw new RollbackFailedException("Could not resetInternalState autocommit", e);
-                }
-            }
-        }
-
-    }
 
     /**
      * Returns whether custom rollback steps are specified for this changeSet, or whether auto-generated ones should be used
@@ -829,7 +562,7 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
         }
 
         for (String statment : StringUtils.splitSQL(sql, null)) {
-            rollBackChanges.add(new RawSQLAction(statment.trim()));
+            rollBackChanges.add(new RawSQLChange(statment.trim()));
         }
     }
 
@@ -847,23 +580,6 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
 
 
     /* (non-Javadoc)
-     * @see liquibase.changelog.IChangeSet#supportsRollback(liquibase.database.Database)
-     */
-    @Override
-    public boolean supportsRollback(Database database) {
-        if (rollBackChanges != null && rollBackChanges.size() > 0) {
-            return true;
-        }
-
-        for (Change change : getChanges()) {
-            if (!((ExecutableChange)change).supportsRollback(database)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /* (non-Javadoc)
      * @see liquibase.changelog.IChangeSet#getDescription()
      */
     @Override
@@ -874,19 +590,19 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
         }
 
         StringBuffer returnString = new StringBuffer();
-        Class<? extends ExecutableChange> lastChangeClass = null;
+        Class<? extends Change> lastChangeClass = null;
         int changeCount = 0;
         for (Change c : changes) {
-            ExecutableChange change = (ExecutableChange) c;
+            Change change = c;
             if (change.getClass().equals(lastChangeClass)) {
                 changeCount++;
             } else if (changeCount > 1) {
                 returnString.append(" (x").append(changeCount).append(")");
                 returnString.append(", ");
-                returnString.append(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
+                returnString.append(ChangeFactory.getInstance().getChangeMetaData(change).getName());
                 changeCount = 1;
             } else {
-                returnString.append(", ").append(ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName());
+                returnString.append(", ").append(ChangeFactory.getInstance().getChangeMetaData(change).getName());
                 changeCount = 1;
             }
             lastChangeClass = change.getClass();
@@ -1196,10 +912,10 @@ public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializab
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExecutableChangeSetImpl)) {
+        if (!(obj instanceof ChangeSetImpl)) {
             return false;
         }
-        return this.toString(false).equals(((ExecutableChangeSetImpl) obj).toString(false));
+        return this.toString(false).equals(((ChangeSetImpl) obj).toString(false));
     }
 
     /* (non-Javadoc)

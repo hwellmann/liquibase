@@ -9,8 +9,9 @@ import java.util.List;
 import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
 import liquibase.changelog.ChangeLogValidator;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.OracleDatabase;
@@ -32,7 +33,7 @@ import org.junit.Test;
 public class ValidatingVisitorPreConditionsTest {
 
     private DatabaseChangeLogImpl changeLog;
-    private ExecutableChangeSetImpl changeSet1;
+    private ExecutableChangeSet changeSet1;
 
     /**
      * Create a DatabaseChangelog, one changeset, and a create sequence change

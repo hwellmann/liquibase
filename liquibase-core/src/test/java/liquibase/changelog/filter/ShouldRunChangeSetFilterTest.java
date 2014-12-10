@@ -1,13 +1,18 @@
 package liquibase.changelog.filter;
 
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import liquibase.change.CheckSum;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
@@ -16,8 +21,6 @@ import liquibase.executor.ExecutorService;
 import liquibase.statement.core.UpdateStatement;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ShouldRunChangeSetFilterTest  {
 

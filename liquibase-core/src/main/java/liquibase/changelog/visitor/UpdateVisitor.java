@@ -3,7 +3,7 @@ package liquibase.changelog.visitor;
 import java.util.Set;
 
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ExecutableChangeSet.RunStatus;
@@ -38,10 +38,10 @@ public class UpdateVisitor implements ChangeSetVisitor {
 
     @Override
     public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
-        ExecutableChangeSetImpl.RunStatus runStatus = this.database.getRunStatus(changeSet);
+        ExecutableChangeSet.RunStatus runStatus = this.database.getRunStatus(changeSet);
         log.debug("Running Changeset:" + changeSet);
         fireWillRun(changeSet, databaseChangeLog, database, runStatus);
-        ExecutableChangeSetImpl.ExecType execType = changeSet.execute(databaseChangeLog, execListener, this.database);
+        ChangeSetImpl.ExecType execType = changeSet.execute(databaseChangeLog, execListener, this.database);
         if (!runStatus.equals(RunStatus.NOT_RAN)) {
             execType = ExecutableChangeSet.ExecType.RERAN;
         }

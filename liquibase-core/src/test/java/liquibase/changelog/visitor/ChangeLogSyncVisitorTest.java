@@ -5,10 +5,10 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 
-import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.filter.ChangeSetFilterResult;
 import liquibase.database.Database;
 import liquibase.exception.LiquibaseException;
@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ChangeLogSyncVisitorTest {
-    private ExecutableChangeSetImpl changeSet;
+    private ExecutableChangeSet changeSet;
     private DatabaseChangeLog databaseChangeLog;
 
     @Before

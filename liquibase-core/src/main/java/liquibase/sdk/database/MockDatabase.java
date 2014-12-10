@@ -13,10 +13,10 @@ import java.util.List;
 import liquibase.CatalogAndSchema;
 import liquibase.Liquibase;
 import liquibase.change.ExecutableChange;
-import liquibase.changelog.ExecutableChangeSetImpl;
-import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
@@ -449,7 +449,7 @@ public class MockDatabase implements Database, InternalDatabase {
     }
 
     @Override
-    public ExecutableChangeSetImpl.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
+    public ExecutableChangeSet.RunStatus getRunStatus(final ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException {
         return null;
     }
 
@@ -459,7 +459,7 @@ public class MockDatabase implements Database, InternalDatabase {
     }
 
     @Override
-    public void markChangeSetExecStatus(final ChangeSet changeSet, final ExecutableChangeSetImpl.ExecType execType) throws DatabaseException {
+    public void markChangeSetExecStatus(final ChangeSet changeSet, final ChangeSetImpl.ExecType execType) throws DatabaseException {
         ;
     }
 

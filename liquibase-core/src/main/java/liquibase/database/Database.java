@@ -1,25 +1,30 @@
 package liquibase.database;
 
-import liquibase.CatalogAndSchema;
-import liquibase.change.ExecutableChange;
-import liquibase.changelog.ExecutableChangeSetImpl;
-import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.changelog.ChangeSet;
-import liquibase.changelog.RanChangeSet;
-import liquibase.structure.DatabaseObject;
-import liquibase.exception.*;
-import liquibase.sql.visitor.SqlVisitor;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.DatabaseFunction;
-import liquibase.util.PrioritizedService;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import liquibase.CatalogAndSchema;
+import liquibase.change.ExecutableChange;
+import liquibase.changelog.ChangeSet;
+import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.changelog.ExecutableChangeSet;
+import liquibase.changelog.RanChangeSet;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.DatabaseHistoryException;
+import liquibase.exception.DateParseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.exception.RollbackImpossibleException;
+import liquibase.exception.StatementNotSupportedOnDatabaseException;
+import liquibase.sql.visitor.SqlVisitor;
+import liquibase.statement.DatabaseFunction;
+import liquibase.statement.SqlStatement;
+import liquibase.structure.DatabaseObject;
+import liquibase.util.PrioritizedService;
 
 public interface Database extends PrioritizedService {
 
@@ -207,11 +212,11 @@ public interface Database extends PrioritizedService {
 
     String escapeViewName(String catalogName, String schemaName, String viewName);
 
-    ExecutableChangeSetImpl.RunStatus getRunStatus(ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
+    ExecutableChangeSet.RunStatus getRunStatus(ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
     RanChangeSet getRanChangeSet(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
-    void markChangeSetExecStatus(ChangeSet changeSet, ExecutableChangeSetImpl.ExecType execType) throws DatabaseException;
+    void markChangeSetExecStatus(ChangeSet changeSet, ChangeSetImpl.ExecType execType) throws DatabaseException;
 
     List<RanChangeSet> getRanChangeSetList() throws DatabaseException;
 
@@ -280,6 +285,7 @@ public interface Database extends PrioritizedService {
      * removing set schema or catalog names if they are not supported
      * @deprecated use {@link liquibase.CatalogAndSchema#standardize(Database)}
      */
+    @Deprecated
     CatalogAndSchema correctSchema(CatalogAndSchema schema);
 
     /**

@@ -1,7 +1,9 @@
 package liquibase.changelog.filter;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import liquibase.changelog.ExecutableChangeSetImpl;
-import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class CountChangeSetFilterTest  {

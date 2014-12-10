@@ -48,13 +48,13 @@ create view sql_view as select * from sql_table;'''
         def path2 = "com/example/path2.xml"
         when:
         def changeLog = new DatabaseChangeLogImpl(path)
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("1", "auth", false, false, path, null, null, changeLog))
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("2", "auth", false, false, path, null, null, changeLog))
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("1", "other-auth", false, false, path, null, null, changeLog))
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("1", "auth", false, false, path2, null, null, changeLog)) //path 2
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("with-dbms", "auth", false, false, path, null, "mock, oracle", changeLog))
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("with-context", "auth", false, false, path, "test, live", null, changeLog))
-        changeLog.addChangeSet(new ExecutableChangeSetImpl("with-dbms-and-context", "auth", false, false, path, "test, live", "mock, oracle", changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("1", "auth", false, false, path, null, null, changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("2", "auth", false, false, path, null, null, changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("1", "other-auth", false, false, path, null, null, changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("1", "auth", false, false, path2, null, null, changeLog)) //path 2
+        changeLog.addChangeSet(new ChangeSetImpl("with-dbms", "auth", false, false, path, null, "mock, oracle", changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("with-context", "auth", false, false, path, "test, live", null, changeLog))
+        changeLog.addChangeSet(new ChangeSetImpl("with-dbms-and-context", "auth", false, false, path, "test, live", "mock, oracle", changeLog))
 
         then:
         changeLog.getChangeSet(path, "auth", "1").id == "1"

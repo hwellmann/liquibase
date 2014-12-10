@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ExecutableChangeSetImpl;
+import liquibase.changelog.ChangeSetImpl;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.exception.UnexpectedLiquibaseException;
@@ -35,7 +35,7 @@ public class FormattedSqlChangeLogSerializer  implements ChangeLogSerializer {
 
     @Override
     public String serialize(LiquibaseSerializable object, boolean pretty) {
-        if (object instanceof ExecutableChangeSetImpl) {
+        if (object instanceof ChangeSetImpl) {
             StringBuilder builder = new StringBuilder();
 
             ChangeSet changeSet = (ChangeSet) object;
