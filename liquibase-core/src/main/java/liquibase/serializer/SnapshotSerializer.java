@@ -1,6 +1,6 @@
 package liquibase.serializer;
 
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.snapshot.DatabaseSnapshot;
 
 import java.io.File;

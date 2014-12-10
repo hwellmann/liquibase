@@ -9,7 +9,7 @@ import java.util.List;
 import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
 import liquibase.changelog.ChangeLogValidator;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.core.MSSQLDatabase;
@@ -32,7 +32,7 @@ import org.junit.Test;
 public class ValidatingVisitorPreConditionsTest {
 
     private DatabaseChangeLogImpl changeLog;
-    private ChangeSetImpl changeSet1;
+    private ExecutableChangeSetImpl changeSet1;
 
     /**
      * Create a DatabaseChangelog, one changeset, and a create sequence change
@@ -41,7 +41,7 @@ public class ValidatingVisitorPreConditionsTest {
     public void setUp() {
         changeLog = new DatabaseChangeLogImpl();
 
-        changeSet1 = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet1 = new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
         changeLog.addChangeSet(changeSet1);
 
         CreateTableAction change1 = new CreateTableAction();

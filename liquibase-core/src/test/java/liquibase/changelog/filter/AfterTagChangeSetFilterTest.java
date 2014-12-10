@@ -1,7 +1,7 @@
 package liquibase.changelog.filter;
 
 import liquibase.change.CheckSum;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.exception.RollbackFailedException;
 import static org.junit.Assert.*;
@@ -30,9 +30,9 @@ public class AfterTagChangeSetFilterTest {
         ranChanges.add(new RanChangeSet("path/changelog", "3", "testAuthor", CheckSum.parse("12345"), new Date(), null, null, null, null));
         AfterTagChangeSetFilter filter = new AfterTagChangeSetFilter("tag1", ranChanges);
 
-        assertFalse(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
-        assertFalse(filter.accepts(new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
-        assertTrue(filter.accepts(new ChangeSetImpl("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertTrue(filter.accepts(new ExecutableChangeSetImpl("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
     }
 }

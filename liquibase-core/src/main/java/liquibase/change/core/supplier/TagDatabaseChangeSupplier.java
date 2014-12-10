@@ -5,7 +5,7 @@ import liquibase.change.AbstractChange;
 import liquibase.change.Change;
 import liquibase.change.core.TagDatabaseChange;
 import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.database.Database;
 import liquibase.diff.DiffResult;
@@ -34,10 +34,10 @@ public class TagDatabaseChangeSupplier extends AbstractChangeSupplier<TagDatabas
             public SqlStatement[] generateStatements(Database database) {
                 return new SqlStatement[]{
                         new CreateDatabaseChangeLogTableStatement(),
-                        new MarkChangeSetRanStatement(new ChangeSetImpl("1", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
-                        new MarkChangeSetRanStatement(new ChangeSetImpl("2", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
-                        new MarkChangeSetRanStatement(new ChangeSetImpl("3", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
-                        new MarkChangeSetRanStatement(new ChangeSetImpl("4", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED)
+                        new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("1", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
+                        new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("2", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
+                        new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("3", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED),
+                        new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("4", "test", false, false, "com/example/test.xml", null, null, new DatabaseChangeLogImpl("com/example/test.xml")), ExecutableChangeSet.ExecType.EXECUTED)
                 };
 
             }

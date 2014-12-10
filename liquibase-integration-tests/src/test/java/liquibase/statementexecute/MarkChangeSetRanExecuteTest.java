@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.database.Database;
 import liquibase.database.core.DB2Database;
 import liquibase.database.core.DerbyDatabase;
@@ -33,7 +33,7 @@ public class MarkChangeSetRanExecuteTest extends AbstractExecuteTest {
 
     @Test
     public void generateSql_insert() throws Exception {
-        this.statementUnderTest = new MarkChangeSetRanStatement(new ChangeSetImpl("a", "b", false, false, "c", "e", "f", null), ExecutableChangeSet.ExecType.EXECUTED);
+        this.statementUnderTest = new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("a", "b", false, false, "c", "e", "f", null), ExecutableChangeSet.ExecType.EXECUTED);
         String version = LiquibaseUtil.getBuildVersion().replaceAll("SNAPSHOT", "SNP");
         assertCorrect("insert into [databasechangelog] ([id], [author], [filename], [dateexecuted], [orderexecuted], [md5sum], [description], [comments], [exectype], [liquibase]) values ('a', 'b', 'c', getdate(), 1, '7:d41d8cd98f00b204e9800998ecf8427e', 'empty', '', 'executed', '"+version+"')", MSSQLDatabase.class);
         assertCorrect("insert into databasechangelog (id, author, filename, dateexecuted, orderexecuted, md5sum, description, comments, exectype, liquibase) values ('a', 'b', 'c', systimestamp, 1, '7:d41d8cd98f00b204e9800998ecf8427e', 'empty', '', 'executed', '"+version+"')",OracleDatabase.class);
@@ -49,7 +49,7 @@ public class MarkChangeSetRanExecuteTest extends AbstractExecuteTest {
 
     @Test
     public void generateSql_update() throws Exception {
-        this.statementUnderTest = new MarkChangeSetRanStatement(new ChangeSetImpl("a", "b", false, false, "c", "e", "f", null), ExecutableChangeSet.ExecType.RERAN);
+        this.statementUnderTest = new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("a", "b", false, false, "c", "e", "f", null), ExecutableChangeSet.ExecType.RERAN);
         assertCorrect("update [databasechangelog] set [dateexecuted] = NOW(), [exectype] = 'reran', [md5sum] = '7:d41d8cd98f00b204e9800998ecf8427e' where id='a' and author='b' and filename='c'", MSSQLDatabase.class);
         assertCorrect("update [databasechangelog] set [dateexecuted] = SYSTIMESTAMP, [exectype] = 'reran', [md5sum] = '7:d41d8cd98f00b204e9800998ecf8427e' where id='a' and author='b' and filename='c'", OracleDatabase.class);
         assertCorrect("update [databasechangelog] set [dateexecuted] = getdate(), [exectype] = 'reran', [md5sum] = '7:d41d8cd98f00b204e9800998ecf8427e' where id='a' and author='b' and filename='c'", SybaseDatabase.class);

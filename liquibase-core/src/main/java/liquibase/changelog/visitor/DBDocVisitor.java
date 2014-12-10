@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 import liquibase.change.ExecutableChange;
 import liquibase.change.Change;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.filter.ChangeSetFilterResult;
@@ -79,7 +79,7 @@ public class DBDocVisitor implements ChangeSetVisitor {
 
     @Override
     public void visit(ExecutableChangeSet changeSet, DatabaseChangeLog databaseChangeLog, Database database, Set<ChangeSetFilterResult> filterResults) throws LiquibaseException {
-        ChangeSetImpl.RunStatus runStatus = this.database.getRunStatus(changeSet);
+        ExecutableChangeSetImpl.RunStatus runStatus = this.database.getRunStatus(changeSet);
         if (rootChangeLogName == null) {
             rootChangeLogName = changeSet.getFilePath();
         }

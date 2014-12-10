@@ -9,7 +9,7 @@ import java.util.List;
 
 import liquibase.change.ExecutableChange;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.ExecutableChangeSet.RunStatus;
 import liquibase.database.Database;
@@ -141,7 +141,7 @@ public abstract class HTMLWriter {
                     writeTD(fileWriter, changeSet.getId());
                     writeTD(fileWriter, "<a href='../authors/"+DBDocUtil.toFileName(changeSet.getAuthor().toLowerCase())+".html'>"+StringUtils.escapeHtml(changeSet.getAuthor().toLowerCase())+"</a>");
 
-                    ChangeSetImpl.RunStatus runStatus = database.getRunStatus(changeSet);
+                    ExecutableChangeSetImpl.RunStatus runStatus = database.getRunStatus(changeSet);
                     if (runStatus.equals(RunStatus.NOT_RAN)) {
                         String anchor = changeSet.toString(false).replaceAll("\\W","_");
                         writeTD(fileWriter, "NOT YET RAN [<a href='../pending/sql.html#"+ anchor +"'>SQL</a>]");

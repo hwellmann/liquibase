@@ -5,7 +5,7 @@ import java.util.List;
 
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
@@ -559,7 +559,7 @@ public class PreconditionService {
         else {
             objectQuotingStrategy = changeSet.getObjectQuotingStrategy();
         }
-        ExecutableChangeSet interestedChangeSet = new ChangeSetImpl(condition.getId(),
+        ExecutableChangeSet interestedChangeSet = new ExecutableChangeSetImpl(condition.getId(),
             condition.getAuthor(), false, false, condition.getChangeLogFile(), null, null, false,
             objectQuotingStrategy, changeLog);
         RanChangeSet ranChangeSet;

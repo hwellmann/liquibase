@@ -1,7 +1,7 @@
 package liquibase.change
 
 import liquibase.changelog.ChangeSet
-import liquibase.changelog.ChangeSetImpl
+import liquibase.changelog.ExecutableChangeSetImpl
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.changelog.DatabaseChangeLogImpl
 import liquibase.database.Database
@@ -116,7 +116,7 @@ public class AbstractChangeTest extends Specification {
     def getChangeSet() {
         when:
         ExampleAbstractChange change = new ExampleAbstractChange();
-        ChangeSet changeSet = new ChangeSetImpl(new DatabaseChangeLogImpl());
+        ChangeSet changeSet = new ExecutableChangeSetImpl(new DatabaseChangeLogImpl());
         change.setChangeSet(changeSet);
 
         then:

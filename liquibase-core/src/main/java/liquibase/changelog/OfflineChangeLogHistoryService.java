@@ -220,7 +220,7 @@ public class OfflineChangeLogHistoryService extends AbstractChangeLogHistoryServ
         }
     }
 
-    protected void appendChangeSet(ChangeSet changeSet, ChangeSetImpl.ExecType execType) throws DatabaseException {
+    protected void appendChangeSet(ChangeSet changeSet, ExecutableChangeSetImpl.ExecType execType) throws DatabaseException {
         File oldFile = this.changeLogFile;
         File newFile = new File(oldFile.getParentFile(), oldFile.getName()+".new");
 
@@ -279,7 +279,7 @@ public class OfflineChangeLogHistoryService extends AbstractChangeLogHistoryServ
     }
 
     @Override
-    public void setExecType(final ChangeSet changeSet, final ChangeSetImpl.ExecType execType) throws DatabaseException {
+    public void setExecType(final ChangeSet changeSet, final ExecutableChangeSetImpl.ExecType execType) throws DatabaseException {
         if (isExecuteAgainstDatabase()) {
             ExecutorService.getInstance().getExecutor(getDatabase()).execute(new MarkChangeSetRanStatement(changeSet, execType));
             getDatabase().commit();

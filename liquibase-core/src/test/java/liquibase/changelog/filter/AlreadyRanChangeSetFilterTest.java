@@ -1,7 +1,7 @@
 package liquibase.changelog.filter;
 
 import liquibase.change.CheckSum;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.RanChangeSet;
 import static org.easymock.EasyMock.expect;
@@ -28,7 +28,7 @@ public class AlreadyRanChangeSetFilterTest {
     public void accepts_noneRun() {
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(new ArrayList<RanChangeSet>(), false);
 
-        assertFalse(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog",null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog",null, null, null)).isAccepted());
     }
 
     @Test
@@ -36,27 +36,27 @@ public class AlreadyRanChangeSetFilterTest {
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(getRanChangeSets(), false);
 
         //everything same
-        assertTrue(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog",  null, null, null)).isAccepted());
+        assertTrue(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog",  null, null, null)).isAccepted());
 
         //alwaysRun
-        assertTrue(filter.accepts(new ChangeSetImpl("1", "testAuthor", true, false, "path/changelog",  null, null, null)).isAccepted());
+        assertTrue(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", true, false, "path/changelog",  null, null, null)).isAccepted());
 
         //run on change
-        assertTrue(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, true, "path/changelog", null, null, null)).isAccepted());
+        assertTrue(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", false, true, "path/changelog", null, null, null)).isAccepted());
 
         //different id
-        assertFalse(filter.accepts(new ChangeSetImpl("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("3", "testAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
         //different author
-        assertFalse(filter.accepts(new ChangeSetImpl("1", "otherAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("1", "otherAuthor", false, false, "path/changelog", null, null, null)).isAccepted());
 
         //different path
-        assertFalse(filter.accepts(new ChangeSetImpl("1", "testAuthor", false, false, "other/changelog", null, null, null)).isAccepted());
+        assertFalse(filter.accepts(new ExecutableChangeSetImpl("1", "testAuthor", false, false, "other/changelog", null, null, null)).isAccepted());
     }
 
     @Test
     public void does_accept_current_changeset_with_classpath_prefix() throws DatabaseException {
-        ExecutableChangeSet changeSetWithClasspathPrefix = new ChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
+        ExecutableChangeSet changeSetWithClasspathPrefix = new ExecutableChangeSetImpl("1", "testAuthor", false, false, "classpath:path/changelog", null, null, null);
 
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(getRanChangeSets(), true);
 
@@ -69,7 +69,7 @@ public class AlreadyRanChangeSetFilterTest {
         ranChanges.add(new RanChangeSet("path/changelog", "1", "testAuthor", CheckSum.parse("12345"), new Date(), null, null, null, null));
         ranChanges.add(new RanChangeSet("classpath:path/changelog", "2", "testAuthor", CheckSum.parse("12345"), new Date(), null, null, null, null));
 
-        ExecutableChangeSet changeSet = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        ExecutableChangeSet changeSet = new ExecutableChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
 
         AlreadyRanChangeSetFilter filter = new AlreadyRanChangeSetFilter(ranChanges, true);
 

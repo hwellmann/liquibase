@@ -3,7 +3,7 @@ package liquibase.sqlgenerator.core;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.sdk.database.MockDatabase;
 import liquibase.sql.Sql;
 import liquibase.sqlgenerator.AbstractSqlGeneratorTest;
@@ -19,12 +19,12 @@ public class MarkChangeSetRanGeneratorTest extends AbstractSqlGeneratorTest<Mark
 
     @Override
     protected MarkChangeSetRanStatement createSampleSqlStatement() {
-        return new MarkChangeSetRanStatement(new ChangeSetImpl("1", "a", false, false, "c", null, null, null), ExecutableChangeSet.ExecType.EXECUTED);
+        return new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("1", "a", false, false, "c", null, null, null), ExecutableChangeSet.ExecType.EXECUTED);
     }
 
     @Test
     public void generateSql_markRan() {
-        Sql[] sqls = new MarkChangeSetRanGenerator().generateSql(new MarkChangeSetRanStatement(new ChangeSetImpl("1", "a", false, false, "c", null, null, null), ExecutableChangeSet.ExecType.MARK_RAN), new MockDatabase(), new MockSqlGeneratorChain());
+        Sql[] sqls = new MarkChangeSetRanGenerator().generateSql(new MarkChangeSetRanStatement(new ExecutableChangeSetImpl("1", "a", false, false, "c", null, null, null), ExecutableChangeSet.ExecType.MARK_RAN), new MockDatabase(), new MockSqlGeneratorChain());
         assertEquals(1, sqls.length);
         assertTrue(sqls[0].toSql(), sqls[0].toSql().contains("MARK_RAN"));
     }

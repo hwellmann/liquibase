@@ -2,7 +2,7 @@ package liquibase.database;
 
 import liquibase.CatalogAndSchema;
 import liquibase.change.ExecutableChange;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.ExecutableChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.ChangeSet;
@@ -207,11 +207,11 @@ public interface Database extends PrioritizedService {
 
     String escapeViewName(String catalogName, String schemaName, String viewName);
 
-    ChangeSetImpl.RunStatus getRunStatus(ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
+    ExecutableChangeSetImpl.RunStatus getRunStatus(ExecutableChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
     RanChangeSet getRanChangeSet(ChangeSet changeSet) throws DatabaseException, DatabaseHistoryException;
 
-    void markChangeSetExecStatus(ChangeSet changeSet, ChangeSetImpl.ExecType execType) throws DatabaseException;
+    void markChangeSetExecStatus(ChangeSet changeSet, ExecutableChangeSetImpl.ExecType execType) throws DatabaseException;
 
     List<RanChangeSet> getRanChangeSetList() throws DatabaseException;
 

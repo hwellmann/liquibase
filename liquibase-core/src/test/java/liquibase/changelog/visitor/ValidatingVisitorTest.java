@@ -9,7 +9,7 @@ import java.util.List;
 
 import liquibase.action.CreateTableAction;
 import liquibase.change.ColumnConfig;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
@@ -22,13 +22,13 @@ import org.junit.Test;
 
 public class ValidatingVisitorTest {
 
-    private ChangeSetImpl changeSet1;
-    private ChangeSetImpl changeSet2;
+    private ExecutableChangeSetImpl changeSet1;
+    private ExecutableChangeSetImpl changeSet2;
 
     @Before
     public void setup() {
-        changeSet1 = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
-        changeSet2 = new ChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet1 = new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet2 = new ExecutableChangeSetImpl("2", "testAuthor", false, false, "path/changelog", null, null, null);
     }
 
 

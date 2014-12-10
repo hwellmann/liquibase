@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Collections;
 
 import liquibase.changelog.ExecutableChangeSet;
-import liquibase.changelog.ChangeSetImpl;
+import liquibase.changelog.ExecutableChangeSetImpl;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.changelog.DatabaseChangeLogImpl;
 import liquibase.changelog.filter.ChangeSetFilterResult;
@@ -17,12 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ChangeLogSyncVisitorTest {
-    private ChangeSetImpl changeSet;
+    private ExecutableChangeSetImpl changeSet;
     private DatabaseChangeLog databaseChangeLog;
 
     @Before
     public void setUp() {
-        changeSet = new ChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
+        changeSet = new ExecutableChangeSetImpl("1", "testAuthor", false, false, "path/changelog", null, null, null);
         databaseChangeLog = new DatabaseChangeLogImpl();
     }
 

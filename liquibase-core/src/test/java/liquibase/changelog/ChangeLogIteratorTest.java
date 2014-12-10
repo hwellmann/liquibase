@@ -25,12 +25,12 @@ public class ChangeLogIteratorTest {
     @Before
     public void setUp() {
         changeLog = new DatabaseChangeLogImpl();
-        changeLog.addChangeSet(new ChangeSetImpl("1", "nvoxland", false, false, "/path/to/changelog", "test1", "mysql", null));
-        changeLog.addChangeSet(new ChangeSetImpl("2", "nvoxland", false, false, "/path/to/changelog",  "test1", "oracle", null));
-        changeLog.addChangeSet(new ChangeSetImpl("3", "nvoxland", false, false, "/path/to/changelog",  "test2", "mysql", null));
-        changeLog.addChangeSet(new ChangeSetImpl("4", "nvoxland", false, false, "/path/to/changelog",  null, null, null));
-        changeLog.addChangeSet(new ChangeSetImpl("5", "nvoxland", false, false, "/path/to/changelog",  null, "mysql", null));
-        changeLog.addChangeSet(new ChangeSetImpl("6", "nvoxland", false, false, "/path/to/changelog",  "test2", null, null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("1", "nvoxland", false, false, "/path/to/changelog", "test1", "mysql", null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("2", "nvoxland", false, false, "/path/to/changelog",  "test1", "oracle", null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("3", "nvoxland", false, false, "/path/to/changelog",  "test2", "mysql", null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("4", "nvoxland", false, false, "/path/to/changelog",  null, null, null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("5", "nvoxland", false, false, "/path/to/changelog",  null, "mysql", null));
+        changeLog.addChangeSet(new ExecutableChangeSetImpl("6", "nvoxland", false, false, "/path/to/changelog",  "test2", null, null));
     }
 
     @Test

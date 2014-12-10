@@ -11,7 +11,7 @@ import liquibase.executor.ExecutorService;
 import org.junit.Test;
 
 /**
- * Tests for {@link liquibase.changelog.ChangeSetImpl#execute(DatabaseChangeLogImpl, Database)}
+ * Tests for {@link liquibase.changelog.ExecutableChangeSetImpl#execute(DatabaseChangeLogImpl, Database)}
  */
 public class ChangeSetExecuteTest {
 
@@ -49,7 +49,7 @@ public class ChangeSetExecuteTest {
     }
     
     private ExecutableChangeSet createTestChangeSet(boolean runInTransaction) {
-    	return new ChangeSetImpl("test-id", "test-author", false, false, "/test.xml", null, null, runInTransaction, null);
+    	return new ExecutableChangeSetImpl("test-id", "test-author", false, false, "/test.xml", null, null, runInTransaction, null);
     }
     
     @Test

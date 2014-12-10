@@ -53,7 +53,7 @@ import liquibase.util.StringUtils;
 /**
  * Encapsulates a changeSet and all its associated changes.
  */
-public class ChangeSetImpl implements Conditional, LiquibaseSerializable, ExecutableChangeSet {
+public class ExecutableChangeSetImpl implements Conditional, LiquibaseSerializable, ExecutableChangeSet {
 
     private ChangeLogParameters changeLogParameters;
 
@@ -171,25 +171,25 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
         return runOnChange;
     }
 
-    public ChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
+    public ExecutableChangeSetImpl(DatabaseChangeLog databaseChangeLog) {
         this.changes = new ArrayList<Change>();
         log = LogFactory.getLogger();
         this.changeLog = databaseChangeLog;
     }
 
-    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, DatabaseChangeLog databaseChangeLog) {
+    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, true, ObjectQuotingStrategy.LEGACY, databaseChangeLog);
     }
 
-    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, boolean runInTransaction, DatabaseChangeLog databaseChangeLog) {
+    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, boolean runInTransaction, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, runInTransaction, ObjectQuotingStrategy.LEGACY, databaseChangeLog);
     }
 
-    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
+    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
         this(id, author, alwaysRun, runOnChange, filePath, contextList, dbmsList, true, quotingStrategy, databaseChangeLog);
     }
 
-    public ChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList,
+    public ExecutableChangeSetImpl(String id, String author, boolean alwaysRun, boolean runOnChange, String filePath, String contextList, String dbmsList,
                      boolean runInTransaction, ObjectQuotingStrategy quotingStrategy, DatabaseChangeLog databaseChangeLog) {
         this(databaseChangeLog);
         this.id = id;
@@ -367,7 +367,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
 
             ChangeSet changeSet = this.getChangeLog().getChangeSet(changeSetPath, changeSetAuthor, changeSetId);
             if (changeSet == null) {
-                throw new ParsedNodeException("Change set "+new ChangeSetImpl(changeSetId, changeSetAuthor, false, false, changeSetPath, null, null, null).toString(false)+" does not exist");
+                throw new ParsedNodeException("Change set "+new ExecutableChangeSetImpl(changeSetId, changeSetAuthor, false, false, changeSetPath, null, null, null).toString(false)+" does not exist");
             }
             for (Change change : changeSet.getChanges()) {
                 addRollbackChange(change);
@@ -1196,7 +1196,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ChangeSetImpl)) {
+        if (!(obj instanceof ExecutableChangeSetImpl)) {
             return false;
         }
         return this.toString(false).equals(((ExecutableChangeSet) obj).toString(false));

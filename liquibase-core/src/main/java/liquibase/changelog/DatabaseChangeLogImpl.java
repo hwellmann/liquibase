@@ -387,7 +387,7 @@ public class DatabaseChangeLogImpl implements Conditional, DatabaseChangeLog {
     }
 
     protected ExecutableChangeSet createChangeSet(ParsedNode node, ResourceAccessor resourceAccessor) throws ParsedNodeException, SetupException {
-        ChangeSetImpl changeSet = new ChangeSetImpl(this);
+        ExecutableChangeSetImpl changeSet = new ExecutableChangeSetImpl(this);
         changeSet.setChangeLogParameters(this.getChangeLogParameters());
         try {
             changeSet.load(node, resourceAccessor);

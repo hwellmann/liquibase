@@ -4,7 +4,7 @@ import liquibase.CatalogAndSchema
 import liquibase.change.Change
 import liquibase.change.ExecutableChangeFactory
 import liquibase.changelog.ChangeSet
-import liquibase.changelog.ChangeSetImpl
+import liquibase.changelog.ExecutableChangeSetImpl
 import liquibase.database.Database
 import liquibase.database.DatabaseFactory
 import liquibase.database.OfflineConnection
@@ -46,7 +46,7 @@ class StandardChangeTest extends Specification {
         def test = new VerifiedTest(this.getClass().getName(), "valid properties are valid sql")
 
         for (Change change in changeSupplier.getSupplier(changeClass).getAllParameterPermutations(database)) {
-            def changeSet = new ChangeSetImpl("1", "StandardChangeTest-test", false, false, "com/example/dbchangelog.xml", null, null, null)
+            def changeSet = new ExecutableChangeSetImpl("1", "StandardChangeTest-test", false, false, "com/example/dbchangelog.xml", null, null, null)
             change.setChangeSet(changeSet)
             def permutation = new TestPermutation(test)
             permutation.describe("Database", database.shortName);
