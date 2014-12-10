@@ -3,6 +3,7 @@ package liquibase.changelog
 import static org.junit.Assert.assertTrue
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.action.CreateTableAction
+import liquibase.action.EmptyAction
 import liquibase.action.InsertDataAction
 import liquibase.change.CheckSum
 import liquibase.change.core.*
@@ -190,7 +191,7 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 1
         changeSet.rollBackChanges.size() == 1
-        ((RawSQLChange) changeSet.rollBackChanges[0]).sql == "rollback logic here"
+        (changeSet.rollBackChanges[0]).sql == "rollback logic here"
     }
 
     def "load node with rollback containing change node as value"() {
@@ -253,7 +254,7 @@ public class ChangeSetTest extends Specification {
         changeSet.rollBackChanges.size() == 3
         (changeSet.rollBackChanges[0]).newTableName == "rename_to_a"
         (changeSet.rollBackChanges[1]).newTableName == "rename_to_b"
-        ((RawSQLChange) changeSet.rollBackChanges[2]).sql == "rollback sql"
+        (changeSet.rollBackChanges[2]).sql == "rollback sql"
     }
 
     def "load node with rollback containing multiple sql statements in value"() {
@@ -271,8 +272,8 @@ public class ChangeSetTest extends Specification {
 
         then:
         changeSet.changes.size() == 1
-        ((RawSQLChange) changeSet.rollBackChanges[0]).sql == "rollback sql 1"
-        ((RawSQLChange) changeSet.rollBackChanges[1]).sql == "rollback sql 2"
+        (changeSet.rollBackChanges[0]).sql == "rollback sql 1"
+        (changeSet.rollBackChanges[1]).sql == "rollback sql 2"
         changeSet.rollBackChanges.size() == 2
     }
 
@@ -395,7 +396,7 @@ public class ChangeSetTest extends Specification {
         then:
         changeSet.changes.size() == 0
         changeSet.rollBackChanges.size() == 1
-        changeSet.rollBackChanges[0] instanceof EmptyChange
+        changeSet.rollBackChanges[0] instanceof EmptyAction
     }
 
     @Unroll("#featureName with changeSetPath=#changeSetPath")

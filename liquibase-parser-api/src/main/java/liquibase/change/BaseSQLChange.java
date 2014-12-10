@@ -1,15 +1,15 @@
 package liquibase.change;
 
-import liquibase.database.Database;
-import liquibase.database.core.MSSQLDatabase;
-import liquibase.exception.*;
-import liquibase.logging.LogFactory;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.RawSqlStatement;
-import liquibase.util.StringUtils;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.*;
-import java.util.*;
+import liquibase.exception.UnexpectedLiquibaseException;
+import liquibase.logging.LogFactory;
+import liquibase.util.StringUtils;
 
 /**
  * A common parent for all raw SQL related changes regardless of where the sql was sourced from.
@@ -17,7 +17,7 @@ import java.util.*;
  * Implements the necessary logic to choose how the SQL string should be parsed to generate the statements.
  *
  */
-public abstract class AbstractSQLChange extends AbstractChange implements DbmsTargetedChange {
+public abstract class BaseSQLChange extends BaseChange implements DbmsTargetedChange {
 
     private boolean stripComments;
     private boolean splitStatements;
@@ -28,7 +28,7 @@ public abstract class AbstractSQLChange extends AbstractChange implements DbmsTa
     protected String encoding = null;
 
 
-    protected AbstractSQLChange() {
+    protected BaseSQLChange() {
         setStripComments(null);
         setSplitStatements(null);
     }
@@ -46,31 +46,6 @@ public abstract class AbstractSQLChange extends AbstractChange implements DbmsTa
     @Override
     public void setDbms(final String dbms) {
         this.dbms = dbms;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param database
-     * @return
-     */
-    @Override
-    public boolean supports(Database database) {
-        return true;
-    }
-
-    @Override
-    public Warnings warn(Database database) {
-        return new Warnings();
-    }
-
-    @Override
-    public ValidationErrors validate(Database database) {
-        ValidationErrors validationErrors = new ValidationErrors();
-        if (StringUtils.trimToNull(sql) == null) {
-            validationErrors.addError("'sql' is required");
-        }
-        return validationErrors;
-
     }
 
     /**
@@ -187,77 +162,9 @@ public abstract class AbstractSQLChange extends AbstractChange implements DbmsTa
     }
 
 
-    /**
-     * Generates one or more SqlStatements depending on how the SQL should be parsed.
-     * If split statements is set to true then the SQL is split and each command is made into a separate SqlStatement.
-     * <p></p>
-     * If stripping comments is true then any comments are removed before the splitting is executed.
-     * The set SQL is passed through the {@link java.sql.Connection#nativeSQL} method if a connection is available.
-     */
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-
-        List<SqlStatement> returnStatements = new ArrayList<SqlStatement>();
-
-        String sql = StringUtils.trimToNull(getSql());
-        if (sql == null) {
-            return new SqlStatement[0];
-        }
-
-        String processedSQL = normalizeLineEndings(sql);
-        for (String statement : StringUtils.processMutliLineSQL(processedSQL, isStripComments(), isSplitStatements(), getEndDelimiter())) {
-            if (database instanceof MSSQLDatabase) {
-                 statement = statement.replaceAll("\\n", "\r\n");
-             }
-
-            String escapedStatement = statement;
-            try {
-                if (database.getConnection() != null) {
-                    escapedStatement = database.getConnection().nativeSQL(statement);
-                }
-            } catch (DatabaseException e) {
-				escapedStatement = statement;
-			}
-
-            returnStatements.add(new RawSqlStatement(escapedStatement, getEndDelimiter()));
-        }
-
-        return returnStatements.toArray(new SqlStatement[returnStatements.size()]);
-    }
-
-    @Override
-    public boolean generateStatementsVolatile(Database database) {
-        return false;
-    }
-
-    @Override
-    public boolean generateRollbackStatementsVolatile(Database database) {
-        return false;
-    }
-
-    @Override
-    public ChangeStatus checkStatus(Database database) {
-        return new ChangeStatus().unknown("Cannot check raw sql status");
-    }
-
     protected String normalizeLineEndings(String string) {
         return string.replace("\r", "");
     }
-
-//    @Override
-//    public Set<String> getSerializableFields() {
-//        Set<String> fieldsToSerialize = new HashSet<String>(super.getSerializableFields());
-//        fieldsToSerialize.add("splitStatements");
-//        fieldsToSerialize.add("stripComments");
-//        return Collections.unmodifiableSet(fieldsToSerialize);
-//    }
-//
-//    @Override
-//    public Object getSerializableFieldValue(String field) {
-//        if (field.equals("splitStatements")) {
-//            return isSplitStatements();
-//        }
-//    }
 
     public static class NormalizingStream extends InputStream {
         private ByteArrayInputStream headerStream;

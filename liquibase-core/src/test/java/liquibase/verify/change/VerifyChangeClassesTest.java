@@ -1,11 +1,22 @@
 package liquibase.verify.change;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeSet;
+
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeParameterMetaData;
 import liquibase.change.ChangeParameterService;
 import liquibase.change.ChangeService;
 import liquibase.change.ExecutableChange;
 import liquibase.change.ExecutableChangeFactory;
-import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeParameterMetaData;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.exception.ValidationErrors;
@@ -20,11 +31,6 @@ import liquibase.verify.AbstractVerifyTest;
 
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class VerifyChangeClassesTest extends AbstractVerifyTest {
 
@@ -111,6 +117,7 @@ public class VerifyChangeClassesTest extends AbstractVerifyTest {
                 ChangeService changeService = new ChangeService(changeMetaData);
 
                 change.setResourceAccessor(new JUnitResourceAccessor());
+                System.out.println(change.getClass().getSimpleName());
 
                 ArrayList<String> requiredParams = new ArrayList<String>(changeService.getRequiredParameters(database).keySet());
                 for (String paramName : requiredParams) {

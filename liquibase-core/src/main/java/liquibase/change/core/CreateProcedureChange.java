@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import liquibase.change.AbstractChange;
-import liquibase.change.AbstractSQLChange;
+import liquibase.change.BaseSQLChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.ChangeMetaData;
@@ -238,7 +238,7 @@ public class CreateProcedureChange extends AbstractChange implements DbmsTargete
             }
         }
 
-        CheckSum checkSum = CheckSum.compute(new AbstractSQLChange.NormalizingStream(";", false, false, stream), false);
+        CheckSum checkSum = CheckSum.compute(new BaseSQLChange.NormalizingStream(";", false, false, stream), false);
 
         return CheckSum.compute(super.generateCheckSum().toString()+":"+checkSum.toString());
 

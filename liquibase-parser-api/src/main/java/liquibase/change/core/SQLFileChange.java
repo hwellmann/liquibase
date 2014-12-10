@@ -3,18 +3,15 @@ package liquibase.change.core;
 import java.io.IOException;
 import java.io.InputStream;
 
-import liquibase.change.AbstractSQLChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseSQLChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
 import liquibase.changelog.ChangeLogParameters;
-import liquibase.database.Database;
 import liquibase.exception.SetupException;
 import liquibase.exception.UnexpectedLiquibaseException;
-import liquibase.exception.ValidationErrors;
 import liquibase.util.StreamUtil;
-import liquibase.util.StringUtils;
 
 import org.kohsuke.MetaInfServices;
 
@@ -41,21 +38,11 @@ import org.kohsuke.MetaInfServices;
                 "A multiline comment that starts with /* and ends with */.\n" +
                 "A single line comment starting with <space>--<space> and finishing at the end of the line",
         priority = ChangeMetaData.PRIORITY_DEFAULT)
-@MetaInfServices(ExecutableChange.class)
-public class SQLFileChange extends AbstractSQLChange {
+@MetaInfServices(Change.class)
+public class SQLFileChange extends BaseSQLChange {
 
     private String path;
     private Boolean relativeToChangelogFile;
-
-    @Override
-    public boolean generateStatementsVolatile(Database database) {
-        return false;
-    }
-
-    @Override
-    public boolean generateRollbackStatementsVolatile(Database database) {
-        return false;
-    }
 
     @DatabaseChangeProperty(description = "The file path of the SQL file to load", requiredForDatabase = "all", exampleValue = "my/path/file.sql")
     public String getPath() {
@@ -120,20 +107,6 @@ public class SQLFileChange extends AbstractSQLChange {
             throw new IOException("File does not exist: '" + path + "'");
         }
         return inputStream;
-    }
-
-    @Override
-    public ValidationErrors validate(Database database) {
-        ValidationErrors validationErrors = new ValidationErrors();
-        if (StringUtils.trimToNull(getPath()) == null) {
-            validationErrors.addError("'path' is required");
-        }
-        return validationErrors;
-    }
-
-    @Override
-    public String getConfirmationMessage() {
-        return "SQL in file " + path + " executed";
     }
 
     @Override

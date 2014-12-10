@@ -1,6 +1,5 @@
 package liquibase.parser.core.xml
 
-import liquibase.change.core.RawSQLChange
 import liquibase.changelog.ChangeLogParameters
 import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.exception.ChangeLogParseException
@@ -49,13 +48,13 @@ class AbstractChangeLogParserTest extends Specification {
         changeLog.changeSets[2].toString(false) == "com/example/changelog.xml::3::nvoxland"
 
         changeLog.changeSets[0].changes.size() == 1
-        ((RawSQLChange) changeLog.changeSets[0].changes[0]).sql == "select * from x"
+        (changeLog.changeSets[0].changes[0]).sql == "select * from x"
 
         changeLog.changeSets[1].changes.size() == 1
-        ((RawSQLChange) changeLog.changeSets[1].changes[0]).sql == "select * from y"
+        (changeLog.changeSets[1].changes[0]).sql == "select * from y"
 
         changeLog.changeSets[2].changes.size() == 1
-        ((RawSQLChange) changeLog.changeSets[2].changes[0]).sql == "select * from z"
+        (changeLog.changeSets[2].changes[0]).sql == "select * from z"
     }
 
 

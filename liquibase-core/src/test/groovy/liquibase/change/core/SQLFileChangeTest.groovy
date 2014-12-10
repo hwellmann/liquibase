@@ -1,10 +1,13 @@
 package liquibase.change.core
 
+import static org.junit.Assert.assertEquals
+import liquibase.action.RawSQLAction
+import liquibase.action.SQLFileAction
 import liquibase.change.Change
-import liquibase.change.ChangeStatus;
-import liquibase.change.StandardChangeTest;
-import liquibase.changelog.ChangeLogParameters;
-import liquibase.changelog.ChangeLogParametersImpl;
+import liquibase.change.ChangeStatus
+import liquibase.change.StandardChangeTest
+import liquibase.changelog.ChangeLogParameters
+import liquibase.changelog.ChangeLogParametersImpl
 import liquibase.changelog.ChangeSet
 import liquibase.changelog.ChangeSetImpl
 import liquibase.exception.UnexpectedLiquibaseException
@@ -12,13 +15,11 @@ import liquibase.sdk.database.MockDatabase
 import liquibase.sdk.resource.MockResourceAccessor
 import liquibase.statement.SqlStatement
 
-import static org.junit.Assert.assertEquals
-
 public class SQLFileChangeTest extends StandardChangeTest {
 
     def "generateStatements throws Exception if file does not exist"() throws Exception {
         when:
-        def change = new SQLFileChange();
+        def change = new SQLFileAction();
         change.setPath("doesnotexist.sql");
         change.finishInitialization();
 
@@ -30,7 +31,7 @@ public class SQLFileChangeTest extends StandardChangeTest {
 
     def "lines from file parse into one or more statements correctly"() throws Exception {
         when:
-        SQLFileChange change2 = new SQLFileChange();
+        SQLFileAction change2 = new SQLFileAction();
         change2.setSql(fileContents);
         MockDatabase database = new MockDatabase();
         SqlStatement[] statements = change2.generateStatements(database);
@@ -56,7 +57,7 @@ public class SQLFileChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        def change = new SQLFileChange();
+        def change = new SQLFileAction();
         change.setPath("com/example/changelog.xml");
 
         then:
@@ -65,7 +66,7 @@ public class SQLFileChangeTest extends StandardChangeTest {
 
     def replacementOfProperties() throws Exception {
         when:
-        SQLFileChange change = new SQLFileChange();
+        SQLFileAction change = new SQLFileAction();
         ChangeLogParameters changeLogParameters = new ChangeLogParametersImpl();
         changeLogParameters.set("table.prefix", "prfx");
         changeLogParameters.set("some.other.prop", "nofx");
@@ -84,7 +85,7 @@ public class SQLFileChangeTest extends StandardChangeTest {
     def "checkStatus"() {
         when:
         def database = new MockDatabase()
-        def change = new RawSQLChange()
+        def change = new RawSQLAction()
 
         then:
         assert change.checkStatus(database).status == ChangeStatus.Status.unknown
@@ -97,7 +98,7 @@ public class SQLFileChangeTest extends StandardChangeTest {
     }
 
     def isValidForLoad(Change change) {
-        return ((SQLFileChange) change).path != null;
+        return ((SQLFileAction) change).path != null;
     }
 
     def "openSqlStream throws exception if file does not exist"() {

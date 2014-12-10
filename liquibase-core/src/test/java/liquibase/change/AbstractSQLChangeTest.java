@@ -1,5 +1,17 @@
 package liquibase.change;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import liquibase.action.AbstractSQLAction;
 import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.core.MSSQLDatabase;
@@ -7,20 +19,14 @@ import liquibase.exception.DatabaseException;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.util.StreamUtil;
+
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AbstractSQLChangeTest {
 
     @Test
     public void constructor() {
-        AbstractSQLChange change = new ExampleAbstractSQLChange();
+        BaseSQLChange change = new ExampleAbstractSQLChange();
         assertFalse(change.isStripComments());
         assertTrue(change.isSplitStatements());
         assertNull(change.getEndDelimiter());
@@ -28,12 +34,12 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void supports() {
-        assertTrue("AbstractSQLChange automatically supports all databases", new ExampleAbstractSQLChange().supports(mock(Database.class)));
+        assertTrue("AbstractSQLChange automatically supports all databases", new ExampleAbstractSQLAction().supports(mock(Database.class)));
     }
 
     @Test
     public void setStrippingComments() {
-        AbstractSQLChange change = new ExampleAbstractSQLChange();
+        BaseSQLChange change = new ExampleAbstractSQLChange();
         change.setStripComments(true);
         assertTrue(change.isStripComments());
 
@@ -46,7 +52,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void setSplittingStatements() {
-        AbstractSQLChange change = new ExampleAbstractSQLChange();
+        BaseSQLChange change = new ExampleAbstractSQLChange();
         change.setSplitStatements(true);
         assertTrue(change.isSplitStatements());
 
@@ -59,7 +65,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void setSql() {
-        AbstractSQLChange sql = new ExampleAbstractSQLChange();
+        BaseSQLChange sql = new ExampleAbstractSQLChange();
         sql.setSql("SOME SQL");
         assertEquals("SOME SQL", sql.getSql());
 
@@ -72,7 +78,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void setEndDelmiter() {
-        AbstractSQLChange change = new ExampleAbstractSQLChange();
+        BaseSQLChange change = new ExampleAbstractSQLChange();
 
         change.setEndDelimiter("GO");
         assertEquals("GO", change.getEndDelimiter());
@@ -117,12 +123,12 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_nullSqlMakesNoStatements() {
-        assertEquals(0, new ExampleAbstractSQLChange(null).generateStatements(mock(Database.class)).length);
+        assertEquals(0, new ExampleAbstractSQLAction(null).generateStatements(mock(Database.class)).length);
     }
 
     @Test
     public void generateStatements() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
 
         change.setSplitStatements(true);
         change.setStripComments(true);
@@ -135,7 +141,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_crlfEndingStandardizes() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\r\n--a comment\r\nLINE 2;\r\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\r\n--a comment\r\nLINE 2;\r\nLINE 3;");
 
         change.setSplitStatements(true);
         change.setStripComments(true);
@@ -148,7 +154,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_convertsEndingsOnSqlServer() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
 
         change.setSplitStatements(false);
         change.setStripComments(true);
@@ -159,7 +165,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_keepComments() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
 
         change.setSplitStatements(true);
         change.setStripComments(false);
@@ -172,7 +178,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_noSplit() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
 
         change.setSplitStatements(false);
         change.setStripComments(true);
@@ -183,7 +189,7 @@ public class AbstractSQLChangeTest {
 
     @Test
     public void generateStatements_noSplitKeepComments() {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("LINE 1;\n--a comment\nLINE 2;\nLINE 3;");
 
         change.setSplitStatements(false);
         change.setStripComments(false);
@@ -228,13 +234,13 @@ public class AbstractSQLChangeTest {
     }
 
     private void assertNormalizingStreamCorrect(String expected, String toCorrect) throws IOException {
-        AbstractSQLChange.NormalizingStream normalizingStream = new AbstractSQLChange.NormalizingStream("x", true, false, new ByteArrayInputStream(toCorrect.getBytes()));
+        BaseSQLChange.NormalizingStream normalizingStream = new BaseSQLChange.NormalizingStream("x", true, false, new ByteArrayInputStream(toCorrect.getBytes()));
         assertEquals("x:true:false:"+expected, StreamUtil.getStreamContents(normalizingStream));
     }
 
     @Test
     public void generateStatements_willCallNativeSqlIfPossible() throws DatabaseException {
-        ExampleAbstractSQLChange change = new ExampleAbstractSQLChange("SOME SQL");
+        ExampleAbstractSQLAction change = new ExampleAbstractSQLAction("SOME SQL");
 
         Database database = mock(Database.class);
         DatabaseConnection connection = mock(DatabaseConnection.class);
@@ -253,13 +259,31 @@ public class AbstractSQLChangeTest {
     }
 
     @DatabaseChange(name = "exampleAbstractSQLChange", description = "Used for the AbstractSQLChangeTest unit test", priority = 1)
-    private static class ExampleAbstractSQLChange extends AbstractSQLChange {
+    private static class ExampleAbstractSQLChange extends BaseSQLChange {
 
-        private ExampleAbstractSQLChange() {
+        public ExampleAbstractSQLChange() {
         }
 
-        private ExampleAbstractSQLChange(String sql) {
+        public ExampleAbstractSQLChange(String sql) {
             setSql(sql);
+        }
+
+
+        @Override
+        public String getSerializedObjectNamespace() {
+            return STANDARD_CHANGELOG_NAMESPACE;
+        }
+
+    }
+
+    private static class ExampleAbstractSQLAction extends AbstractSQLAction<ExampleAbstractSQLChange> {
+
+        public ExampleAbstractSQLAction() {
+            super(new ExampleAbstractSQLChange());
+        }
+
+        public ExampleAbstractSQLAction(String sql) {
+            super(new ExampleAbstractSQLChange(sql));
         }
 
 

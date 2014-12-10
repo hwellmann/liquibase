@@ -1,10 +1,10 @@
-package liquibase.change.core;
+package liquibase.action;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
+import liquibase.change.ExecutableChange;
+import liquibase.change.core.OutputChange;
 import liquibase.database.Database;
 import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
@@ -13,16 +13,20 @@ import liquibase.serializer.LiquibaseSerializable;
 import liquibase.sql.Sql;
 import liquibase.statement.SqlStatement;
 import liquibase.statement.core.RuntimeStatement;
-import liquibase.util.StringUtils;
 
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="output", description = "Logs a message and continues execution.", priority = ChangeMetaData.PRIORITY_DEFAULT, since = "3.3")
 @MetaInfServices(ExecutableChange.class)
-public class OutputChange extends AbstractChange {
+public class OutputAction extends AbstractAction<OutputChange> {
 
-    private String message;
-    private String target = "";
+    public OutputAction() {
+        super(new OutputChange());
+    }
+
+    public OutputAction(OutputChange change) {
+        super(change);
+    }
 
     @Override
     public ValidationErrors validate(Database database) {
@@ -33,23 +37,20 @@ public class OutputChange extends AbstractChange {
 
     @DatabaseChangeProperty(description = "Message to output", exampleValue = "Make sure you feed the cat", serializationType = LiquibaseSerializable.SerializationType.DIRECT_VALUE)
     public String getMessage() {
-        return message;
+        return change.getMessage();
     }
 
     public void setMessage(String message) {
-        this.message = StringUtils.trimToNull(message);
+        change.setMessage(message);
     }
 
     @DatabaseChangeProperty(description = "Target for message. Possible values: STDOUT, STDERR, FATAL, WARN, INFO, DEBUG. Default value: STDERR", exampleValue = "STDERR")
     public String getTarget() {
-        if (target == null) {
-            return "STDERR";
-        }
-        return target;
+        return change.getTarget();
     }
 
     public void setTarget(String target) {
-        this.target = StringUtils.trimToNull(target);
+        change.setTarget(target);
     }
 
 
@@ -84,17 +85,4 @@ public class OutputChange extends AbstractChange {
         return "Output: "+getMessage();
     }
 
-    @Override
-    public String getSerializedObjectNamespace() {
-        return STANDARD_CHANGELOG_NAMESPACE;
-    }
-
-    @Override
-    public Object getSerializableFieldValue(String field) {
-        Object value = super.getSerializableFieldValue(field);
-        if (field.equals("target") && value.equals("")) {
-            return null;
-        }
-        return value;
-    }
 }

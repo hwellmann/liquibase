@@ -12,13 +12,14 @@ import java.util.Set;
 
 import liquibase.ContextExpression;
 import liquibase.Labels;
+import liquibase.action.EmptyAction;
+import liquibase.action.RawSQLAction;
 import liquibase.change.Change;
 import liquibase.change.CheckSum;
 import liquibase.change.DbmsTargetedChange;
 import liquibase.change.ExecutableChange;
 import liquibase.change.ExecutableChangeFactory;
 import liquibase.change.core.EmptyChange;
-import liquibase.change.core.RawSQLChange;
 import liquibase.changelog.visitor.ChangeExecListener;
 import liquibase.database.Database;
 import liquibase.database.DatabaseList;
@@ -387,7 +388,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
                 if (finalValue != null) {
                     String[] strings = StringUtils.processMutliLineSQL(finalValue, true, true, ";");
                     for (String string : strings) {
-                        addRollbackChange(new RawSQLChange(string));
+                        addRollbackChange(new RawSQLAction(string));
                         foundValue = true;
                     }
                 }
@@ -396,7 +397,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
             }
         }
         if (!foundValue) {
-            addRollbackChange(new EmptyChange());
+            addRollbackChange(new EmptyAction());
         }
     }
 
@@ -828,7 +829,7 @@ public class ChangeSetImpl implements Conditional, LiquibaseSerializable, Execut
         }
 
         for (String statment : StringUtils.splitSQL(sql, null)) {
-            rollBackChanges.add(new RawSQLChange(statment.trim()));
+            rollBackChanges.add(new RawSQLAction(statment.trim()));
         }
     }
 

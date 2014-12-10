@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.containsInAnyOrder
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.Contexts
 import liquibase.action.CreateTableAction
+import liquibase.action.EmptyAction
+import liquibase.action.RawSQLAction
 import liquibase.change.Change
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
@@ -130,8 +132,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert changeLog.getChangeSets().get(1).shouldAlwaysRun()
         assert changeLog.getChangeSets().get(1).shouldRunOnChange()
         changeLog.getChangeSets().get(1).getRollBackChanges().length == 2
-        assert changeLog.getChangeSets().get(1).getRollBackChanges()[0] instanceof RawSQLChange
-        assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLChange
+        assert changeLog.getChangeSets().get(1).getRollBackChanges()[0] instanceof RawSQLAction
+        assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLAction
 
         ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
         assert changeLog.getChangeSets().get(1).getChanges()[0].change instanceof AddColumnChange
@@ -331,8 +333,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 		changeLog.getChangeSets()[0].getAuthor() == "paikens"
 		changeLog.getChangeSets()[0].getId() == "1"
         changeLog.getChangeSets()[0].comments == "Some values: overridden: 'Value passed in', not.overridden: 'value from changelog 2', database: 'database mock', contextNote: 'context prod', contextNote2: '\${contextNote2}'"
-		((RawSQLChange) changeLog.getChangeSets()[0].getChanges()[0]).getSql() == "create table my_table_name;"
-		((RawSQLChange) changeLog.getChangeSets()[0].getRollBackChanges()[0]).getSql() == "drop table my_table_name"
+		(changeLog.getChangeSets()[0].getChanges()[0]).getSql() == "create table my_table_name;"
+		(changeLog.getChangeSets()[0].getRollBackChanges()[0]).getSql() == "drop table my_table_name"
 
         and: "changeSet 2"
         changeLog.getChangeSets().get(1).getAuthor() == "nvoxland"
@@ -414,8 +416,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
 
         then: "comment in sql is parsed correctly"
         changeLog.getChangeSet(path, "nvoxland", "comment in sql").comments == "This is a changeSet level comment"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "comment in sql").changes[0]).comment == "There is a comment in the SQL"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "comment in sql").changes[0]).sql == "select * from comment_in_sql"
+        (changeLog.getChangeSet(path, "nvoxland", "comment in sql").changes[0]).comment == "There is a comment in the SQL"
+        (changeLog.getChangeSet(path, "nvoxland", "comment in sql").changes[0]).sql == "select * from comment_in_sql"
 
         and: "column and constraints are parsed correctly"
         (changeLog.getChangeSet(path, "nvoxland", "nested column and constraint objects").changes[0]).columns[0] != null
@@ -472,26 +474,26 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         that(((AppendSqlVisitor) changeLog.getChangeSet(path, "nvoxland", "changeSet with modifySql").sqlVisitors[4]).getApplicableDbms(), containsInAnyOrder(["mysql"].toArray()))
 
         and: "utf8 is read correctly"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "changeSet with UTF8").changes[0]).sql == "insert into testutf8insert (stringvalue) values ('string with € and £')"
+        (changeLog.getChangeSet(path, "nvoxland", "changeSet with UTF8").changes[0]).sql == "insert into testutf8insert (stringvalue) values ('string with € and £')"
 
         and: "rollback blocks are parsed correctly"
         changeLog.getChangeSet(path, "nvoxland", "standard changeSet").rollBackChanges.size() == 0
 
         changeLog.getChangeSet(path, "nvoxland", "one rollback block").rollBackChanges.length == 1
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "one rollback block").rollBackChanges[0]).sql == "drop table rollback_test"
+        (changeLog.getChangeSet(path, "nvoxland", "one rollback block").rollBackChanges[0]).sql == "drop table rollback_test"
 
         changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges.size() == 1
-        assert changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges[0] instanceof EmptyChange
+        assert changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges[0] instanceof EmptyAction
 
 
         changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges.length == 7
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[0]).sql == "drop table multiRollback1"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[1]).sql == "drop table multiRollback2"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[2]).sql == "drop table multiRollback3"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[0]).sql == "drop table multiRollback1"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[1]).sql == "drop table multiRollback2"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[2]).sql == "drop table multiRollback3"
         (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[3]).tableName == "multiRollback4"
         (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[4]).tableName == "multiRollback5"
         (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[5]).tableName == "multiRollback6"
-        ((RawSQLChange) changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[6]).sql == "select * from simple"
+        (changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges[6]).sql == "select * from simple"
 
     }
 
