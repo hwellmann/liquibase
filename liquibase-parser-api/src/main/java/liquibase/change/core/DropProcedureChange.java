@@ -1,20 +1,17 @@
 package liquibase.change.core;
 
-import liquibase.change.AbstractChange;
-import liquibase.change.ExecutableChange;
+import liquibase.change.BaseChange;
+import liquibase.change.Change;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
 import liquibase.change.DatabaseChangeProperty;
-import liquibase.database.Database;
 import liquibase.serializer.LiquibaseSerializable;
-import liquibase.statement.SqlStatement;
-import liquibase.statement.core.DropProcedureStatement;
 
 import org.kohsuke.MetaInfServices;
 
 @DatabaseChange(name="dropProcedure", description = "Drops an existing procedure", priority = ChangeMetaData.PRIORITY_DEFAULT+100, appliesTo = "storedProcedure")
-@MetaInfServices(ExecutableChange.class)
-public class DropProcedureChange extends AbstractChange {
+@MetaInfServices(Change.class)
+public class DropProcedureChange extends BaseChange {
 
     private String catalogName;
     private String schemaName;
@@ -45,18 +42,6 @@ public class DropProcedureChange extends AbstractChange {
 
     public void setProcedureName(String procedureName) {
         this.procedureName = procedureName;
-    }
-
-    @Override
-    public String getConfirmationMessage() {
-        return "Stored Procedure "+getProcedureName()+" dropped";
-    }
-
-    @Override
-    public SqlStatement[] generateStatements(Database database) {
-        return new SqlStatement[]{
-                new DropProcedureStatement(getCatalogName(), getSchemaName(), getProcedureName())
-        };
     }
 
     @Override

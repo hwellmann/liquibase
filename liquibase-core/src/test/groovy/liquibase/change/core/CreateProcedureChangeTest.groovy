@@ -1,5 +1,6 @@
 package liquibase.change.core
 
+import liquibase.action.CreateProcedureAction
 import liquibase.change.StandardChangeTest
 import liquibase.database.core.OracleDatabase
 import liquibase.parser.core.ParsedNode
@@ -12,7 +13,7 @@ public class CreateProcedureChangeTest extends StandardChangeTest {
 
     def getConfirmationMessage() throws Exception {
         when:
-        CreateProcedureChange refactoring = new CreateProcedureChange();
+        CreateProcedureAction refactoring = new CreateProcedureAction();
 
         then:
         "Stored procedure created" == refactoring.getConfirmationMessage()
@@ -23,7 +24,7 @@ public class CreateProcedureChangeTest extends StandardChangeTest {
         def database = new MockDatabase()
         def snapshotFactory = new MockSnapshotGeneratorFactory()
         SnapshotGeneratorFactory.instance = snapshotFactory
-        def change = new CreateProcedureChange()
+        def change = new CreateProcedureAction()
         change.procedureName = "test_proc"
 
         then:
@@ -32,7 +33,7 @@ public class CreateProcedureChangeTest extends StandardChangeTest {
 
     def "load with inline sql"() {
         when:
-        def change = new CreateProcedureChange()
+        def change = new CreateProcedureAction()
         change.load(new ParsedNode(null, "createProcedure").setValue("create procedure sql"), new MockResourceAccessor())
         change.validate(new OracleDatabase())
 

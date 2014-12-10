@@ -1,17 +1,19 @@
 package liquibase.sdk.supplier.resource;
 
-import liquibase.change.ExecutableChangeFactory;
-import liquibase.change.ChangeMetaData;
-import liquibase.change.ChangeParameterService;
-import liquibase.change.ChangeParameterMetaData;
-import liquibase.change.core.CreateProcedureChange;
-import liquibase.database.core.HsqlDatabase;
-import liquibase.resource.ResourceAccessor;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import liquibase.change.ChangeFactory;
+import liquibase.change.ChangeMetaData;
+import liquibase.change.ChangeParameterMetaData;
+import liquibase.change.ChangeParameterService;
+import liquibase.change.core.CreateProcedureChange;
+import liquibase.database.core.HsqlDatabase;
+import liquibase.resource.ResourceAccessor;
 
 public class ResourceSupplier {
 
@@ -35,7 +37,7 @@ public class ResourceSupplier {
             if (path.toLowerCase().endsWith("csv")) {
                 stream = new ByteArrayInputStream(usersCsv.getBytes());
             } else if (path.toLowerCase().endsWith("my-logic.sql")) {
-                ChangeMetaData changeMetaData = ExecutableChangeFactory.getInstance().getChangeMetaData(new CreateProcedureChange());
+                ChangeMetaData changeMetaData = ChangeFactory.getInstance().getChangeMetaData(new CreateProcedureChange());
                 ChangeParameterMetaData metaData = changeMetaData.getParameters().get("procedureBody");
                 ChangeParameterService analyzer = new ChangeParameterService(metaData);
                 stream = new ByteArrayInputStream(((String)analyzer.getExampleValue(new HsqlDatabase())).getBytes());
