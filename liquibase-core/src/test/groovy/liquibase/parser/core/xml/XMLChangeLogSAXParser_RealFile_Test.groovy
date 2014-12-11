@@ -3,10 +3,9 @@ package liquibase.parser.core.xml
 import static org.hamcrest.Matchers.containsInAnyOrder
 import static spock.util.matcher.HamcrestSupport.that
 import liquibase.Contexts
-import liquibase.action.CreateTableAction
-import liquibase.action.EmptyAction
-import liquibase.action.RawSQLAction
+import liquibase.action.CustomChangeAction
 import liquibase.change.Change
+import liquibase.change.ChangeFactory
 import liquibase.change.CheckSum
 import liquibase.change.ExecutableChangeFactory
 import liquibase.change.core.*
@@ -79,8 +78,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         changeSet.getFilePath() == path
         changeSet.getComments() == "Some comments go here"
 
-        ExecutableChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
-        assert change instanceof CreateTableAction
+        ChangeFactory.getInstance().getChangeMetaData(change).getName() == "createTable"
+        assert change instanceof CreateTableChange
         change.tableName == "person"
         change.columns.size() == 3
         change.columns[0].name == "id"
@@ -120,8 +119,8 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSets()[0].shouldAlwaysRun()
         assert !changeLog.getChangeSets()[0].shouldRunOnChange()
 
-        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets()[0].getChanges()[0]).getName() == "createTable"
-        assert changeLog.getChangeSets()[0].getChanges()[0] instanceof CreateTableAction
+        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets()[0].getChanges()[0]).getName() == "createTable"
+        assert changeLog.getChangeSets()[0].getChanges()[0] instanceof CreateTableChange
 
         then:
         changeLog.getChangeSets().get(1).getAuthor() == "nvoxland"
@@ -132,14 +131,14 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert changeLog.getChangeSets().get(1).shouldAlwaysRun()
         assert changeLog.getChangeSets().get(1).shouldRunOnChange()
         changeLog.getChangeSets().get(1).getRollBackChanges().length == 2
-        assert changeLog.getChangeSets().get(1).getRollBackChanges()[0] instanceof RawSQLAction
-        assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLAction
+        assert changeLog.getChangeSets().get(1).getRollBackChanges()[0] instanceof RawSQLChange
+        assert changeLog.getChangeSets().get(1).getRollBackChanges()[1] instanceof RawSQLChange
 
-        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
-        assert changeLog.getChangeSets().get(1).getChanges()[0].change instanceof AddColumnChange
+        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges()[0]).getName() == "addColumn"
+        assert changeLog.getChangeSets().get(1).getChanges()[0] instanceof AddColumnChange
 
-        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges().get(1)).getName() == "addColumn"
-        assert changeLog.getChangeSets().get(1).getChanges().get(1).change instanceof AddColumnChange
+        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(1).getChanges().get(1)).getName() == "addColumn"
+        assert changeLog.getChangeSets().get(1).getChanges().get(1) instanceof AddColumnChange
 
         changeLog.getChangeSets().get(2).getAuthor() == "bob"
         changeLog.getChangeSets().get(2).getId() == "3"
@@ -149,17 +148,23 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         assert !changeLog.getChangeSets().get(2).shouldAlwaysRun()
         assert !changeLog.getChangeSets().get(2).shouldRunOnChange()
 
-        ExecutableChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(2).getChanges()[0]).getName() == "createTable"
-        assert changeLog.getChangeSets().get(2).getChanges()[0] instanceof CreateTableAction
+        ChangeFactory.getInstance().getChangeMetaData(changeLog.getChangeSets().get(2).getChanges()[0]).getName() == "createTable"
+        assert changeLog.getChangeSets().get(2).getChanges()[0] instanceof CreateTableChange
 
 
         changeLog.getChangeSets().get(3).getChanges().size() == 1
 
-        assert changeLog.getChangeSets().get(3).getChanges()[0] instanceof CustomChangeWrapper
-        assert changeLog.getChangeSets().get(3).getChanges()[0].getCustomChange() instanceof ExampleCustomSqlChange
-        changeLog.getChangeSets().get(3).getChanges()[0].generateStatements(new MockDatabase()) //fills out customChange params
-        changeLog.getChangeSets().get(3).getChanges()[0].getCustomChange().getTableName() == "table"
-        changeLog.getChangeSets().get(3).getChanges()[0].getCustomChange().getColumnName() == "column"
+        def wrapper = changeLog.getChangeSets().get(3).getChanges()[0]
+        assert wrapper instanceof CustomChangeWrapper
+        def customChange  = wrapper.getCustomChange()
+        assert  customChange instanceof ExampleCustomSqlChange
+
+        // FIXME
+        //changeLog.getChangeSets().get(3).getChanges()[0].generateStatements(new MockDatabase()) //fills out customChange params
+        def customAction = new CustomChangeAction(wrapper);
+        customAction.generateStatements(new MockDatabase())
+        customAction.getCustomChange().getTableName() == "table"
+        customAction.getCustomChange().getColumnName() == "column"
     }
 
     def "local path can be set in changelog file logicalPathChangeLog.xml"() throws Exception {
@@ -483,7 +488,7 @@ public class XMLChangeLogSAXParser_RealFile_Test extends Specification {
         (changeLog.getChangeSet(path, "nvoxland", "one rollback block").rollBackChanges[0]).sql == "drop table rollback_test"
 
         changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges.size() == 1
-        assert changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges[0] instanceof EmptyAction
+        assert changeLog.getChangeSet(path, "nvoxland", "empty rollback block").rollBackChanges[0] instanceof EmptyChange
 
 
         changeLog.getChangeSet(path, "nvoxland", "multiple rollback blocks").rollBackChanges.length == 7

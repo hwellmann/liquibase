@@ -74,9 +74,8 @@ public class ExampleCustomSqlChange implements CustomSqlChange, CustomSqlRollbac
         this.resourceAccessor = resourceAccessor;
     }
 
-    @Override
     public ValidationErrors validate(Database database) {
         return new ValidationErrors();
     }
-    
+
 }

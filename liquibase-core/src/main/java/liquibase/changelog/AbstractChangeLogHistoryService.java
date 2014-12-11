@@ -64,8 +64,9 @@ public abstract class AbstractChangeLogHistoryService implements ChangeLogHistor
     public void upgradeChecksums(final DatabaseChangeLog databaseChangeLog, final Contexts contexts, LabelExpression labels) throws DatabaseException {
         for (RanChangeSet ranChangeSet : this.getRanChangeSets()) {
             if (ranChangeSet.getLastCheckSum() == null) {
-                ExecutableChangeSet changeSet = ((DatabaseChangeLogImpl) databaseChangeLog).getChangeSet(ranChangeSet);
-                if (changeSet != null && new ContextChangeSetFilter(contexts).accepts(changeSet).isAccepted() && new DbmsChangeSetFilter(getDatabase()).accepts(changeSet).isAccepted()) {
+                ChangeSet changeSet = ((DatabaseChangeLogImpl) databaseChangeLog).getChangeSet(ranChangeSet);
+                ExecutableChangeSet ecs = new ExecutableChangeSetImpl((ChangeSetImpl) changeSet);
+                if (changeSet != null && new ContextChangeSetFilter(contexts).accepts(ecs).isAccepted() && new DbmsChangeSetFilter(getDatabase()).accepts(ecs).isAccepted()) {
                     LogFactory.getLogger().debug("Updating null or out of date checksum on changeSet " + changeSet + " to correct value");
                     replaceChecksum(changeSet);
                 }

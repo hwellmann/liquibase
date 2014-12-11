@@ -46,7 +46,6 @@ public class ExampleCustomProcCallChange implements CustomSqlChange {
         this.resourceAccessor = resourceAccessor;
     }
 
-    @Override
     public ValidationErrors validate(Database database) {
         return new ValidationErrors();
     }

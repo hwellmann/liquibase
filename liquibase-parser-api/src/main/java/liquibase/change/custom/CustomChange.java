@@ -1,8 +1,6 @@
 package liquibase.change.custom;
 
-import liquibase.database.Database;
 import liquibase.exception.SetupException;
-import liquibase.exception.ValidationErrors;
 import liquibase.resource.ResourceAccessor;
 
 /**
@@ -35,11 +33,5 @@ public interface CustomChange {
      * finding for files that are provided by the user.
      */
     public void setFileOpener(ResourceAccessor resourceAccessor);
-
-    /**
-     * Tests that the change is configured correctly before attempting to execute it.
-     * @param database The database the change will be ran against
-     */
-    public ValidationErrors validate(Database database);
 
 }
